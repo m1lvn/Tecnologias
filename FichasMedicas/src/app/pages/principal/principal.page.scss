@@ -1,0 +1,85 @@
+/* Fondo general suave */
+.page-bg{ --background: #f6f8fb; }
+
+/* Topbar actions */
+.actions .action-btn{
+  --background: transparent;
+  --border-color: rgba(255,255,255,.35);
+  --color: #fff;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 10px;
+  margin-left: 8px;
+}
+
+/* Barra de búsqueda */
+.search-row{
+  display:flex; align-items:center; gap:10px;
+  background:#fff; border:var(--soft-border); border-radius:12px;
+  padding:8px 12px; margin:14px 0 10px; box-shadow: var(--soft-shadow);
+}
+.search-row ion-icon{ color:#90a4b0; }
+.search-row input{
+  border:none; outline:none; flex:1; background:transparent; font-size:14px; color:#0b1c24;
+}
+
+/* Tabs/secciones superiores */
+.section-tabs{ display:flex; gap:8px; padding:8px; background:#fff; border:var(--soft-border); border-radius:12px; box-shadow: var(--soft-shadow);}
+.tab{
+  border:none; background:#f0f4f7; padding:8px 14px; border-radius:10px; color:#476276; font-weight:600; cursor:pointer;
+}
+.tab.active{ background:#e8f1ff; color:var(--c-deep); box-shadow: inset 0 0 0 1px #cfe1ff; }
+
+/* Barra de datos de paciente */
+.patient-bar{
+  display:flex; align-items:center; gap:12px; margin-top:10px; margin-bottom:14px;
+  background:#fff; border:var(--soft-border); border-radius:12px; padding:10px 12px; box-shadow: var(--soft-shadow);
+}
+.avatar{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:#e7f0ff;color:#184C7A;font-weight:800;
+}
+.data .name{ font-weight:700; }
+.data .meta{ color:#647989; font-size:12px; }
+
+/* Paneles (tarjetas) */
+.pane{
+  border:var(--soft-border); border-radius:12px; box-shadow: var(--soft-shadow);
+}
+ion-card-title{ font-weight:700; color:#26333b; }
+
+/* Estado de red */
+.net-item{ display:flex; align-items:center; gap:8px; padding:6px 0; color:#344452; }
+.net-item .dot{ width:10px;height:10px;border-radius:50%; display:inline-block; }
+.dot.ok{ background:#5cd17a; }
+.dot.warn{ background:#f0b000; }
+.dot.err{ background:#ff6b6b; }
+.net-item small{ margin-left:auto; color:#7d8b97; }
+
+/* Filtros */
+.filter-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 0; }
+.filter-row .label{ color:#6a7a87; font-size:13px; }
+.filter-row .value{ font-weight:600; color:#2e3b45; }
+.filter-row .link{ color:#184C7A; cursor:pointer; }
+.chip{ padding:6px 10px; border-radius:999px; background:#eef3f7; color:#334752; font-weight:600; }
+
+/* Resumen (columna derecha) */
+.resumen-item{
+  display:flex; align-items:center; gap:10px; border:1px solid #edf1f6; border-radius:12px;
+  padding:10px; background:#fff; margin-bottom:10px;
+}
+.resumen-item .bar{ width:3px;height:28px; border-radius:2px; }
+.r-body .r-title{ font-weight:700; color:#22313a; }
+.r-body .r-sub{ font-size:12px; color:#6e818d; }
+.go{ margin-left:auto; --background:#f5f7fa; --color:#4a5e6e; }
+
+/* Encuentros (lista central) */
+.encuentro{ display:flex; align-items:flex-start; gap:10px; padding:12px; border:1px solid #edf1f6; border-radius:12px; background:#fff; margin-bottom:10px; }
+.enc-icon{ width:28px;height:28px;border-radius:8px; background:#e7eef6; }
+.enc-icon.med{ background:#e9f1ff; }
+.enc-icon.urg{ background:#fff5e0; }
+.enc-icon.card{ background:#eaf6ea; }
+.enc-title{ font-weight:700; color:#22313a; }
+.enc-sub{ font-size:12px; color:#6e818d; }
+
+/* Espaciado superior de la grilla */
+.top-cards{ margin-top:6px; }

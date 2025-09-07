@@ -1,0 +1,44 @@
+/* ===== Toolbar (todas las páginas) ===== */
+ion-header ion-toolbar[color="primary"],
+ion-header ion-toolbar {                 /* fallback por si olvidamos color="primary" */
+  --background: var(--c-deep) !important;
+  --color: #ffffff !important;
+  color: #ffffff;
+}
+
+/* ===== Sidebar ===== */
+ion-menu.app-menu {
+  --width: 260px;
+  border-right: 1px solid rgba(24, 76, 122, 0.12);
+  box-shadow: var(--soft-shadow);
+}
+
+/* Encabezado del menú: azul con texto blanco (evita “blanco sobre blanco”) */
+ion-menu.app-menu ion-header ion-toolbar {
+  --background: var(--c-deep) !important;
+  --color: #ffffff !important;
+  color: #ffffff;
+}
+
+.menu-content { --background: #ffffff !important; }
+
+.menu-list { padding: 6px; }
+.menu-list ion-item {
+  margin: 6px 10px;
+  border-radius: 10px;
+  --background: transparent;
+  --color: #0b1c24;
+  color: #0b1c24;
+}
+.menu-list ion-icon {
+  font-size: 20px;
+  color: var(--ion-color-primary);
+}
+
+/* Estado activo/hover visible y de tu paleta */
+.menu-list ion-item:hover,
+.menu-list ion-item.active,
+.menu-list ion-item.ion-activated {
+  --background: rgba(24, 76, 122, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(24, 76, 122, 0.2);
+}

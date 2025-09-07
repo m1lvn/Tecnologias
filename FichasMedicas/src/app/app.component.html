@@ -1,0 +1,24 @@
+<ion-app>
+  <ion-split-pane when="lg" contentId="main-content">
+    <ion-menu side="start" contentId="main-content" type="push" class="app-menu">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Clinica online</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="menu-content">
+        <ion-list lines="none" class="menu-list">
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+            <ion-item routerLink="{{ p.url }}" routerDirection="root" routerLinkActive="active" detail="false">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>
