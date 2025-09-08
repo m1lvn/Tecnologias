@@ -1,0 +1,262 @@
+// ===== CARDS PRINCIPALES =====
+.create-card {
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--ion-color-primary);
+  
+  ion-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ion-color-primary);
+    
+    ion-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.urgent-card {
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--ion-color-danger);
+  background: rgba(var(--ion-color-danger-rgb), 0.05);
+  
+  .urgent-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ion-color-danger);
+    animation: pulse-urgent 2s infinite;
+    
+    ion-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.today-card {
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--ion-color-primary);
+  
+  ion-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ion-color-primary);
+    
+    ion-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.upcoming-card {
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--ion-color-tertiary);
+  
+  ion-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ion-color-tertiary);
+    
+    ion-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.actions-card {
+  margin-top: 1rem;
+  background: rgba(var(--ion-color-light-rgb), 0.3);
+}
+
+// ===== ITEMS DE RECORDATORIOS =====
+.reminder-item {
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  background: rgba(var(--ion-color-light-rgb), 0.2);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: rgba(var(--ion-color-light-rgb), 0.4);
+  }
+  
+  &.vencido {
+    background: rgba(var(--ion-color-danger-rgb), 0.1);
+    border-left: 3px solid var(--ion-color-danger);
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  &.proximo {
+    background: rgba(var(--ion-color-warning-rgb), 0.1);
+    border-left: 3px solid var(--ion-color-warning);
+    animation: glow-warning 2s infinite;
+  }
+  
+  ion-label {
+    h3 {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--ion-color-dark);
+    }
+    
+    .time-info {
+      font-size: 0.9rem;
+      color: var(--ion-color-medium);
+      margin: 0;
+    }
+  }
+}
+
+// ===== ACCIONES DE ITEMS =====
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    height: 32px;
+    
+    ion-icon {
+      font-size: 1rem;
+    }
+  }
+  
+  ion-checkbox {
+    margin-right: 0.5rem;
+  }
+}
+
+// ===== FORMULARIO =====
+.datetime-row {
+  margin-bottom: 1rem;
+  
+  .datetime-trigger {
+    --color: var(--ion-color-primary);
+  }
+}
+
+.action-buttons {
+  margin-top: 1rem;
+  
+  ion-button {
+    --border-radius: 8px;
+    font-weight: 600;
+  }
+}
+
+// ===== BADGES Y ELEMENTOS =====
+.proximity-badge {
+  margin-top: 0.25rem;
+  font-size: 0.7rem;
+  animation: pulse-warning 1s infinite;
+}
+
+ion-badge {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+}
+
+// ===== ESTADO VACÍO =====
+.empty-state {
+  margin-top: 2rem;
+  text-align: center;
+  
+  .empty-content {
+    padding: 2rem 1rem;
+    
+    .empty-icon {
+      font-size: 4rem;
+      color: var(--ion-color-medium);
+      margin-bottom: 1rem;
+    }
+    
+    h2 {
+      color: var(--ion-color-medium);
+      margin: 1rem 0 0.5rem 0;
+    }
+    
+    p {
+      color: var(--ion-color-medium);
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+// ===== ACCIONES GENERALES =====
+.general-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  
+  ion-button {
+    flex: 1;
+  }
+}
+
+.more-items {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+// ===== ANIMACIONES =====
+@keyframes pulse-urgent {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.7; 
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulse-warning {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0.6; 
+  }
+}
+
+@keyframes glow-warning {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(var(--ion-color-warning-rgb), 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 15px rgba(var(--ion-color-warning-rgb), 0.6);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 576px) {
+  .item-actions {
+    flex-direction: column;
+    gap: 0.125rem;
+    
+    ion-button {
+      height: 28px;
+      font-size: 0.8rem;
+    }
+  }
+  
+  .general-actions {
+    flex-direction: column;
+    
+    ion-button {
+      width: 100%;
+    }
+  }
+}

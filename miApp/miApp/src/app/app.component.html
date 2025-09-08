@@ -12,9 +12,8 @@
         <ion-list>
           <ion-menu-toggle auto-hide="true" *ngFor="let p of appPages">
             <ion-item button detail="false"
-                      (click)="go(p.url)"
-                      routerDirection="root"
-                      [routerLinkActive]="'ion-activated'">
+                      (click)="navigateWithRefresh(p.url)"
+                      [class.ion-activated]="isActiveRoute(p.url)">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
