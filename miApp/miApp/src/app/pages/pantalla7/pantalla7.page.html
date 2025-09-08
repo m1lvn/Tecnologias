@@ -1,13 +1,63 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Pantalla 7</ion-title>
+    <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
+    <ion-title>Calendario</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p>Contenido de Pantalla 7</p>
-  <ion-button routerLink="/pantalla8">Ir a Pantalla 8</ion-button>
+  <div class="page">
+    <!-- ===== Calendario en tarjeta estética ===== -->
+    <div class="cal-card">
+      <div class="cal-wrapper">
+        <div class="cal-zoom">
+          <ion-datetime
+            class="pretty-dt"
+            presentation="date"
+            [preferWheel]="false"
+            (ionChange)="onDateChange($event)"
+          ></ion-datetime>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Panel del día -->
+    <ion-card *ngIf="selectedKey as key" class="day-card">
+      <ion-card-header>
+        <ion-card-title>{{ prettyDate }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <div class="day-events">
+          <div class="events-title">Eventos</div>
+
+          <ng-container *ngIf="dayEvents.length; else noEvents">
+            <div class="event-row" *ngFor="let ev of dayEvents; let i = index">
+              <span class="dot"></span>
+              <span class="event-text">{{ ev }}</span>
+              <ion-button size="small" fill="clear" (click)="removeEvent(i)">Quitar</ion-button>
+            </div>
+          </ng-container>
+
+          <ng-template #noEvents>
+            <p class="muted">Sin eventos para este día.</p>
+          </ng-template>
+        </div>
+
+        <div class="add-box" *ngIf="dayEvents.length < 3">
+          <ion-item lines="none" class="input-row">
+            <ion-label position="stacked">Nuevo evento (máx 3 por día)</ion-label>
+            <ion-input
+              placeholder="Ej: Control médico 10:30"
+              [(ngModel)]="newEvent"
+              [ngModelOptions]="{ standalone: true }"
+            ></ion-input>
+          </ion-item>
+          <ion-button (click)="addEvent()" [disabled]="!canAddEvent()">Agregar evento</ion-button>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

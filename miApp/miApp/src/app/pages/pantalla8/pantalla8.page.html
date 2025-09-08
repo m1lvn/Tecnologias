@@ -3,11 +3,57 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Pantalla 8</ion-title>
+    <ion-title>Metas a Largo Plazo</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p>Contenido de Pantalla 8</p>
-  <ion-button routerLink="/pantalla9">Ir a Pantalla 9</ion-button>
+
+  <!-- Botón para agregar nueva meta -->
+  <ion-card class="add-meta-card">
+    <ion-item>
+      <ion-input placeholder="Nueva meta..." [(ngModel)]="newMeta"></ion-input>
+      <ion-button fill="solid" (click)="addMeta()" [disabled]="!newMeta.trim()">Agregar</ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Fecha límite (opcional)</ion-label>
+      <ion-datetime presentation="date" [(ngModel)]="newMetaDeadline"></ion-datetime>
+    </ion-item>
+  </ion-card>
+
+  <!-- Lista de metas -->
+  <ion-card *ngFor="let meta of metas; let i = index" class="meta-card">
+    <ion-card-header>
+      <ion-card-title>{{ meta.titulo }}</ion-card-title>
+      <ion-card-subtitle *ngIf="meta.deadline">
+        ⏳ {{ getDaysRemaining(meta.deadline) }} días restantes
+      </ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <!-- Progreso circular -->
+      <div class="progress-container">
+        <ion-progress-bar [value]="getProgress(meta)" color="success"></ion-progress-bar>
+        <p>{{ getCompleted(meta) }}/{{ meta.subtareas.length }} completadas</p>
+      </div>
+
+      <!-- Subtareas -->
+      <ion-list>
+        <ion-item *ngFor="let sub of meta.subtareas; let j = index">
+          <ion-checkbox slot="start" [(ngModel)]="sub.done" (ionChange)="updateProgress(meta)"></ion-checkbox>
+          <ion-label [class.done]="sub.done">{{ sub.texto }}</ion-label>
+          <ion-button fill="clear" color="danger" slot="end" (click)="removeSubtask(meta, j)">✕</ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-input placeholder="Nueva subtarea..." [(ngModel)]="newSubtask[i]"></ion-input>
+          <ion-button fill="outline" (click)="addSubtask(meta, i)" [disabled]="!newSubtask[i]?.trim()">+</ion-button>
+        </ion-item>
+      </ion-list>
+
+      <!-- Botón borrar meta -->
+      <ion-button expand="block" fill="solid" (click)="removeMeta(i)">Eliminar meta</ion-button>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
+

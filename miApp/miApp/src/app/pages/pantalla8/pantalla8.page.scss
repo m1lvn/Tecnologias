@@ -1,0 +1,21 @@
+.meta-card {
+  margin-bottom: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.add-meta-card {
+  margin-bottom: 25px;
+  border-radius: 15px;
+  background: #fff8f8;
+}
+
+.progress-container {
+  margin: 10px 0;
+  text-align: center;
+}
+
+ion-label.done {
+  text-decoration: line-through;
+  color: gray;
+}

@@ -32,3 +32,31 @@ ion-content {
   font-weight: bold;
   --border-radius: 8px;
 }
+
+
+.task-card {
+  background: #fffaf7;
+  border: 1px solid #f3d9d6;
+  border-radius: 14px;
+  margin: 10px 16px;
+  padding: 8px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+}
+
+.task-card ion-item {
+  --background: transparent;
+  --inner-padding-end: 8px;
+  border-radius: 12px;
+}
+
+.task-card h2 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: var(--rose-5, #746a78);
+}
+
+.task-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #8b7f86;
+}

@@ -37,7 +37,7 @@
 
   <!-- Acciones de listado -->
   <div class="list-actions" *ngIf="notas.length">
-    <ion-button fill="outline" class="danger-rose" (click)="deleteAll()">
+    <ion-button fill="solid" (click)="deleteAll()">
       Eliminar todas
     </ion-button>
   </div>
@@ -51,7 +51,7 @@
       </ion-label>
 
       <ion-buttons slot="end">
-        <ion-button fill="clear" class="danger-rose icon-only"
+        <ion-button fill="clear"
                     (click)="deleteNote(n.id); $event.stopPropagation()">
           <ion-icon name="trash"></ion-icon>
         </ion-button>
@@ -105,15 +105,15 @@
 
           <!-- Footer pegajoso dentro del modal -->
           <div class="sticky-footer">
-            <ion-button fill="outline" class="danger-rose" (click)="deleteCurrent()">
+            <ion-button fill="solid" (click)="deleteCurrent()">
               Eliminar esta nota
             </ion-button>
 
-            <ion-button *ngIf="!editing" color="primary" (click)="startEdit()">
+            <ion-button *ngIf="!editing" (click)="startEdit()">
               Editar
             </ion-button>
 
-            <ion-button *ngIf="editing" color="primary" (click)="saveEdit()">
+            <ion-button *ngIf="editing" (click)="saveEdit()">
               Guardar
             </ion-button>
           </div>

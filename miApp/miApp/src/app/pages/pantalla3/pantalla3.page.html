@@ -14,23 +14,25 @@
     <div class="total-box">
       <strong>Total:</strong> {{ completedTasks.length }}
     </div>
-    <ion-button color="danger" fill="outline" class="delete-btn" (click)="deleteCompleted()">
+    <ion-button fill="solid" class="delete-btn" (click)="deleteCompleted()">
       Borrar completadas
     </ion-button>
   </div>
 
   <!-- Lista -->
   <ion-list>
-    <ion-item *ngFor="let task of completedTasks">
+  <div *ngFor="let task of completedTasks" class="task-card">
+    <ion-item lines="none">
       <ion-label>
         <h2><s>{{ task.text }}</s></h2>
         <p>Completada el {{ task.createdAt | date:'short' }}</p>
       </ion-label>
 
-      <ion-button color="primary" (click)="markPending(task)">
+      <ion-button (click)="markPending(task)">
         Marcar pendiente
       </ion-button>
     </ion-item>
-  </ion-list>
+  </div>
+</ion-list>
 
 </ion-content>

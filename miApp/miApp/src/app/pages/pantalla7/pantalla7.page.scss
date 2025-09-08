@@ -1,0 +1,193 @@
+/* Contenedor general al estilo de tus otras páginas */
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* ===== Calendario grande sin solapes ===== */
+.cal-wrapper {
+  /* escala configurable */
+  --scale: 1.35;
+
+  /* alto base aproximado del ion-datetime (modo calendario) */
+  --base-h: 340px;
+
+  /* reservamos altura real = alto base * escala */
+  position: relative;
+  min-height: calc(var(--base-h) * var(--scale));
+  margin-bottom: 14px;
+}
+
+.cal-zoom {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) scale(var(--scale));
+  transform-origin: top center;
+}
+
+/* Separación del panel del día */
+.day-card {
+  margin-top: 8px;
+}
+
+/* ===== Dots en los días del ion-datetime ===== */
+ion-datetime::part(calendar-day) {
+  position: relative;
+}
+
+ion-datetime::part(calendar-day)[data-dots="1"]::after,
+ion-datetime::part(calendar-day)[data-dots="2"]::after,
+ion-datetime::part(calendar-day)[data-dots="3"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ion-color-primary, #d97786);
+}
+
+ion-datetime::part(calendar-day)[data-dots="2"]::after {
+  box-shadow:
+    -8px 0 0 0 var(--ion-color-primary, #d97786),
+     8px 0 0 0 var(--ion-color-primary, #d97786);
+}
+
+ion-datetime::part(calendar-day)[data-dots="3"]::after {
+  box-shadow:
+   -10px 0 0 0 var(--ion-color-primary, #d97786),
+     0px 0 0 0 var(--ion-color-primary, #d97786),
+    10px 0 0 0 var(--ion-color-primary, #d97786);
+}
+
+/* ===== Lista de eventos ===== */
+.day-events {
+  margin-bottom: 12px;
+
+  .events-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .event-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: #fff7f7;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--ion-color-primary, #d97786);
+      display: inline-block;
+    }
+    .event-text {
+      flex: 1;
+    }
+  }
+
+  .muted {
+    opacity: 0.7;
+    font-style: italic;
+  }
+}
+
+.add-box {
+  display: grid;
+  gap: 10px;
+}
+
+.input-row {
+  --background: transparent;
+}
+
+/* Responsive: baja la escala en pantallas pequeñas para que no corte */
+@media (max-width: 420px) {
+  .cal-wrapper { --scale: 1.15; }
+}
+
+/* Separación general para que no quede pegado al header */
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-top: 14px;
+}
+
+/* ===== Tarjeta estética que envuelve al calendario ===== */
+.cal-card {
+  /* Colores suaves (paleta rosada) */
+  --rose-bg: #fbeeed; /* fondo suave (sin blanco) */
+  --rose-border: rgba(217, 119, 134, 0.25);
+  --rose-shadow: rgba(217, 119, 134, 0.08);
+
+  background: var(--rose-bg);
+  border: 1px solid var(--rose-border);
+  border-radius: 20px;
+  padding: 18px 16px;
+  margin: 16px auto 10px;
+  box-shadow: 0 10px 30px var(--rose-shadow);
+}
+
+/* ===== Calendario grande, centrado, sin solapes ===== */
+.cal-wrapper {
+  --scale: 1.35;     /* escala del calendario */
+  --base-h: 340px;   /* alto aproximado del ion-datetime */
+
+  position: relative;
+  min-height: calc(var(--base-h) * var(--scale));
+}
+
+.cal-zoom {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) scale(var(--scale));
+  transform-origin: top center;
+}
+
+/* Quitamos el panel blanco interno del ion-datetime */
+.pretty-dt {
+  --background: transparent;
+}
+
+/* ===== Dots en los días (señal de eventos) ===== */
+ion-datetime::part(calendar-day) {
+  position: relative;
+}
+ion-datetime::part(calendar-day)[data-dots="1"]::after,
+ion-datetime::part(calendar-day)[data-dots="2"]::after,
+ion-datetime::part(calendar-day)[data-dots="3"]::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ion-color-primary, #d97786);
+}
+ion-datetime::part(calendar-day)[data-dots="2"]::after {
+  box-shadow:
+    -8px 0 0 0 var(--ion-color-primary, #d97786),
+     8px 0 0 0 var(--ion-color-primary, #d97786);
+}
+ion-datetime::part(calendar-day)[data-dots="3"]::after {
+  box-shadow:
+   -10px 0 0 0 var(--ion-color-primary, #d97786),
+     0px 0 0 0 var(--ion-color-primary, #d97786),
+    10px 0 0 0 var(--ion-color-primary, #d97786);
+}
+
+/* Responsive: baja la escala en móviles para que no corte */
+@media (max-width: 420px) {
+  .cal-wrapper { --scale: 1.15; }
+}
