@@ -20,7 +20,7 @@
     <ion-item lines="full" class="deadline-row">
       <ion-label>Fecha límite (opcional)</ion-label>
 
-      <!-- Botón para abrir selector -->
+      <!-- Botón para abrir el selector -->
       <ion-datetime-button
         slot="end"
         datetime="deadlinePicker"
@@ -46,11 +46,11 @@
       id="deadlinePicker"
       presentation="date"
       preferWheel="true"
-      [value]="newMetaDeadline"
-      (ionChange)="onDeadlineChange($event)"
       show-default-buttons="true"
       done-text="Listo"
-      cancel-text="Cancelar">
+      cancel-text="Cancelar"
+      [value]="newMetaDeadline"
+      (ionChange)="onDeadlineChange($event)">
     </ion-datetime>
   </ion-modal>
 
