@@ -1,0 +1,8 @@
+.muted { opacity: .7; }
+.done h3 { text-decoration: line-through; opacity: .8; }
+
+.header-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .75rem;
+}
+.header-row .left { display: flex; align-items: center; gap: .5rem; }

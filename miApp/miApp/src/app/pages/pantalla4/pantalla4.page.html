@@ -1,0 +1,124 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Notas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Nueva nota -->
+  <ion-item lines="full">
+    <ion-label position="stacked">Título</ion-label>
+    <ion-input
+      placeholder="Ej: Ideas para la app"
+      [(ngModel)]="title"
+      [ngModelOptions]="{ standalone: true }">
+    </ion-input>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Contenido</ion-label>
+    <ion-textarea
+      placeholder="Escribe la nota aquí…"
+      auto-grow="true"
+      [(ngModel)]="body"
+      [ngModelOptions]="{ standalone: true }">
+    </ion-textarea>
+  </ion-item>
+
+  <div class="actions">
+    <ion-button expand="block" (click)="addNote()" [disabled]="!title.trim() && !body.trim()">
+      Guardar nota
+    </ion-button>
+  </div>
+
+  <!-- Acciones de listado -->
+  <div class="list-actions" *ngIf="notas.length">
+    <ion-button fill="outline" class="danger-rose" (click)="deleteAll()">
+      Eliminar todas
+    </ion-button>
+  </div>
+
+  <!-- Listado de notas -->
+  <ion-list class="mt" *ngIf="notas.length; else vacio">
+    <ion-item lines="inset" *ngFor="let n of notas">
+      <ion-label (click)="openNote(n)" class="tap-label">
+        <h3>{{ titlePreview(n) }}</h3>
+        <p class="muted">{{ n.date | date:'short' }}</p>
+      </ion-label>
+
+      <ion-buttons slot="end">
+        <ion-button fill="clear" class="danger-rose icon-only"
+                    (click)="deleteNote(n.id); $event.stopPropagation()">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #vacio>
+    <p class="muted mt">Aún no hay notas.</p>
+  </ng-template>
+
+  <!-- MODAL centrado -->
+  <ion-modal [isOpen]="modalOpen" cssClass="note-modal" (didDismiss)="closeModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ draft?.title || '(Sin título)' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeModal()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding modal-content">
+        <ng-container *ngIf="draft as d">
+
+          <!-- Título (readonly o editable) -->
+          <ion-item lines="full">
+            <ion-label position="stacked">Título</ion-label>
+            <ion-input
+              [readonly]="!editing"
+              [(ngModel)]="d.title"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="Título de la nota">
+            </ion-input>
+          </ion-item>
+
+          <!-- Contenido (readonly o editable) -->
+          <ion-item lines="full">
+            <ion-label position="stacked">Contenido</ion-label>
+            <ion-textarea
+              [readonly]="!editing"
+              auto-grow="true"
+              [(ngModel)]="d.body"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="Escribe el contenido…">
+            </ion-textarea>
+          </ion-item>
+
+          <!-- Footer pegajoso dentro del modal -->
+          <div class="sticky-footer">
+            <ion-button fill="outline" class="danger-rose" (click)="deleteCurrent()">
+              Eliminar esta nota
+            </ion-button>
+
+            <ion-button *ngIf="!editing" color="primary" (click)="startEdit()">
+              Editar
+            </ion-button>
+
+            <ion-button *ngIf="editing" color="primary" (click)="saveEdit()">
+              Guardar
+            </ion-button>
+          </div>
+        </ng-container>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

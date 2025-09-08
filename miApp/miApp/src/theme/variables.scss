@@ -1,0 +1,97 @@
+/* =========================================
+   P A L E T A   P A S T E L   G L O B A L
+   ========================================= */
+:root {
+  /* Colores base */
+  --color-peach: #FFD8C2;   /* rgb(255,216,194) */
+  --color-salmon:#FFB3A8;   /* rgb(255,179,168) */
+  --color-rose:  #E79AA8;   /* rgb(231,154,168) */
+  --color-mauve: #B98999;   /* rgb(185,137,153) */
+  --color-slate: #7B7384;   /* rgb(123,115,132) */
+  --color-ink:   #5E5666;   /* rgb(94,86,102)   */
+  --color-paper: #FFF5EF;   /* rgb(255,245,239) */
+
+  /* Fondo y texto */
+  --ion-background-color: var(--color-paper);
+  --ion-text-color: var(--color-ink);
+
+  /* ====== Ionic semantic colors (mapeados a tu paleta) ====== */
+  /* primary = rose */
+  --ion-color-primary:        #E79AA8;
+  --ion-color-primary-rgb:    231,154,168;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade:  #cf8b98; /* un poco más oscuro */
+  --ion-color-primary-tint:   #ecacb9; /* un poco más claro  */
+
+  /* secondary = salmon */
+  --ion-color-secondary:      #FFB3A8;
+  --ion-color-secondary-rgb:  255,179,168;
+  --ion-color-secondary-contrast: #5E5666;
+  --ion-color-secondary-contrast-rgb: 94,86,102;
+  --ion-color-secondary-shade:#e0a196;
+  --ion-color-secondary-tint: #ffc1b8;
+
+  /* tertiary = mauve */
+  --ion-color-tertiary:       #B98999;
+  --ion-color-tertiary-rgb:   185,137,153;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255,255,255;
+  --ion-color-tertiary-shade: #a47786;
+  --ion-color-tertiary-tint:  #c39aa9;
+
+  /* success = rose (más oscuro) – nos quedamos en la paleta */
+  --ion-color-success:        #cf8b98;
+  --ion-color-success-rgb:    207,139,152;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255,255,255;
+  --ion-color-success-shade:  #b57985;
+  --ion-color-success-tint:   #d8a0ab;
+
+  /* warning = peach */
+  --ion-color-warning:        #FFD8C2;
+  --ion-color-warning-rgb:    255,216,194;
+  --ion-color-warning-contrast: #5E5666;
+  --ion-color-warning-contrast-rgb: 94,86,102;
+  --ion-color-warning-shade:  #e0bfae;
+  --ion-color-warning-tint:   #ffe1d0;
+
+  /* danger = slate (el más oscuro de la paleta, con contraste claro) */
+  --ion-color-danger:         #7B7384;
+  --ion-color-danger-rgb:     123,115,132;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255,255,255;
+  --ion-color-danger-shade:   #6b6473;
+  --ion-color-danger-tint:    #8a8292;
+
+  /* medium/light/dark adaptados a la paleta */
+  --ion-color-medium:         #B98999; /* mauve */
+  --ion-color-medium-rgb:     185,137,153;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255,255,255;
+  --ion-color-medium-shade:   #a47786;
+  --ion-color-medium-tint:    #c39aa9;
+
+  --ion-color-light:          #FFF5EF; /* paper */
+  --ion-color-light-rgb:      255,245,239;
+  --ion-color-light-contrast: #5E5666;
+  --ion-color-light-contrast-rgb: 94,86,102;
+  --ion-color-light-shade:    #e0ddd8;
+  --ion-color-light-tint:     #fff7f2;
+
+  --ion-color-dark:           #5E5666; /* ink */
+  --ion-color-dark-rgb:       94,86,102;
+  --ion-color-dark-contrast:  #ffffff;
+  --ion-color-dark-contrast-rgb: 255,255,255;
+  --ion-color-dark-shade:     #524b58;
+  --ion-color-dark-tint:      #726a7a;
+
+  /* Bordes suaves por defecto */
+  --app-soft-border: #F1D0C3; /* peach bajita */
+}
+
+/* iOS y MD comparten la misma paleta para que todo se vea igual */
+.ios, .md {
+  --ion-background-color: var(--color-paper);
+  --ion-text-color: var(--color-ink);
+}

@@ -1,0 +1,58 @@
+.actions { margin-top: .75rem; }
+.mt { margin-top: .75rem; }
+.muted { opacity: .7; }
+ion-textarea { white-space: pre-wrap; }
+
+/* Botones del listado */
+.list-actions {
+  margin-top: .75rem;
+  display: flex;
+  gap: .5rem;
+}
+
+/* Para poder tocar solo el label y abrir el modal */
+.tap-label { cursor: pointer; }
+
+/* Botón icon-only más compacto */
+.icon-only {
+  --padding-start: 6px;
+  --padding-end: 6px;
+}
+
+/* Modal dialog centrado (no toca bordes) */
+.note-modal {
+  --width: 720px;
+  --max-width: 92vw;
+  --height: 70vh;           /* el contenido hará scroll si es largo */
+  --max-height: 85vh;
+  --border-radius: 16px;
+  --box-shadow: 0 16px 40px rgba(31,41,55,.15);
+  --backdrop-opacity: 0.28;
+}
+
+/* espacio extra por si el footer pegajoso cubre algo */
+.modal-content { padding-bottom: 96px; }
+
+/* Footer pegajoso (siempre visible al final del modal) */
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: .6rem;
+  padding: 12px 8px;
+  background: var(--ion-background-color, #fff);
+  border-top: 1px solid rgba(0,0,0,.06);
+  backdrop-filter: blur(2px);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+/* Botón borrar rosado pastel */
+.danger-rose {
+  --background: #fce7f3;
+  --color: #9d174d;
+  --border-color: #f9a8d4;
+  border: 1px solid var(--border-color);
+}

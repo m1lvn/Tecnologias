@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Pantalla Principal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ userName }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="muted">{{ today | date:"EEEE d 'de' MMMM, HH:mm" }}</div>
+      <p class="mt">Resumen del día:</p>
+
+      <div class="kpis">
+        <div>
+          <div class="kpi-title">Tareas</div>
+          <div class="kpi-values">
+            <ion-badge color="warning">{{ pendingTasks }}</ion-badge>
+            <span class="kpi-label">pendientes</span>
+            <ion-badge color="success" class="ml">{{ doneTasks }}</ion-badge>
+            <span class="kpi-label">hechas</span>
+          </div>
+          <ion-progress-bar [value]="tasksProgress"></ion-progress-bar>
+        </div>
+
+        <div>
+          <div class="kpi-title">Hábitos de hoy</div>
+          <div class="kpi-values">
+            <ion-badge color="success">{{ todayHabitsDone }}</ion-badge>
+            <span class="kpi-label">cumplidos</span>
+            <ion-badge color="medium" class="ml">{{ totalHabits }}</ion-badge>
+            <span class="kpi-label">totales</span>
+          </div>
+          <ion-progress-bar [value]="habitsProgress"></ion-progress-bar>
+        </div>
+
+        <div>
+          <div class="kpi-title">Notas</div>
+          <div class="kpi-values">
+            <ion-badge color="tertiary">{{ notas.length }}</ion-badge>
+            <span class="kpi-label">guardadas</span>
+          </div>
+          <ion-progress-bar [value]="notas.length ? 1 : 0"></ion-progress-bar>
+        </div>
+      </div>
+
+      <div class="actions">
+        <ion-button routerLink="/pantalla1">Ver tareas</ion-button>
+        <ion-button routerLink="/pantalla2" fill="outline">Nueva tarea</ion-button>
+        <ion-button routerLink="/pantalla7" fill="outline">Hábitos</ion-button>
+        <ion-button routerLink="/pantalla9" fill="outline">Calendario</ion-button>
+        <ion-button routerLink="/pantalla10" fill="outline">Estadísticas</ion-button>
+      </div>
+
+      <div class="demo">
+        <ion-button size="small" color="medium" (click)="seedDemoData()">
+          Cargar datos demo
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Notas recientes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list *ngIf="notas.length; else noNotes">
+        <ion-item *ngFor="let n of notas | slice:0:3" lines="none"
+                  style="margin:6px 0; border-radius:12px; background:#fff3ef;">
+          <ion-label>
+            <h3>{{ n.title }}</h3>
+            <p class="muted">{{ n.date | date:'short' }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ng-template #noNotes>
+        <p class="muted">Aún no tienes notas. Crea una en la sección “Notas”.</p>
+      </ng-template>
+
+      <ion-button size="small" routerLink="/pantalla5">Ir a Notas</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

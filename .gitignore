@@ -1,1 +1,6 @@
 /.venv
+# Angular/Ionic
+miApp/miApp/node_modules/
+miApp/miApp/dist/
+miApp/miApp/.angular/cache/
+miApp/miApp/.env

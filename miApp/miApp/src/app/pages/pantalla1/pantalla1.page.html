@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Tareas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list *ngIf="tareas.length; else noTasks">
+    <ion-item *ngFor="let t of tareas">
+      <ion-checkbox slot="start" [checked]="t.done" (ionChange)="toggleDone(t)"></ion-checkbox>
+      <ion-label [class.done]="t.done">{{ t.text }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #noTasks>
+    <p>No tienes tareas registradas.</p>
+  </ng-template>
+
+  <ion-button expand="block" color="danger" (click)="clearAll()">Borrar todas</ion-button>
+</ion-content>

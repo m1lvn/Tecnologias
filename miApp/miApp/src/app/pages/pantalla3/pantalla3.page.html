@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Tareas completadas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div class="header-row">
+    <div class="left">
+      <span class="muted">Total:</span>
+      <ion-badge color="success">{{ completadas.length }}</ion-badge>
+    </div>
+    <ion-button size="small" color="danger" fill="outline"
+                (click)="openConfirmDeleteAll()"
+                [disabled]="!completadas.length">
+      Borrar completadas
+    </ion-button>
+  </div>
+
+  <ion-list *ngIf="completadas.length; else vacio">
+    <ion-item *ngFor="let t of completadas">
+      <ion-label class="done">
+        <h3>{{ t.text }}</h3>
+        <p class="muted">Completada el {{ t.createdAt | date:'short' }}</p>
+      </ion-label>
+      <ion-button slot="end" size="small" (click)="marcarPendiente(t)">
+        Marcar pendiente
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #vacio>
+    <p class="muted">No tienes tareas completadas aún.</p>
+  </ng-template>
+
+  <!-- Alert bonito -->
+  <ion-alert
+    cssClass="pretty-alert"
+    [isOpen]="confirmOpen"
+    header="Borrar tareas completadas"
+    message="Se eliminarán todas las tareas marcadas como hechas. ¿Deseas continuar?"
+    [buttons]="[
+      { text: 'Cancelar', role: 'cancel' },
+      { text: 'Borrar', role: 'confirm', cssClass: 'danger' }
+    ]"
+    (didDismiss)="onConfirmDeleteAllDismiss($event)">
+  </ion-alert>
+</ion-content>

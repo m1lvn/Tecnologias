@@ -1,0 +1,29 @@
+<ion-app>
+  <ion-split-pane when="false" contentId="main-content">
+    <!-- MENU LATERAL -->
+    <ion-menu contentId="main-content" type="overlay" side="start">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Organizador Personal</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <ion-list>
+          <ion-menu-toggle auto-hide="true" *ngFor="let p of appPages">
+            <ion-item button detail="false"
+                      (click)="go(p.url)"
+                      routerDirection="root"
+                      [routerLinkActive]="'ion-activated'">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>

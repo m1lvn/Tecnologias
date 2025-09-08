@@ -1,0 +1,7 @@
+/* Opcional: asegura que todo ocupe la pantalla completa */
+ion-app, ion-router-outlet, ion-content {
+  height: 100%;
+}
+
+/* Si añadiste antes estilos que ponían un max-width o centraban el contenido,
+   elimínalos para que no encojan la página. */

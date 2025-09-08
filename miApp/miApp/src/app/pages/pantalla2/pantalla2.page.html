@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Nueva tarea</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-item>
+    <ion-label position="stacked">Descripción</ion-label>
+    <ion-input
+      placeholder="Ej: Estudiar para la prueba"
+      [(ngModel)]="text"
+      [ngModelOptions]="{ standalone: true }"
+      clear-input="true">
+    </ion-input>
+  </ion-item>
+
+  <div class="actions">
+    <ion-button expand="block" (click)="addTask()" [disabled]="!text.trim()">
+      Agregar
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" (click)="goToList()">
+      Ver lista de tareas
+    </ion-button>
+  </div>
+
+  <ion-toast
+    [isOpen]="showToast"
+    message="¡Tarea agregada!"
+    duration="1200"
+    (didDismiss)="showToast = false">
+  </ion-toast>
+</ion-content>
