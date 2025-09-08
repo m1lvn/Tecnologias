@@ -44,3 +44,9 @@ export class Pantalla1Page {
     localStorage.setItem('tareas', JSON.stringify(this.tareas));
   }
 }
+
+const APP_LS_EVENT = 'app-ls-updated';
+function saveLS(key: string, value: any) {
+  localStorage.setItem(key, JSON.stringify(value));
+  window.dispatchEvent(new Event(APP_LS_EVENT)); // 👈 notifica
+}

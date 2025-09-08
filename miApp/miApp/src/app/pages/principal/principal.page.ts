@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton,
@@ -7,12 +7,13 @@ import {
   IonList, IonItem, IonLabel, IonBadge
 } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
 
 type Task  = { id: number; text: string; done: boolean; createdAt: string };
 type Habit = { id: number; name: string; doneToday: boolean };
 type Note  = { id: number; title: string; body: string; date: string };
+
+// Evento que disparamos desde otras pantallas cuando guardan en localStorage
+const APP_LS_EVENT = 'app-ls-updated';
 
 @Component({
   selector: 'app-principal',
@@ -27,62 +28,63 @@ type Note  = { id: number; title: string; body: string; date: string };
     IonList, IonItem, IonLabel, IonBadge
   ],
 })
-export class PrincipalPage implements OnInit {
-  constructor(private nav: NavController, private router: Router) {}
+export class PrincipalPage implements OnInit, OnDestroy {
+  constructor(private nav: NavController) {}
 
-  // UI
-  today = new Date();
-  userName = '¡Hola!';
-
-  // Datos
+  // Datos base
   tareas: Task[] = [];
   habitos: Habit[] = [];
   notas: Note[] = [];
+  today = new Date();
+  userName = '¡Hola!';
 
   // KPIs
   pendingTasks = 0;
   doneTasks = 0;
-  totalHabits = 0;
-  todayHabitsDone = 0;
+  totalTasks = 0;
 
-  // Progreso (0..1)
-  tasksProgress = 0;
-  habitsProgress = 0;
+  todayHabitsDone = 0;
+  totalHabits = 0;
+
+  tasksProgress = 0;   // 0..1
+  habitsProgress = 0;  // 0..1
+  notesProgress = 0;   // 0 o 1 (sólo para barra estética)
+
+  // Listeners para sincronizarse con el resto
+  private onLsUpdated  = () => this.loadAll();       // disparado por nuestras páginas
+  private onStorageEvt = () => this.loadAll();       // si cambia localStorage en otra pestaña
 
   ngOnInit(): void {
     this.loadAll();
-
-    // ⚡ Recalcula cada vez que regreses a /principal
-    this.router.events
-      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-      .subscribe(e => {
-        if (e.urlAfterRedirects?.includes('/principal')) {
-          this.loadAll();
-        }
-      });
+    window.addEventListener(APP_LS_EVENT, this.onLsUpdated);
+    window.addEventListener('storage', this.onStorageEvt);
   }
 
-  ionViewWillEnter(): void {
-    // También por si llegas por back/navController
-    this.loadAll();
+  ngOnDestroy(): void {
+    window.removeEventListener(APP_LS_EVENT, this.onLsUpdated);
+    window.removeEventListener('storage', this.onStorageEvt);
   }
 
-  // ------- Carga y KPIs -------
+  ionViewWillEnter(): void { this.loadAll(); }
+
+  // ---------- Carga y cálculo ----------
   private loadAll(): void {
     this.userName = this.getUserName();
+
     this.tareas  = this.getFromLS<Task[]>('tareas')  ?? [];
     this.habitos = this.getFromLS<Habit[]>('habitos') ?? [];
-    this.notas   = this.getFromLS<Note[]>('notas')   ?? [];
+    this.notas   = this.getFromLS<Note[]>('notas')    ?? [];
 
     this.pendingTasks = this.tareas.filter(t => !t.done).length;
     this.doneTasks    = this.tareas.filter(t =>  t.done).length;
+    this.totalTasks   = this.pendingTasks + this.doneTasks;
 
     this.totalHabits     = this.habitos.length;
     this.todayHabitsDone = this.habitos.filter(h => h.doneToday).length;
 
-    const totalTasks = this.pendingTasks + this.doneTasks;
-    this.tasksProgress  = totalTasks > 0 ? this.doneTasks / totalTasks : 0;
-    this.habitsProgress = this.totalHabits > 0 ? this.todayHabitsDone / this.totalHabits : 0;
+    this.tasksProgress  = this.totalTasks   > 0 ? this.doneTasks / this.totalTasks : 0;
+    this.habitsProgress = this.totalHabits  > 0 ? this.todayHabitsDone / this.totalHabits : 0;
+    this.notesProgress  = this.notas.length > 0 ? 1 : 0;
   }
 
   private getUserName(): string {
@@ -91,44 +93,25 @@ export class PrincipalPage implements OnInit {
   }
 
   private getFromLS<T>(key: string): T | null {
-    try { const raw = localStorage.getItem(key); return raw ? (JSON.parse(raw) as T) : null; }
-    catch { return null; }
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? (JSON.parse(raw) as T) : null;
+    } catch {
+      return null;
+    }
   }
 
-  private setToLS<T>(key: string, value: T): void {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
+  // Navegación
+  go(url: string) { this.nav.navigateForward(url, { animated: true }); }
 
-  // ------- Demo -------
+  // (Opcional) Datos demo. No afecta si no lo usas.
   seedDemoData(): void {
-    const now = new Date().toISOString();
     const demoTasks: Task[] = [
-      { id: 1, text: 'Estudiar Angular',       done: false, createdAt: now },
-      { id: 2, text: 'Hacer 20 min de cardio', done: true,  createdAt: now },
-      { id: 3, text: 'Preparar presentación',  done: false, createdAt: now },
-      { id: 4, text: 'Leer 10 páginas',        done: true,  createdAt: now },
+      { id: Date.now(),     text: 'Estudiar Angular',        done: false, createdAt: new Date().toISOString() },
+      { id: Date.now() + 1, text: 'Hacer 20 min de cardio',  done: true,  createdAt: new Date().toISOString() },
+      { id: Date.now() + 2, text: 'Preparar presentación',   done: true,  createdAt: new Date().toISOString() },
     ];
-    const demoHabits: Habit[] = [
-      { id: 1, name: 'Beber 2L de agua',  doneToday: true  },
-      { id: 2, name: 'Caminar 20 minutos',doneToday: false },
-      { id: 3, name: 'Meditar 5 min',     doneToday: false },
-      { id: 4, name: 'Dormir 7+ horas',   doneToday: true  },
-      { id: 5, name: 'Estiramientos',     doneToday: false },
-    ];
-    const demoNotes: Note[] = [
-      { id: 1, title: 'Ideas para la app', body: 'Sidebar + 12 páginas + stats', date: now },
-      { id: 2, title: 'Reunión martes',    body: 'Llevar demo actualizado',       date: now },
-    ];
-    this.setToLS('tareas', demoTasks);
-    this.setToLS('habitos', demoHabits);
-    this.setToLS('notas', demoNotes);
-    if (!localStorage.getItem('userName')) localStorage.setItem('userName', 'Nacha');
-
-    this.loadAll();
-  }
-
-  // ------- Navigation -------
-  go(url: string) {
-    this.nav.navigateForward(url, { animated: true });
+    localStorage.setItem('tareas', JSON.stringify(demoTasks));
+    window.dispatchEvent(new Event(APP_LS_EVENT));
   }
 }
