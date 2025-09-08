@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="light">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -7,46 +7,30 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content [fullscreen]="true">
 
-  <div class="header-row">
-    <div class="left">
-      <span class="muted">Total:</span>
-      <ion-badge color="success">{{ completadas.length }}</ion-badge>
+  <!-- Encabezado con total y botón -->
+  <div class="header-container">
+    <div class="total-box">
+      <strong>Total:</strong> {{ completedTasks.length }}
     </div>
-    <ion-button size="small" color="danger" fill="outline"
-                (click)="openConfirmDeleteAll()"
-                [disabled]="!completadas.length">
+    <ion-button color="danger" fill="outline" class="delete-btn" (click)="deleteCompleted()">
       Borrar completadas
     </ion-button>
   </div>
 
-  <ion-list *ngIf="completadas.length; else vacio">
-    <ion-item *ngFor="let t of completadas">
-      <ion-label class="done">
-        <h3>{{ t.text }}</h3>
-        <p class="muted">Completada el {{ t.createdAt | date:'short' }}</p>
+  <!-- Lista -->
+  <ion-list>
+    <ion-item *ngFor="let task of completedTasks">
+      <ion-label>
+        <h2><s>{{ task.text }}</s></h2>
+        <p>Completada el {{ task.createdAt | date:'short' }}</p>
       </ion-label>
-      <ion-button slot="end" size="small" (click)="marcarPendiente(t)">
+
+      <ion-button color="primary" (click)="markPending(task)">
         Marcar pendiente
       </ion-button>
     </ion-item>
   </ion-list>
 
-  <ng-template #vacio>
-    <p class="muted">No tienes tareas completadas aún.</p>
-  </ng-template>
-
-  <!-- Alert bonito -->
-  <ion-alert
-    cssClass="pretty-alert"
-    [isOpen]="confirmOpen"
-    header="Borrar tareas completadas"
-    message="Se eliminarán todas las tareas marcadas como hechas. ¿Deseas continuar?"
-    [buttons]="[
-      { text: 'Cancelar', role: 'cancel' },
-      { text: 'Borrar', role: 'confirm', cssClass: 'danger' }
-    ]"
-    (didDismiss)="onConfirmDeleteAllDismiss($event)">
-  </ion-alert>
 </ion-content>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton,
-  IonContent, IonList, IonItem, IonLabel, IonButton, IonBadge, IonAlert
+  IonContent, IonList, IonItem, IonLabel, IonButton
 } from '@ionic/angular/standalone';
 
 type Task = { id: number; text: string; done: boolean; createdAt: string };
@@ -15,56 +15,50 @@ type Task = { id: number; text: string; done: boolean; createdAt: string };
   imports: [
     CommonModule,
     IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton,
-    IonContent, IonList, IonItem, IonLabel, IonButton, IonBadge, IonAlert
+    IonContent, IonList, IonItem, IonLabel, IonButton
   ],
 })
 export class Pantalla3Page implements OnInit {
-  tareas: Task[] = [];
-  completadas: Task[] = [];
 
-  // estado del Alert
-  confirmOpen = false;
+  /** Todas las tareas del LS */
+  private all: Task[] = [];
+  /** Solo las completadas (lo que mostramos) */
+  completedTasks: Task[] = [];
 
   ngOnInit(): void { this.load(); }
   ionViewWillEnter(): void { this.load(); }
 
-  private getTasks(): Task[] {
+  // ---------- Cargar / Guardar ----------
+  private load(): void {
     try {
       const raw = localStorage.getItem('tareas');
-      return raw ? (JSON.parse(raw) as Task[]) : [];
+      this.all = raw ? JSON.parse(raw) as Task[] : [];
     } catch {
-      return [];
+      this.all = [];
+    }
+    this.completedTasks = this.all.filter(t => t.done);
+  }
+
+  private save(): void {
+    localStorage.setItem('tareas', JSON.stringify(this.all));
+    this.completedTasks = this.all.filter(t => t.done);
+  }
+
+  // ---------- Acciones ----------
+  /** Pasa la tarea a pendiente */
+  markPending(task: Task): void {
+    const idx = this.all.findIndex(t => t.id === task.id);
+    if (idx > -1) {
+      this.all[idx].done = false;
+      this.save();
     }
   }
-  private saveTasks(tasks: Task[]) {
-    localStorage.setItem('tareas', JSON.stringify(tasks));
-  }
 
-  load(): void {
-    this.tareas = this.getTasks();
-    this.completadas = this.tareas.filter(t => t.done);
-  }
-
-  marcarPendiente(t: Task): void {
-    const idx = this.tareas.findIndex(x => x.id === t.id);
-    if (idx >= 0) {
-      this.tareas[idx].done = false;
-      this.saveTasks(this.tareas);
-      this.load();
-    }
-  }
-
-  // abrir alert
-  openConfirmDeleteAll(): void { this.confirmOpen = true; }
-
-  // manejar decisión
-  onConfirmDeleteAllDismiss(ev: CustomEvent) {
-    const role = (ev as any).detail?.role;
-    this.confirmOpen = false;
-    if (role === 'confirm') {
-      this.tareas = this.tareas.filter(t => !t.done);
-      this.saveTasks(this.tareas);
-      this.load();
-    }
+  /** Borra TODAS las completadas */
+  deleteCompleted(): void {
+    const ok = confirm('¿Seguro que quieres borrar todas las tareas completadas?');
+    if (!ok) return;
+    this.all = this.all.filter(t => !t.done);
+    this.save();
   }
 }

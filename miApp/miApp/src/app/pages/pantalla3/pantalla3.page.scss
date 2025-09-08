@@ -6,3 +6,29 @@
   margin-bottom: .75rem;
 }
 .header-row .left { display: flex; align-items: center; gap: .5rem; }
+
+ion-content {
+  --background: #fff6f4;
+  padding: 12px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 0 18px 0;
+}
+
+.total-box {
+  background: #fffaf9;
+  border: 1px solid #e8b6c1;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.delete-btn {
+  font-weight: bold;
+  --border-radius: 8px;
+}
