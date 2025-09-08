@@ -1,0 +1,7 @@
+{
+  "name": "FichaMedica",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
