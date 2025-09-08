@@ -1,66 +1,48 @@
-.card {
-  background: #f8fafc;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 12px;
+.kpi-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 12px;
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .75rem;
-  margin-bottom: .5rem;
-}
-
 .kpi {
-  text-align: center;
+  background: #fff;
+  border: 1px solid #f0d3d8;
+  border-radius: 12px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
 }
-.kpi-number {
-  font-size: 22px;
-  font-weight: 700;
-  color: #0f172a;
-}
-.kpi-label {
-  font-size: 12px;
-  opacity: .7;
-}
-.today {
-  background: #e0f2fe;
-  color: #0c4a6e;
-  border: 1px solid #bae6fd;
+.kpi-label { font-size: 12px; color: #7b6c72; }
+.kpi-number { font-weight: 700; font-size: 18px; color: #8c5c66; }
+
+ion-badge.today {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fdecef;
+  color: #8c5c66;
+  border: 1px solid #f3c1ca;
 }
 
 .add-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: .5rem;
-  margin-bottom: .5rem;
+  display: flex;
+  gap: 10px;
+  margin: 14px 0;
+  align-items: center;
+}
+.add-row ion-input {
+  flex: 1;
+  --background: #fff;
+  --padding-start: 12px;
+  border: 1px solid #f0d3d8;
+  border-radius: 12px;
 }
 
 .day-actions {
   display: flex;
-  gap: .5rem;
-  margin-bottom: .25rem;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.pretty-list ion-item {
-  --inner-padding-end: 8px;
-}
-
-h3.done {
-  text-decoration: line-through;
-  opacity: .55;
-}
-
-/* Botón borrar rosado pastel */
 .danger-rose {
-  --background: #fce7f3;
-  --color: #9d174d;
-  --border-color: #f9a8d4;
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  --padding-start: 10px;
-  --padding-end: 10px;
+  --color: #b84a64;
 }

@@ -3,11 +3,50 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Pantalla 6</ion-title>
+    <ion-title>Hábitos – Progreso semanal</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p>Contenido de Pantalla 6</p>
-  <ion-button routerLink="/pantalla7">Ir a Pantalla 7</ion-button>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        Progreso de la semana
+        <ion-badge color="tertiary" style="margin-left:.5rem">{{ weeklyPercent }}</ion-badge>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-progress-bar [value]="weeklyProgress"></ion-progress-bar>
+
+      <div class="hint">
+        Hábitos totales: <strong>{{ totalHabits }}</strong>
+      </div>
+
+      <div class="actions">
+        <ion-button size="small" (click)="registrarHoy()">Registrar día de hoy</ion-button>
+        <ion-button size="small" fill="outline" color="medium" (click)="cargarDemoSemana()">
+          Cargar semana demo
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Detalle por día</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let d of week">
+          <ion-label>
+            <h3>{{ d.date | date:'EEEE d MMM' }}</h3>
+            <p>{{ d.completed }}/{{ d.total || totalHabits }} cumplidos</p>
+            <ion-progress-bar [value]="(d.total || totalHabits) > 0 ? d.completed/(d.total || totalHabits) : 0"></ion-progress-bar>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

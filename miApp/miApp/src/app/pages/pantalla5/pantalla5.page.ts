@@ -3,14 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton,
-  IonContent, IonList, IonItem, IonLabel, IonToggle, IonInput,
-  IonButton, IonBadge, IonProgressBar
+  IonContent, IonList, IonItem, IonLabel, IonToggle, IonButton,
+  IonBadge, IonProgressBar, IonInput
 } from '@ionic/angular/standalone';
 
-type Habit = { id: number; name: string; done: boolean };
-
-export const LS_HABITS_LIST = 'habits:list:v1';
-export const LS_HABITS_DONE_PREFIX = 'habits:done:'; // + YYYY-MM-DD
+type Habit = { id: number; name: string; doneToday: boolean };
+type DayEntry = { date: string; completed: number; total: number };
 
 @Component({
   selector: 'app-pantalla5',
@@ -20,112 +18,101 @@ export const LS_HABITS_DONE_PREFIX = 'habits:done:'; // + YYYY-MM-DD
   imports: [
     CommonModule, FormsModule,
     IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton,
-    IonContent, IonList, IonItem, IonLabel, IonToggle, IonInput,
-    IonButton, IonBadge, IonProgressBar
+    IonContent, IonList, IonItem, IonLabel, IonToggle, IonButton,
+    IonBadge, IonProgressBar, IonInput
   ],
 })
 export class Pantalla5Page implements OnInit {
 
-  habits: Habit[] = [];
+  // Datos
+  habitos: Habit[] = [];
+
+  // UI / KPIs
   newHabit = '';
-  todayId = this.dateId(new Date());
+  doneCount = 0;
+  total = 0;
+  progress = 0;            // 0..1 para <ion-progress-bar>
+  todayId = this.iso(new Date()); // YYYY-MM-DD
 
-  get total() { return this.habits.length; }
-  get doneCount() { return this.habits.filter(h => h.done).length; }
-  get progress() { return this.total ? this.doneCount / this.total : 0; }
+  ngOnInit() { this.load(); }
+  ionViewWillEnter() { this.load(); }
 
-  ngOnInit(): void {
-    this.loadList();
-    this.loadTodayStatus();
+  // --------- Carga / Guardado ----------
+  private load() {
+    this.habitos = this.getFromLS<Habit[]>('habitos') ?? [];
+    this.refreshStats();
   }
 
-  ionViewWillEnter(): void {
-    const now = this.dateId(new Date());
-    if (now !== this.todayId) {
-      this.todayId = now;
-      this.loadTodayStatus();
-    }
+  private save() {
+    this.setToLS('habitos', this.habitos);
+    this.refreshStats();
+    this.updateHistorial(); // 🔗 sincroniza Pantalla 6 y Principal
   }
 
-  // ---------- Persistencia ----------
-  private dateId(d: Date) {
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+  private refreshStats() {
+    this.total = this.habitos.length;
+    this.doneCount = this.habitos.filter(h => h.doneToday).length;
+    this.progress = this.total > 0 ? this.doneCount / this.total : 0;
   }
 
-  private saveList() {
-    const plain = this.habits.map(h => ({ id: h.id, name: h.name }));
-    localStorage.setItem(LS_HABITS_LIST, JSON.stringify(plain));
-    this.emitChanged();
-  }
-
-  private loadList() {
-    const raw = localStorage.getItem(LS_HABITS_LIST);
-    if (raw) {
-      const arr = JSON.parse(raw) as Array<{ id: number; name: string }>;
-      this.habits = arr.map(x => ({ id: x.id, name: x.name, done: false }));
-    } else {
-      // Lista por defecto
-      this.habits = [
-        { id: 1, name: 'Beber agua (8 vasos)', done: false },
-        { id: 2, name: 'Caminar 20 min', done: false },
-        { id: 3, name: 'Leer 10 min', done: false },
-        { id: 4, name: 'Estiramientos', done: false },
-      ];
-      this.saveList();
-    }
-  }
-
-  private saveTodayStatus() {
-    const key = LS_HABITS_DONE_PREFIX + this.todayId;
-    const doneIds = this.habits.filter(h => h.done).map(h => h.id);
-    localStorage.setItem(key, JSON.stringify(doneIds));
-    this.emitChanged();
-  }
-
-  private loadTodayStatus() {
-    const key = LS_HABITS_DONE_PREFIX + this.todayId;
-    const raw = localStorage.getItem(key);
-    const doneIds: number[] = raw ? JSON.parse(raw) : [];
-    this.habits = this.habits.map(h => ({ ...h, done: doneIds.includes(h.id) }));
-  }
-
-  // ---------- Acciones ----------
-  toggleHabit(h: Habit, value: boolean) {
-    h.done = value;
-    this.saveTodayStatus();
-  }
-
+  // --------- Acciones ----------
   addHabit() {
-    const name = (this.newHabit || '').trim();
+    const name = this.newHabit.trim();
     if (!name) return;
-    const id = this.habits.length ? Math.max(...this.habits.map(h => h.id)) + 1 : 1;
-    this.habits.push({ id, name, done: false });
+    this.habitos.push({ id: Date.now(), name, doneToday: false });
     this.newHabit = '';
-    this.saveList();
-    this.saveTodayStatus();
-  }
-
-  clearDay() {
-    this.habits.forEach(h => (h.done = false));
-    this.saveTodayStatus();
-  }
-
-  markAll() {
-    this.habits.forEach(h => (h.done = true));
-    this.saveTodayStatus();
+    this.save();
   }
 
   removeHabit(id: number) {
-    this.habits = this.habits.filter(h => h.id !== id);
-    this.saveList();
-    this.saveTodayStatus();
+    this.habitos = this.habitos.filter(h => h.id !== id);
+    this.save();
   }
 
-  // Notifica a la pantalla principal que algo cambió (para refrescar resumen)
-  private emitChanged() {
-    window.dispatchEvent(new CustomEvent('habits:changed'));
+  clearDay() {
+    this.habitos.forEach(h => h.doneToday = false);
+    this.save();
+  }
+
+  markAll() {
+    this.habitos.forEach(h => h.doneToday = true);
+    this.save();
+  }
+
+  toggleHabit(h: Habit, checked?: boolean) {
+    if (typeof checked === 'boolean') h.doneToday = checked;
+    else h.doneToday = !h.doneToday;
+    this.save();
+  }
+
+  // --------- Historial semanal (compartido con Pantalla 6 y Principal) ----------
+  private updateHistorial() {
+    const today = this.todayId;
+    const completed = this.doneCount;
+    const total = this.total;
+
+    let hist = this.getFromLS<DayEntry[]>('habitos_historial') ?? [];
+    // Mantén últimos 7 días
+    hist = hist
+      .filter(d => !!d?.date)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(-6); // conservar 6 previos; hoy lo agregamos
+
+    // Reemplazar entrada de hoy
+    hist = hist.filter(d => d.date !== today);
+    hist.push({ date: today, completed, total });
+    hist.sort((a, b) => a.date.localeCompare(b.date));
+
+    this.setToLS('habitos_historial', hist);
+  }
+
+  // --------- Helpers LS ----------
+  private iso(d: Date): string { return d.toISOString().slice(0, 10); }
+  private getFromLS<T>(key: string): T | null {
+    try { const raw = localStorage.getItem(key); return raw ? (JSON.parse(raw) as T) : null; }
+    catch { return null; }
+  }
+  private setToLS<T>(key: string, value: T) {
+    localStorage.setItem(key, JSON.stringify(value));
   }
 }

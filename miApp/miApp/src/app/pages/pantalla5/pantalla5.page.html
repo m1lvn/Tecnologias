@@ -3,36 +3,37 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Hábitos</ion-title>
+    <ion-title>Hábitos diarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <!-- Resumen / Progreso -->
-  <div class="card">
-    <div class="row">
-      <div class="kpi">
-        <div class="kpi-number">{{ doneCount }}</div>
-        <div class="kpi-label">cumplidos</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-number">{{ total }}</div>
-        <div class="kpi-label">totales</div>
-      </div>
-      <ion-badge class="today">{{ todayId }}</ion-badge>
+  <!-- KPIs del día -->
+  <div class="kpi-bar">
+    <div class="kpi">
+      <div class="kpi-label">Completados</div>
+      <div class="kpi-number">{{ doneCount }}</div>
     </div>
-    <ion-progress-bar [value]="progress"></ion-progress-bar>
+    <div class="kpi">
+      <div class="kpi-label">Totales</div>
+      <div class="kpi-number">{{ total }}</div>
+    </div>
+    <ion-badge class="today">{{ todayId }}</ion-badge>
   </div>
+
+  <ion-progress-bar [value]="progress"></ion-progress-bar>
 
   <!-- Agregar hábito -->
   <div class="add-row">
     <ion-input
-      placeholder="Nuevo hábito (ej: Meditar 5 min)"
+      placeholder="Nuevo hábito (ej. Beber agua)"
       [(ngModel)]="newHabit"
       [ngModelOptions]="{ standalone: true }">
     </ion-input>
-    <ion-button (click)="addHabit()" [disabled]="!newHabit.trim()">Agregar</ion-button>
+    <ion-button (click)="addHabit()" [disabled]="!newHabit.trim()">
+      Agregar
+    </ion-button>
   </div>
 
   <!-- Acciones rápidas del día -->
@@ -42,20 +43,16 @@
   </div>
 
   <!-- Lista de hábitos -->
-  <ion-list class="pretty-list">
-    <ion-item *ngFor="let h of habits" lines="inset">
-      <ion-label>
-        <h3 [class.done]="h.done">{{ h.name }}</h3>
-      </ion-label>
-
-      <ion-toggle slot="end" [checked]="h.done" (ionChange)="toggleHabit(h, $event.detail.checked)">
+  <ion-list>
+    <ion-item *ngFor="let h of habitos" lines="inset">
+      <ion-label>{{ h.name }}</ion-label>
+      <ion-toggle
+        [checked]="h.doneToday"
+        (ionChange)="toggleHabit(h, $event.detail.checked)">
       </ion-toggle>
-
-      <ion-buttons slot="end">
-        <ion-button fill="clear" class="danger-rose" (click)="removeHabit(h.id)">
-          Eliminar
-        </ion-button>
-      </ion-buttons>
+      <ion-button fill="clear" class="danger-rose" (click)="removeHabit(h.id)">
+        Eliminar
+      </ion-button>
     </ion-item>
   </ion-list>
 

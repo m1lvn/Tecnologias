@@ -5,3 +5,25 @@ ion-app, ion-router-outlet, ion-content {
 
 /* Si añadiste antes estilos que ponían un max-width o centraban el contenido,
    elimínalos para que no encojan la página. */
+
+   /* Botón demo con buen contraste sobre fondo claro */
+.demo-btn {
+  --background: var(--rose-200);
+  --color: #553946;                  /* texto más oscuro, legible */
+  --border-radius: 12px;
+  --box-shadow: none;
+  border: 1px solid var(--rose-300);
+  letter-spacing: .3px;
+}
+
+/* Hover/focus sutil */
+.demo-btn:hover {
+  filter: brightness(0.98);
+}
+
+/* Si alguna vez queda disabled, que también se lea bien */
+.demo-btn[disabled] {
+  --background: #f2e7e9;
+  --color: #9a7d87;
+  border-color: #ecd1d7;
+}
