@@ -89,3 +89,23 @@ ion-progress-bar.thick {
 }
 .note-item h3 { margin: 2px 0; font-weight: 600; }
 .notes-cta { margin-top: 10px; }
+
+/* Asegura scroll y deja aire al final para ver el botón */
+ion-content {
+  --background: var(--rose-50);
+  overflow-y: auto;
+  --padding-bottom: 24px;
+}
+
+/* contraste de barras y estilo actual */
+ion-progress-bar.thick {
+  display: block;
+  width: 100%;
+  height: 12px;
+  border-radius: 10px;
+  --background: #f1d7d7;
+  --progress-background: var(--rose-400); /* un pelín más fuerte para que “se vea que se llena” */
+  overflow: hidden;
+}
+
+/* (resto de estilos que ya tenías para las tarjetas / botones / chips) */
