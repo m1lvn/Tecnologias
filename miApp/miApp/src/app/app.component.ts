@@ -8,8 +8,8 @@ import {
   IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet
 } from '@ionic/angular/standalone';
 
-// Angular router directives para activar item seleccionado
-import { RouterLinkActive } from '@angular/router';
+// Angular router directives
+import { NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,7 @@ import { RouterLinkActive } from '@angular/router';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   imports: [
-    CommonModule, RouterLinkActive,
+    CommonModule,
     // Ionic
     IonApp, IonSplitPane, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent,
     IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet
@@ -37,14 +37,22 @@ export class AppComponent {
     { title: 'Pantalla 6', url: '/pantalla6',  icon: 'images-outline' },
     { title: 'Pantalla 7', url: '/pantalla7',  icon: 'medkit-outline' },
     { title: 'Pantalla 8', url: '/pantalla8',  icon: 'shield-checkmark-outline' },
-    { title: 'Pantalla 9', url: '/pantalla9',  icon: 'calendar-outline' },
+    { title: 'Pantalla 9', url: '/pantalla9',  icon: 'alarm-outline' },
     { title: 'Pantalla 10', url: '/pantalla10', icon: 'people-outline' },
     { title: 'Pantalla 11', url: '/pantalla11', icon: 'stats-chart-outline' },
     { title: 'Pantalla 12', url: '/pantalla12', icon: 'settings-outline' },
   ];
 
-  // Navegación programática (sin refresh)
-  go(url: string) {
-    this.router.navigateByUrl(url, { replaceUrl: false });
+  // Navegación con recarga forzada desde el sidebar
+  navigateWithRefresh(url: string) {
+    // Siempre forzar una recarga completa navegando a una ruta temporal
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([url]);
+    });
+  }
+
+  // Verificar si la ruta está activa para resaltar el item
+  isActiveRoute(url: string): boolean {
+    return this.router.url === url;
   }
 }

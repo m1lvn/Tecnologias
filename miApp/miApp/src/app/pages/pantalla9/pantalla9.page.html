@@ -3,11 +3,231 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Pantalla 9</ion-title>
+    <ion-title>Recordatorios & Alarmas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p>Contenido de Pantalla 9</p>
-  <ion-button routerLink="/pantalla10">Ir a Pantalla 10</ion-button>
+  
+  <!-- ===== CREAR NUEVO RECORDATORIO ===== -->
+  <ion-card class="create-card">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="add-outline"></ion-icon>
+        Nuevo Recordatorio
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Título -->
+      <ion-item>
+        <ion-label position="stacked">¿Qué quieres recordar?</ion-label>
+        <ion-input 
+          [(ngModel)]="nuevoTitulo"
+          placeholder="Ej: Tomar agua, Llamar al doctor..."
+          clear-input="true">
+        </ion-input>
+      </ion-item>
+
+      <!-- Fecha y Hora -->
+      <ion-item lines="full" class="datetime-row">
+        <ion-label>Fecha y hora</ion-label>
+        
+        <ion-datetime-button
+          slot="end"
+          datetime="recordatorioDatetime"
+          class="datetime-trigger">
+        </ion-datetime-button>
+
+        <ion-note slot="end" *ngIf="nuevaFechaHora" style="margin-right: 8px;">
+          {{ formatearFechaHora(nuevaFechaHora) }}
+        </ion-note>
+
+        <ion-button slot="end" fill="clear" size="small"
+                    (click)="nuevaFechaHora = undefined" *ngIf="nuevaFechaHora">
+          Limpiar
+        </ion-button>
+      </ion-item>
+
+      <!-- Botón Agregar -->
+      <div class="action-buttons">
+        <ion-button 
+          expand="block" 
+          (click)="agregarRecordatorio()" 
+          [disabled]="!nuevoTitulo.trim() || !nuevaFechaHora">
+          <ion-icon name="alarm-outline" slot="start"></ion-icon>
+          Crear Recordatorio
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Modal con el selector de fecha/hora -->
+  <ion-modal keepContentsMounted="true">
+    <ion-datetime
+      id="recordatorioDatetime"
+      presentation="date-time"
+      preferWheel="true"
+      [value]="nuevaFechaHora"
+      (ionChange)="onFechaHoraChange($event)"
+      [min]="fechaMinima"
+    ></ion-datetime>
+  </ion-modal>
+
+  <!-- ===== RECORDATORIOS PENDIENTES (VENCIDOS) ===== -->
+  <ion-card *ngIf="recordatoriosPendientes.length" class="urgent-card">
+    <ion-card-header>
+      <ion-card-title class="urgent-title">
+        <ion-icon name="notifications-outline"></ion-icon>
+        ¡Atención! Recordatorios vencidos
+        <ion-badge color="danger">{{ recordatoriosPendientes.length }}</ion-badge>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let recordatorio of recordatoriosPendientes" class="reminder-item vencido">
+          <ion-icon name="alarm" slot="start" color="danger"></ion-icon>
+          
+          <ion-label>
+            <h3>{{ recordatorio.titulo }}</h3>
+            <p class="time-info">{{ formatearFechaHora(recordatorio.fechaHora) }}</p>
+          </ion-label>
+
+          <div slot="end" class="item-actions">
+            <ion-button size="small" fill="solid" color="success" 
+                        (click)="completarRecordatorio(recordatorio)">
+              <ion-icon name="checkmark-circle"></ion-icon>
+            </ion-button>
+            <ion-button size="small" fill="outline" color="danger" 
+                        (click)="eliminarRecordatorio(recordatorio)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ===== RECORDATORIOS DE HOY ===== -->
+  <ion-card *ngIf="recordatoriosHoy.length" class="today-card">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="time-outline"></ion-icon>
+        Recordatorios de hoy
+        <ion-badge color="primary">{{ recordatoriosHoy.length }}</ion-badge>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let recordatorio of recordatoriosHoy" 
+                  class="reminder-item"
+                  [class.proximo]="estaProximoAVencer(recordatorio)">
+          
+          <ion-icon 
+            [name]="estaProximoAVencer(recordatorio) ? 'alarm' : 'alarm-outline'" 
+            slot="start" 
+            [color]="estaProximoAVencer(recordatorio) ? 'warning' : 'medium'">
+          </ion-icon>
+          
+          <ion-label>
+            <h3>{{ recordatorio.titulo }}</h3>
+            <p class="time-info">{{ formatearFechaHora(recordatorio.fechaHora) }}</p>
+            <ion-badge *ngIf="estaProximoAVencer(recordatorio)" color="warning" class="proximity-badge">
+              ¡Próximo!
+            </ion-badge>
+          </ion-label>
+
+          <div slot="end" class="item-actions">
+            <ion-checkbox 
+              [checked]="recordatorio.activo"
+              (ionChange)="toggleActivo(recordatorio)">
+            </ion-checkbox>
+            <ion-button size="small" fill="solid" color="success" 
+                        (click)="completarRecordatorio(recordatorio)">
+              <ion-icon name="checkmark-circle"></ion-icon>
+            </ion-button>
+            <ion-button size="small" fill="outline" color="danger" 
+                        (click)="eliminarRecordatorio(recordatorio)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ===== PRÓXIMOS RECORDATORIOS ===== -->
+  <ion-card *ngIf="recordatoriosProximos.length" class="upcoming-card">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="alarm-outline"></ion-icon>
+        Próximos recordatorios
+        <ion-badge color="tertiary">{{ recordatoriosProximos.length }}</ion-badge>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let recordatorio of recordatoriosProximos | slice:0:5" class="reminder-item">
+          <ion-icon name="alarm-outline" slot="start" color="medium"></ion-icon>
+          
+          <ion-label>
+            <h3>{{ recordatorio.titulo }}</h3>
+            <p class="time-info">{{ formatearFechaHora(recordatorio.fechaHora) }}</p>
+          </ion-label>
+
+          <div slot="end" class="item-actions">
+            <ion-checkbox 
+              [checked]="recordatorio.activo"
+              (ionChange)="toggleActivo(recordatorio)">
+            </ion-checkbox>
+            <ion-button size="small" fill="outline" color="danger" 
+                        (click)="eliminarRecordatorio(recordatorio)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+      </ion-list>
+      
+      <ion-note *ngIf="recordatoriosProximos.length > 5" class="more-items">
+        ... y {{ recordatoriosProximos.length - 5 }} más
+      </ion-note>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ===== ESTADO VACÍO ===== -->
+  <ion-card *ngIf="!recordatoriosHoy.length && !recordatoriosProximos.length && !recordatoriosPendientes.length" 
+            class="empty-state">
+    <ion-card-content class="empty-content">
+      <ion-icon name="alarm-outline" class="empty-icon"></ion-icon>
+      <h2>No tienes recordatorios</h2>
+      <p>Crea tu primer recordatorio para no olvidar nada importante</p>
+      
+      <ion-button (click)="cargarDatosDemo()" fill="outline" color="tertiary">
+        Cargar datos demo
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ===== ACCIONES GENERALES ===== -->
+  <ion-card *ngIf="recordatorios.length" class="actions-card">
+    <ion-card-content>
+      <div class="general-actions">
+        <ion-button (click)="cargarDatosDemo()" fill="outline" size="small">
+          Agregar demos
+        </ion-button>
+        <ion-button (click)="limpiarTodos()" fill="outline" color="danger" size="small">
+          Limpiar todos
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- ===== TOAST ===== -->
+  <ion-toast
+    [isOpen]="showToast"
+    [message]="toastMessage"
+    duration="2000"
+    position="bottom"
+    (didDismiss)="showToast = false">
+  </ion-toast>
+
 </ion-content>
