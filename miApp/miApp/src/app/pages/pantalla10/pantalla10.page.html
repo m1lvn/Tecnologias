@@ -3,11 +3,57 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Pantalla 10</ion-title>
+    <ion-title>Diario / Reflexiones</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p>Contenido de Pantalla 10</p>
-  <ion-button routerLink="/pantalla11">Ir a Pantalla 11</ion-button>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Entrada de hoy</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-label>Estado de ánimo</ion-label>
+        <div class="moods">
+          <button class="mood" [class.on]="mood==='😀'" (click)="mood='😀'">😀</button>
+          <button class="mood" [class.on]="mood==='🙂'" (click)="mood='🙂'">🙂</button>
+          <button class="mood" [class.on]="mood==='😐'" (click)="mood='😐'">😐</button>
+          <button class="mood" [class.on]="mood==='😕'" (click)="mood='😕'">😕</button>
+          <button class="mood" [class.on]="mood==='😢'" (click)="mood='😢'">😢</button>
+        </div>
+      </ion-item>
+
+      <ion-textarea
+        placeholder="Escribe aquí tu reflexión..."
+        autoGrow="true"
+        [(ngModel)]="text">
+      </ion-textarea>
+
+      <ion-button expand="block" [disabled]="!text.trim()" (click)="add()">
+        Guardar entrada
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Historial</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list *ngIf="entries.length; else empty">
+        <ion-item *ngFor="let e of entries">
+          <ion-label>
+            <h3>{{ e.mood }} — {{ e.date | date:'fullDate' }}</h3>
+            <p>{{ e.text }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ng-template #empty>
+        <p class="muted">Aún no hay entradas.</p>
+      </ng-template>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

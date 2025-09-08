@@ -14,8 +14,9 @@ export const routes: Routes = [
   { path: 'pantalla7',  loadComponent: () => import('./pages/pantalla7/pantalla7.page').then(m => m.Pantalla7Page) },
   { path: 'pantalla8',  loadComponent: () => import('./pages/pantalla8/pantalla8.page').then(m => m.Pantalla8Page) },
   { path: 'pantalla9',  loadComponent: () => import('./pages/pantalla9/pantalla9.page').then(m => m.Pantalla9Page) },
+  { path: 'pantalla10', loadComponent: () => import('./pages/pantalla10/pantalla10.page').then(m => m.Pantalla10Page) },
   // Pantalla que YA existe
-  { path: 'pantalla10', loadComponent: () => import('./pages/placeholder/placeholder.page').then(m => m.PlaceholderPage) },
+  
   { path: 'pantalla11', loadComponent: () => import('./pages/placeholder/placeholder.page').then(m => m.PlaceholderPage) },
   { path: 'pantalla12', loadComponent: () => import('./pages/placeholder/placeholder.page').then(m => m.PlaceholderPage) },
 
