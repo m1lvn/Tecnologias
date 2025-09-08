@@ -19,3 +19,11 @@ ion-label.done {
   text-decoration: line-through;
   color: gray;
 }
+
+.deadline-row {
+  --padding-start: 12px;
+}
+
+.deadline-trigger {
+  --button-color: var(--ion-color-primary);
+}

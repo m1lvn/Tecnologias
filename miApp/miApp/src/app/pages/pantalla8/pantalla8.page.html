@@ -9,51 +9,88 @@
 
 <ion-content class="ion-padding">
 
-  <!-- Botón para agregar nueva meta -->
-  <ion-card class="add-meta-card">
+  <!-- Crear nueva meta -->
+  <ion-card>
     <ion-item>
-      <ion-input placeholder="Nueva meta..." [(ngModel)]="newMeta"></ion-input>
-      <ion-button fill="solid" (click)="addMeta()" [disabled]="!newMeta.trim()">Agregar</ion-button>
+      <ion-input [(ngModel)]="newMetaTitle" placeholder="Nueva meta..."></ion-input>
+      <ion-button slot="end" (click)="addMeta()" fill="solid" color="primary">Agregar</ion-button>
     </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Fecha límite (opcional)</ion-label>
-      <ion-datetime presentation="date" [(ngModel)]="newMetaDeadline"></ion-datetime>
+
+    <!-- Fecha límite (opcional) -->
+    <ion-item lines="full" class="deadline-row">
+      <ion-label>Fecha límite (opcional)</ion-label>
+
+      <!-- Botón para abrir selector -->
+      <ion-datetime-button
+        slot="end"
+        datetime="deadlinePicker"
+        class="deadline-trigger">
+      </ion-datetime-button>
+
+      <!-- Mostrar fecha seleccionada -->
+      <ion-note slot="end" *ngIf="newMetaDeadline" style="margin-right: 8px;">
+        {{ newMetaDeadline | date:'mediumDate' }}
+      </ion-note>
+
+      <!-- Botón limpiar -->
+      <ion-button slot="end" fill="clear" size="small"
+                  (click)="clearDeadline()" *ngIf="newMetaDeadline">
+        Limpiar
+      </ion-button>
     </ion-item>
   </ion-card>
+
+  <!-- Modal con el selector en modo rueda -->
+  <ion-modal keepContentsMounted="true">
+    <ion-datetime
+      id="deadlinePicker"
+      presentation="date"
+      preferWheel="true"
+      [value]="newMetaDeadline"
+      (ionChange)="onDeadlineChange($event)"
+      show-default-buttons="true"
+      done-text="Listo"
+      cancel-text="Cancelar">
+    </ion-datetime>
+  </ion-modal>
 
   <!-- Lista de metas -->
-  <ion-card *ngFor="let meta of metas; let i = index" class="meta-card">
-    <ion-card-header>
-      <ion-card-title>{{ meta.titulo }}</ion-card-title>
-      <ion-card-subtitle *ngIf="meta.deadline">
-        ⏳ {{ getDaysRemaining(meta.deadline) }} días restantes
-      </ion-card-subtitle>
-    </ion-card-header>
+  <ion-list>
+    <ion-card *ngFor="let meta of metas; let i = index">
+      <ion-card-header>
+        <ion-card-title>{{ meta.titulo }}</ion-card-title>
+        <ion-card-subtitle *ngIf="meta.fechaLimite">
+          ⏳ {{ calcularDiasRestantes(meta.fechaLimite) }}
+        </ion-card-subtitle>
+      </ion-card-header>
 
-    <ion-card-content>
-      <!-- Progreso circular -->
-      <div class="progress-container">
-        <ion-progress-bar [value]="getProgress(meta)" color="success"></ion-progress-bar>
-        <p>{{ getCompleted(meta) }}/{{ meta.subtareas.length }} completadas</p>
-      </div>
+      <ion-card-content>
+        <div>
+          {{ contarSubtareasCompletadas(meta) }}/{{ meta.subtareas.length }} completadas
+        </div>
 
-      <!-- Subtareas -->
-      <ion-list>
-        <ion-item *ngFor="let sub of meta.subtareas; let j = index">
-          <ion-checkbox slot="start" [(ngModel)]="sub.done" (ionChange)="updateProgress(meta)"></ion-checkbox>
-          <ion-label [class.done]="sub.done">{{ sub.texto }}</ion-label>
-          <ion-button fill="clear" color="danger" slot="end" (click)="removeSubtask(meta, j)">✕</ion-button>
+        <ion-progress-bar
+          [value]="calcularProgreso(meta)"
+          color="secondary"
+          style="margin: 8px 0;">
+        </ion-progress-bar>
+
+        <ion-item lines="none">
+          <ion-input [(ngModel)]="meta.nuevaSubtarea" placeholder="Nueva subtarea..."></ion-input>
+          <ion-button fill="clear" (click)="addSubtarea(meta)">+</ion-button>
         </ion-item>
-        <ion-item>
-          <ion-input placeholder="Nueva subtarea..." [(ngModel)]="newSubtask[i]"></ion-input>
-          <ion-button fill="outline" (click)="addSubtask(meta, i)" [disabled]="!newSubtask[i]?.trim()">+</ion-button>
-        </ion-item>
-      </ion-list>
 
-      <!-- Botón borrar meta -->
-      <ion-button expand="block" fill="solid" (click)="removeMeta(i)">Eliminar meta</ion-button>
-    </ion-card-content>
-  </ion-card>
+        <ion-list>
+          <ion-item *ngFor="let sub of meta.subtareas">
+            <ion-checkbox slot="start" [(ngModel)]="sub.completada"></ion-checkbox>
+            <ion-label>{{ sub.titulo }}</ion-label>
+          </ion-item>
+        </ion-list>
 
+        <ion-button expand="block" color="danger" (click)="removeMeta(i)">
+          Eliminar Meta
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
 </ion-content>
-

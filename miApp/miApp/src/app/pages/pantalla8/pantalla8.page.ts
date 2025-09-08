@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { 
-  IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonMenuButton, 
-  IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, 
-  IonItem, IonInput, IonButton, IonList, IonLabel, IonCheckbox, IonProgressBar, IonDatetime
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonMenuButton,
+  IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
+  IonItem, IonInput, IonButton, IonList, IonLabel, IonCheckbox,
+  IonProgressBar, IonDatetime, IonDatetimeButton, IonModal, IonNote
 } from '@ionic/angular/standalone';
 
 @Component({
@@ -16,22 +17,25 @@ import {
     CommonModule, FormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonMenuButton,
     IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-    IonItem, IonInput, IonButton, IonList, IonLabel, IonCheckbox, IonProgressBar, IonDatetime
+    IonItem, IonInput, IonButton, IonList, IonLabel, IonCheckbox,
+    IonProgressBar, IonDatetime, IonDatetimeButton, IonModal, IonNote
   ]
 })
 export class Pantalla8Page {
-  metas: any[] = [];
-  newMeta: string = '';
+  newMetaTitle = '';
   newMetaDeadline: string | null = null;
-  newSubtask: { [key: number]: string } = {};
+
+  metas: any[] = [];
 
   addMeta() {
+    if (!this.newMetaTitle.trim()) return;
     this.metas.push({
-      titulo: this.newMeta,
-      deadline: this.newMetaDeadline,
-      subtareas: []
+      titulo: this.newMetaTitle,
+      fechaLimite: this.newMetaDeadline,
+      subtareas: [],
+      nuevaSubtarea: ''
     });
-    this.newMeta = '';
+    this.newMetaTitle = '';
     this.newMetaDeadline = null;
   }
 
@@ -39,31 +43,34 @@ export class Pantalla8Page {
     this.metas.splice(index, 1);
   }
 
-  addSubtask(meta: any, index: number) {
-    meta.subtareas.push({ texto: this.newSubtask[index], done: false });
-    this.newSubtask[index] = '';
+  addSubtarea(meta: any) {
+    if (!meta.nuevaSubtarea?.trim()) return;
+    meta.subtareas.push({ titulo: meta.nuevaSubtarea, completada: false });
+    meta.nuevaSubtarea = '';
   }
 
-  removeSubtask(meta: any, subIndex: number) {
-    meta.subtareas.splice(subIndex, 1);
+  contarSubtareasCompletadas(meta: any): number {
+    return meta.subtareas.filter((s: any) => s.completada).length;
   }
 
-  updateProgress(meta: any) {
-    // Se recalcula automáticamente con getProgress
+  calcularProgreso(meta: any): number {
+    if (!meta.subtareas.length) return 0;
+    return this.contarSubtareasCompletadas(meta) / meta.subtareas.length;
   }
 
-  getCompleted(meta: any): number {
-    return meta.subtareas.filter((s: any) => s.done).length;
+  calcularDiasRestantes(fecha: string): string {
+    const hoy = new Date();
+    const limite = new Date(fecha);
+    const diff = limite.getTime() - hoy.getTime();
+    const dias = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    return dias > 0 ? `${dias} días restantes` : 'Vencida';
   }
 
-  getProgress(meta: any): number {
-    return meta.subtareas.length > 0 ? this.getCompleted(meta) / meta.subtareas.length : 0;
+  onDeadlineChange(ev: CustomEvent) {
+    this.newMetaDeadline = (ev as any).detail?.value ?? null;
   }
 
-  getDaysRemaining(deadline: string): number {
-    const today = new Date();
-    const target = new Date(deadline);
-    const diff = target.getTime() - today.getTime();
-    return Math.ceil(diff / (1000 * 3600 * 24));
+  clearDeadline() {
+    this.newMetaDeadline = null;
   }
 }
