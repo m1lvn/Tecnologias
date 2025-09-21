@@ -1,17 +1,216 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="light" class="toolbar">
+    <ion-title color="primary">Fichas Médicas</ion-title>
+
+    <ion-buttons slot="end" class="top-links">
+      <ion-button fill="clear" routerLink="/tabs/tab2">Pacientes</ion-button>
+      <ion-button fill="clear" routerLink="/tabs/tab3">Consultas</ion-button>
+      <ion-button fill="clear">Exámenes</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="dashboard-bg">
+  <!-- ACCIONES RÁPIDAS (Carrusel sin IonSlides) -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Acciones rápidas</h2>
+      <div class="carousel-arrows">
+        <ion-button fill="outline" size="small" (click)="prev()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="outline" size="small" (click)="next()">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <!-- viewport -->
+    <div class="carousel" #carousel>
+      <!-- track -->
+      <div class="track" [style.transform]="transform">
+        <!-- Slide 1 -->
+        <div class="slide">
+          <div class="cards-row">
+            <ion-card class="action-card" button (click)="onBuscarMedico()">
+              <div class="icon-wrap"><ion-icon name="search-outline"></ion-icon></div>
+              <div class="action-text">
+                <p class="muted">Buscar</p>
+                <h3>Encontrar médico específico</h3>
+              </div>
+            </ion-card>
+
+            <ion-card class="action-card" button routerLink="/tabs/tab2">
+              <div class="icon-wrap"><ion-icon name="people-outline"></ion-icon></div>
+              <div class="action-text">
+                <p class="muted">Pacientes</p>
+                <h3>Entrar al listado</h3>
+              </div>
+            </ion-card>
+
+            <ion-card class="action-card" button (click)="onDisponibilidad()">
+              <div class="icon-wrap"><ion-icon name="funnel-outline"></ion-icon></div>
+              <div class="action-text">
+                <p class="muted">Agenda</p>
+                <h3>Ver disponibilidad</h3>
+              </div>
+            </ion-card>
+
+            <ion-card class="action-card" button (click)="onAgregarPaciente()">
+              <div class="icon-wrap"><ion-icon name="add-outline"></ion-icon></div>
+              <div class="action-text">
+                <p class="muted">Nuevo</p>
+                <h3>Agregar paciente</h3>
+              </div>
+            </ion-card>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+          <div class="cards-row">
+            <ion-card class="action-card" button (click)="onAbrirUltimaFicha()">
+              <div class="icon-wrap"><ion-icon name="document-text-outline"></ion-icon></div>
+              <div class="action-text">
+                <p class="muted">Expediente</p>
+                <h3>Abrir última ficha</h3>
+              </div>
+            </ion-card>
+
+            <ion-card class="action-card" button (click)="onVerAlertas()">
+              <div class="icon-wrap"><ion-icon name="warning-outline"></ion-icon></div>
+              <div class="action-text">
+                <p class="muted">Alertas</p>
+                <h3>Ver críticas</h3>
+              </div>
+            </ion-card>
+
+            <ion-card class="action-card" button (click)="onAgendar()">
+              <div class="icon-wrap"><ion-icon name="calendar-outline"></ion-icon></div>
+              <div class="action-text">
+                <p class="muted">Citas</p>
+                <h3>Agendar</h3>
+              </div>
+            </ion-card>
+
+            <ion-card class="action-card" button (click)="onNuevaOrden()">
+              <div class="icon-wrap"><ion-icon name="add-circle-outline"></ion-icon></div>
+              <div class="action-text">
+                <p class="muted">Crear</p>
+                <h3>Nueva orden</h3>
+              </div>
+            </ion-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- dots -->
+    <div class="dots">
+      <button [class.active]="activeIndex === 0" (click)="go(0)"></button>
+      <button [class.active]="activeIndex === 1" (click)="go(1)"></button>
+    </div>
+  </div>
+
+  <!-- KPIS + LISTAS LATERALES -->
+  <div class="section kpis-grid">
+    <ion-grid>
+      <ion-row>
+        <!-- KPIs -->
+        <ion-col size="12" sizeLg="8">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12" sizeMd="6" sizeLg="3" *ngFor="let k of kpis">
+                <ion-card class="kpi-card">
+                  <div class="kpi-title">{{k.title}}</div>
+                  <div class="kpi-value" [ngClass]="k.color">{{k.value}}</div>
+                  <div class="kpi-sub">{{k.sub}}</div>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-col>
+
+        <!-- Top alergias + Insumos -->
+        <ion-col size="12" sizeLg="4">
+          <ion-card class="side-card">
+            <div class="side-header">
+              <h3>Top alergias</h3>
+              <span class="muted">últimos 30 días</span>
+            </div>
+            <ion-list lines="none">
+              <ion-item *ngFor="let a of topAlergias">
+                <ion-label>{{a.nombre}}</ion-label>
+                <ion-badge color="danger" mode="ios">{{a.casos}}</ion-badge>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+
+          <ion-card class="side-card">
+            <div class="side-header">
+              <h3>Insumos más utilizados</h3>
+              <span class="muted">semana actual</span>
+            </div>
+            <ion-list lines="none">
+              <ion-item *ngFor="let i of insumos">
+                <ion-label>{{i.nombre}}</ion-label>
+                <ion-badge color="warning" mode="ios">{{i.cantidad}}</ion-badge>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- AGENDA + EXÁMENES + ACCESOS -->
+  <div class="section">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" sizeMd="4">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Próximas citas (hoy)</ion-card-title>
+            </ion-card-header>
+            <ion-list lines="full">
+              <ion-item *ngFor="let c of citas">
+                <ion-label>
+                  <strong>{{c.hora}}</strong> • {{c.paciente}}
+                </ion-label>
+                <ion-note slot="end" class="muted">{{c.medico}}</ion-note>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="4">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Exámenes pendientes</ion-card-title>
+            </ion-card-header>
+            <ion-list lines="full">
+              <ion-item *ngFor="let e of examenes">
+                <ion-label>{{e.nombre}} – {{e.paciente}}</ion-label>
+                <ion-badge color="warning" mode="ios">Pendiente</ion-badge>
+              </ion-item>
+            </ion-list>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="4">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Accesos rápidos</ion-card-title>
+            </ion-card-header>
+            <div class="quick-grid">
+              <ion-button fill="outline" routerLink="/tabs/tab2">Pacientes</ion-button>
+              <ion-button fill="outline" (click)="onDisponibilidad()">Disponibilidad</ion-button>
+              <ion-button fill="outline" (click)="onBuscarMedico()">Buscar médico</ion-button>
+              <ion-button fill="outline" (click)="onAgregarPaciente()">Agregar paciente</ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>
