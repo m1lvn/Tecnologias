@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonCard, IonCardContent, IonButton, IonIcon, IonBadge, IonItem, IonLabel, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, IonCard, IonCardContent, IonButton, IonIcon, IonBadge, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -21,7 +21,7 @@ interface Paciente {
   imports: [
     IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar, 
     IonCard, IonCardContent, IonButton, IonIcon, IonBadge, 
-    IonItem, IonLabel, IonGrid, IonRow, IonCol,
+    IonGrid, IonRow, IonCol,
     CommonModule, FormsModule
   ]
 })
