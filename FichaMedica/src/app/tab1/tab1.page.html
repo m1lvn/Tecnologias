@@ -17,9 +17,7 @@
                 <ion-card-subtitle>{{ s.title }}</ion-card-subtitle>
                 <ion-icon [name]="s.icon"></ion-icon>
               </div>
-              <ion-card-title class="value">
-                {{ s.value }}
-              </ion-card-title>
+              <ion-card-title class="value">{{ s.value }}</ion-card-title>
               <div class="sub">{{ s.sub }}</div>
             </ion-card-header>
           </ion-card>
@@ -38,7 +36,6 @@
                 <span>Alertas Clínicas</span>
               </div>
             </ion-card-header>
-
             <ion-card-content>
               <ion-list class="alert-list">
                 <ion-item class="alert-item" lines="none" *ngFor="let a of alerts">
@@ -71,7 +68,6 @@
                 <span>Pacientes Recientes</span>
               </div>
             </ion-card-header>
-
             <ion-card-content>
               <ion-list class="recent-list">
                 <ion-item class="recent-item" lines="none" *ngFor="let r of recent">
@@ -100,6 +96,31 @@
         </ion-col>
       </ion-row>
     </ion-grid>
+
+    <!-- ========================= -->
+    <!-- Accesos rápidos (NUEVO)  -->
+    <!-- ========================= -->
+    <ion-card class="panel quick-card">
+      <ion-card-header class="panel-head">
+        <div class="panel-title">
+          <ion-icon name="flash-outline"></ion-icon>
+          <span>Accesos Rápidos</span>
+        </div>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-grid class="qa-grid">
+          <ion-row class="qa-row" wrap="wrap">
+            <ion-col size="12" sizeMd="6" sizeLg="3" *ngFor="let q of quick; let i = index" class="qa-item">
+              <button class="qa-btn" [class.primary]="i===0" (click)="onQuick(q.key)">
+                <ion-icon [name]="q.icon"></ion-icon>
+                <div class="qa-text">{{ q.label }}</div>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
 
   </div>
 </ion-content>
