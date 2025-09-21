@@ -1,0 +1,56 @@
+:host {
+  --card-radius: 16px;
+}
+
+ion-card {
+  border-radius: var(--card-radius);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.composer ion-textarea {
+  min-height: 72px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+}
+
+.composer-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.post .title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.post .muted {
+  color: var(--ion-color-medium);
+  font-size: 12px;
+}
+
+.post .text {
+  white-space: pre-wrap;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--ion-color-primary);
+  color: white;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.mt8 { margin-top: 8px; }
