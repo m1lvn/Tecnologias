@@ -1,105 +1,104 @@
-<ion-header collapse="condense">
-  <ion-toolbar>
-    <ion-title size="large">Muro</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="ion-padding">
-
-  <!-- Composer básico -->
-  <ion-card class="composer">
-    <ion-card-content>
-      <ion-textarea
-        autoGrow
-        placeholder="Escribe una actualización…"
-        [(ngModel)]="postText">
-      </ion-textarea>
-
-      <div class="composer-actions">
-        <ion-button (click)="publish()">
-          <ion-icon slot="start" name="send-outline"></ion-icon>
-          Publicar
-        </ion-button>
+<ion-content [fullscreen]="true" class="patients-content">
+  <!-- Header del Sistema (igual que Tab1) -->
+  <div class="dashboard-header">
+    <h1 class="main-title">Sistema Médico</h1>
+    <p class="subtitle">Gestión integral de fichas médicas</p>
+    
+    <!-- Navegación de tabs del dashboard -->
+    <div class="dashboard-tabs">
+      <div class="tab-item" (click)="onTabClick('Dashboard')">
+        <ion-icon name="pulse"></ion-icon>
+        <span>Dashboard</span>
       </div>
-    </ion-card-content>
-  </ion-card>
-
-  <!-- Feed -->
-  <ion-card class="post" *ngFor="let p of posts; trackBy: trackByPost">
-    <ion-item lines="none">
-      <ion-avatar slot="start">
-        <div class="avatar">{{ p.authorName[0] }}</div>
-      </ion-avatar>
-      <ion-label>
-        <div class="title">
-          <strong>{{ p.authorName }}</strong>
-          <ion-badge [color]="p.authorRole==='doctor' ? 'primary' : 'success'">
-            {{ p.authorRole==='doctor' ? 'Médico' : 'Paciente' }}
-          </ion-badge>
-        </div>
-        <div class="muted">{{ p.createdAt | date:'short' }}</div>
-      </ion-label>
-    </ion-item>
-
-    <ion-card-content>
-      <div class="text">{{ p.text }}</div>
-
-      <div class="actions">
-        <ion-button fill="clear" size="small" (click)="toggleLike(p)">
-          <ion-icon [name]="p.liked ? 'thumbs-up' : 'thumbs-up-outline'"></ion-icon>
-          <ion-note>{{ p.likes }}</ion-note>
-        </ion-button>
-
-        <ion-button fill="clear" size="small" (click)="openComments(p)">
-          <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-          <ion-note>{{ p.comments.length }}</ion-note>
-        </ion-button>
+      <div class="tab-item active">
+        <ion-icon name="people"></ion-icon>
+        <span>Pacientes</span>
       </div>
-    </ion-card-content>
-  </ion-card>
+      <div class="tab-item" (click)="onTabClick('Fichas')">
+        <ion-icon name="document-text"></ion-icon>
+        <span>Fichas</span>
+      </div>
+      <div class="tab-item" (click)="onTabClick('Medicacion')">
+        <ion-icon name="medical"></ion-icon>
+        <span>Medicación</span>
+      </div>
+    </div>
+  </div>
 
-  <!-- Modal simple de comentarios -->
-  <ion-modal [isOpen]="!!showCommentsFor">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Comentarios</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="closeComments()">Cerrar</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
+  <!-- Sección Lista de Pacientes -->
+  <div class="patients-section">
+    <div class="section-header">
+      <h2 class="section-title">
+        <ion-icon name="people" class="title-icon blue"></ion-icon>
+        Lista de Pacientes
+      </h2>
+    </div>
 
-      <ion-content class="ion-padding">
-        <ion-list *ngIf="showCommentsFor as post">
-          <ion-item lines="none">
-            <ion-label>
-              <strong>{{ post.authorName }}</strong>
-              <div class="muted">{{ post.createdAt | date:'short' }}</div>
-              <div class="mt8">{{ post.text }}</div>
-            </ion-label>
-          </ion-item>
+    <!-- Buscador -->
+    <div class="search-container">
+      <ion-searchbar
+        [(ngModel)]="searchTerm"
+        (ionInput)="onSearchChange($event)"
+        placeholder="Buscar por nombre, RUT o diagnóstico..."
+        showClearButton="focus"
+        debounce="300">
+      </ion-searchbar>
+    </div>
 
-          <ion-item *ngFor="let c of post.comments; trackBy: trackByComment">
-            <ion-avatar slot="start">
-              <div class="avatar">{{ c.authorName[0] }}</div>
-            </ion-avatar>
-            <ion-label>
-              <strong>{{ c.authorName }}</strong>
-              <div class="muted">{{ c.createdAt | date:'short' }}</div>
-              <div class="mt8">{{ c.text }}</div>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-content>
+    <!-- Lista de Pacientes -->
+    <div class="patients-list">
+      <ion-card class="patient-card" *ngFor="let patient of filteredPatients; trackBy: trackByPatient" (click)="onViewPatient(patient)">
+        <ion-card-content>
+          <div class="patient-header">
+            <div class="patient-info">
+              <h3 class="patient-name">{{patient.name}}</h3>
+              <div class="patient-details">
+                <span class="patient-rut">
+                  <ion-icon name="person-outline"></ion-icon>
+                  RUT: {{patient.rut}}
+                </span>
+                <span class="patient-age">{{patient.age}} años</span>
+                <span class="patient-room">
+                  <ion-icon name="location-outline"></ion-icon>
+                  {{patient.room}}
+                </span>
+              </div>
+            </div>
+            <div class="patient-status">
+              <ion-chip [color]="patient.statusColor">{{patient.status}}</ion-chip>
+            </div>
+          </div>
 
-      <ion-footer class="ion-padding">
-        <ion-item lines="full">
-          <ion-input placeholder="Escribe un comentario…" [(ngModel)]="newCommentText"></ion-input>
-          <ion-button slot="end" (click)="addComment()">Enviar</ion-button>
-        </ion-item>
-      </ion-footer>
-    </ng-template>
-  </ion-modal>
+          <div class="patient-diagnosis">
+            <span class="diagnosis-label">Diagnóstico Principal:</span>
+            <p class="diagnosis-text">{{patient.diagnosis}}</p>
+          </div>
 
+          <div class="patient-footer">
+            <div class="patient-contact">
+              <span class="contact-info">
+                <ion-icon name="call-outline"></ion-icon>
+                {{patient.phone}}
+              </span>
+              <span class="last-visit">
+                <ion-icon name="calendar-outline"></ion-icon>
+                Última visita: {{formatDate(patient.lastVisit)}}
+              </span>
+            </div>
+            <ion-button fill="clear" color="primary" (click)="onViewPatient(patient); $event.stopPropagation()">
+              <ion-icon name="eye-outline" slot="start"></ion-icon>
+              Ver Ficha
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Estado vacío cuando no hay resultados -->
+    <div class="empty-state" *ngIf="filteredPatients.length === 0">
+      <ion-icon name="search-outline" class="empty-icon"></ion-icon>
+      <h3>No se encontraron pacientes</h3>
+      <p>Intenta con otros términos de búsqueda</p>
+    </div>
+  </div>
 </ion-content>
