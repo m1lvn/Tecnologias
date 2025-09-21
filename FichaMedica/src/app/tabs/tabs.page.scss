@@ -1,1 +1,77 @@
+/* Toolbar transparente para que no agregue borde */
+.toolbar-clear {
+  --background: transparent;
+  --border-width: 0;
+}
 
+/* Contenedor central del header */
+.page-head {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 20px 12px;
+}
+
+.page-head h1 {
+  margin: 0 0 4px;
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1.2;
+  color: var(--color-primary-600, #1f5ed1);
+}
+
+.page-head p {
+  margin: 0 0 12px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Barra de tabs tipo píldora */
+.top-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid var(--card-border, #e7edf3);
+  border-radius: 12px;
+  box-shadow: var(--card-shadow, 0 8px 24px rgba(31,41,55,.06));
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Botones de tab */
+.tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  color: #475569;
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 500;
+  transition: border-color .15s, background-color .15s, color .15s;
+}
+
+.tab-btn ion-icon { font-size: 18px; opacity: .9; }
+
+/* Hover y focus */
+.tab-btn:hover,
+.tab-btn:focus-visible {
+  background: #f7faff;
+  border-color: #e7eefc;
+}
+
+/* Tab activa */
+.tab-btn.active {
+  background: #eef5ff;            /* celeste */
+  border-color: #dfe8ff;
+  color: var(--color-primary-600, #1f5ed1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .page-head { padding: 16px 12px 6px; }
+  .top-tabs { border-radius: 10px; padding: 6px; }
+  .tab-btn { padding: 8px 12px; gap: 6px; }
+}
