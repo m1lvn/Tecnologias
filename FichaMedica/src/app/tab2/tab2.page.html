@@ -13,5 +13,89 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Pacientes page"></app-explore-container>
+  <div class="content-container">
+    <!-- Título con icono -->
+    <div class="page-header">
+      <ion-icon name="people" class="header-icon"></ion-icon>
+      <h2>Lista de Pacientes</h2>
+    </div>
+
+    <!-- Buscador -->
+    <ion-searchbar 
+      [(ngModel)]="searchText"
+      placeholder="Buscar por nombre, RUT o diagnóstico..."
+      showClearButton="focus"
+      class="custom-searchbar">
+    </ion-searchbar>
+
+    <!-- Lista de pacientes -->
+    <div class="patients-list">
+      <ion-card *ngFor="let paciente of pacientesFiltrados" class="patient-card">
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <!-- Información principal -->
+              <ion-col size="8">
+                <div class="patient-header">
+                  <h3 class="patient-name">{{ paciente.nombre }}</h3>
+                  <ion-badge 
+                    [color]="getEstadoColor(paciente.estado)" 
+                    class="status-badge">
+                    {{ paciente.estado }}
+                  </ion-badge>
+                </div>
+                
+                <div class="patient-details">
+                  <div class="detail-row">
+                    <ion-icon name="person" class="detail-icon"></ion-icon>
+                    <span>RUT: {{ paciente.rut }} • {{ paciente.edad }} años</span>
+                  </div>
+                  
+                  <div class="detail-row">
+                    <ion-icon name="location" class="detail-icon"></ion-icon>
+                    <span>{{ paciente.habitacion }}</span>
+                  </div>
+                </div>
+
+                <div class="diagnosis">
+                  <strong>Diagnóstico Principal:</strong>
+                  <p>{{ paciente.diagnosticoPrincipal }}</p>
+                </div>
+
+                <div class="contact-info">
+                  <div class="contact-row">
+                    <ion-icon name="call" class="contact-icon"></ion-icon>
+                    <span>{{ paciente.telefono }}</span>
+                  </div>
+                  <div class="contact-row">
+                    <ion-icon name="calendar" class="contact-icon"></ion-icon>
+                    <span>Última visita: {{ paciente.ultimaVisita }}</span>
+                  </div>
+                </div>
+              </ion-col>
+
+              <!-- Botón Ver Ficha -->
+              <ion-col size="4" class="action-col">
+                <ion-button 
+                  fill="solid" 
+                  color="primary" 
+                  size="default"
+                  class="view-file-btn"
+                  (click)="verFicha(paciente)">
+                  <ion-icon name="eye" slot="start"></ion-icon>
+                  Ver Ficha
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Mensaje cuando no hay resultados -->
+    <div *ngIf="pacientesFiltrados.length === 0" class="no-results">
+      <ion-icon name="search" class="no-results-icon"></ion-icon>
+      <p>No se encontraron pacientes con esos criterios de búsqueda.</p>
+    </div>
+  </div>
 </ion-content>
