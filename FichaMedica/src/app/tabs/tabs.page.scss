@@ -4,8 +4,15 @@
   --border-width: 0;
 }
 
-/* Contenedor central del header */
+/* Contenedor central del header FIJO */
 .page-head {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border-bottom: 1px solid var(--card-border, #e7edf3);
   max-width: 1120px;
   margin: 0 auto;
   padding: 24px 20px 12px;
@@ -23,6 +30,11 @@
   margin: 0 0 12px;
   color: #6b7280;
   font-size: 14px;
+}
+
+/* Contenedor de las tabs con margen para el header fijo */
+ion-tabs {
+  margin-top: 160px; /* Espacio para el header fijo */
 }
 
 /* Barra de tabs tipo píldora */
@@ -71,7 +83,18 @@
 
 /* Responsive */
 @media (max-width: 640px) {
-  .page-head { padding: 16px 12px 6px; }
-  .top-tabs { border-radius: 10px; padding: 6px; }
-  .tab-btn { padding: 8px 12px; gap: 6px; }
+  .page-head { 
+    padding: 16px 12px 6px; 
+  }
+  .top-tabs { 
+    border-radius: 10px; 
+    padding: 6px; 
+  }
+  .tab-btn { 
+    padding: 8px 12px; 
+    gap: 6px; 
+  }
+  ion-tabs {
+    margin-top: 140px; /* Menos margen en móvil */
+  }
 }

@@ -44,3 +44,15 @@
 html, body, ion-app, ion-content {
   background: var(--ion-background-color);
 }
+
+/* Permitir scroll natural en todos los ion-content */
+ion-content {
+  --overflow: auto;
+}
+
+/* Asegurar que no haya altura fija que bloquee el scroll */
+.dashboard .container,
+.patients-section {
+  height: auto;
+  min-height: auto;
+}

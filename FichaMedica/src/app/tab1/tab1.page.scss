@@ -59,7 +59,8 @@
   border-radius: 16px;
   box-shadow: var(--card-shadow);
   padding: 16px;
-  height: 100%;
+  height: auto;
+  min-height: 120px;
 }
 .kpi-head {
   display: flex; align-items: center; justify-content: space-between;

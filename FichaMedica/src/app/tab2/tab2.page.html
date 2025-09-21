@@ -1,29 +1,5 @@
-<ion-content [fullscreen]="true" class="patients-content">
-  <!-- Header del Sistema (igual que Tab1) -->
-  <div class="dashboard-header">
-    <h1 class="main-title">Sistema Médico</h1>
-    <p class="subtitle">Gestión integral de fichas médicas</p>
-    
-    <!-- Navegación de tabs del dashboard -->
-    <div class="dashboard-tabs">
-      <div class="tab-item" (click)="onTabClick('Dashboard')">
-        <ion-icon name="pulse"></ion-icon>
-        <span>Dashboard</span>
-      </div>
-      <div class="tab-item active">
-        <ion-icon name="people"></ion-icon>
-        <span>Pacientes</span>
-      </div>
-      <div class="tab-item" (click)="onTabClick('Fichas')">
-        <ion-icon name="document-text"></ion-icon>
-        <span>Fichas</span>
-      </div>
-      <div class="tab-item" (click)="onTabClick('Medicacion')">
-        <ion-icon name="medical"></ion-icon>
-        <span>Medicación</span>
-      </div>
-    </div>
-  </div>
+<ion-content [fullscreen]="true" [scrollEvents]="true" class="patients-content">
+
 
   <!-- Sección Lista de Pacientes -->
   <div class="patients-section">
