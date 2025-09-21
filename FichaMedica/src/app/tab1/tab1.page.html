@@ -1,130 +1,17 @@
-<ion-content [fullscreen]="true" [scrollEvents]="true" class="dashboard">
-  <div class="container">
-    <!-- KPIs -->
-    <ion-grid class="kpis">
-      <ion-row class="ion-justify-content-between">
-        <ion-col size="12" sizeMd="6" sizeLg="3">
-          <div class="kpi-card">
-            <div class="kpi-head">
-              <span>Pacientes Activos</span>
-              <ion-icon name="people-circle-outline"></ion-icon>
-            </div>
-            <div class="kpi-value">42</div>
-            <div class="kpi-sub">28 hospitalizados, 14 ambulatorios</div>
-          </div>
-        </ion-col>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Dashboard
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
-        <ion-col size="12" sizeMd="6" sizeLg="3">
-          <div class="kpi-card">
-            <div class="kpi-head">
-              <span>Consultas del Día</span>
-              <ion-icon name="calendar-outline"></ion-icon>
-            </div>
-            <div class="kpi-value">18</div>
-            <div class="kpi-sub">Cardiología: 6, Medicina: 8, Pediatría: 4</div>
-          </div>
-        </ion-col>
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Dashboard</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-        <ion-col size="12" sizeMd="6" sizeLg="3">
-          <div class="kpi-card">
-            <div class="kpi-head">
-              <span>Boxes Disponibles</span>
-              <ion-icon name="bed-outline"></ion-icon>
-            </div>
-            <div class="kpi-value">3/8</div>
-            <div class="kpi-sub">5 boxes ocupados</div>
-          </div>
-        </ion-col>
-
-        <ion-col size="12" sizeMd="6" sizeLg="3">
-          <div class="kpi-card">
-            <div class="kpi-head">
-              <span>Alertas Activas</span>
-              <ion-icon name="alert-circle-outline"></ion-icon>
-            </div>
-            <div class="kpi-value">7</div>
-            <div class="kpi-sub">2 críticas, 5 moderadas</div>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-grid class="panels">
-      <ion-row>
-        <!-- Alertas clínicas -->
-        <ion-col size="12" sizeLg="6">
-          <div class="panel">
-            <div class="panel-title">
-              <ion-icon name="warning-outline"></ion-icon>
-              <span>Alertas Clínicas</span>
-            </div>
-
-            <div class="alert-item">
-              <div class="info">
-                <div class="name">María González</div>
-                <div class="desc">Alergia severa a penicilina</div>
-                <div class="meta"><ion-icon name="time-outline"></ion-icon> 10:30 AM</div>
-              </div>
-              <span class="badge badge-critico">Crítico</span>
-            </div>
-
-            <div class="alert-item">
-              <div class="info">
-                <div class="name">Juan Pérez</div>
-                <div class="desc">Resultados de laboratorio críticos</div>
-                <div class="meta"><ion-icon name="time-outline"></ion-icon> 09:15 AM</div>
-              </div>
-              <span class="badge badge-critico">Crítico</span>
-            </div>
-
-            <div class="alert-item">
-              <div class="info">
-                <div class="name">Ana López</div>
-                <div class="desc">Signos vitales alterados</div>
-                <div class="meta"><ion-icon name="time-outline"></ion-icon> 11:45 AM</div>
-              </div>
-              <span class="badge badge-moderado">Moderado</span>
-            </div>
-          </div>
-        </ion-col>
-
-        <!-- Pacientes recientes -->
-        <ion-col size="12" sizeLg="6">
-          <div class="panel">
-            <div class="panel-title">
-              <ion-icon name="trending-up-outline"></ion-icon>
-              <span>Pacientes Recientes</span>
-            </div>
-
-            <div class="patient-item">
-              <div class="info">
-                <div class="name">Carlos Ruiz</div>
-                <div class="desc">Hab. 203</div>
-                <div class="meta"><ion-icon name="time-outline"></ion-icon> Hace 15 min</div>
-              </div>
-              <span class="badge badge-estable">Estable</span>
-            </div>
-
-            <div class="patient-item">
-              <div class="info">
-                <div class="name">Elena Morales</div>
-                <div class="desc">Box 4</div>
-                <div class="meta"><ion-icon name="time-outline"></ion-icon> Hace 30 min</div>
-              </div>
-              <span class="badge badge-moderado">En observación</span>
-            </div>
-
-            <div class="patient-item">
-              <div class="info">
-                <div class="name">Roberto Silva</div>
-                <div class="desc">Hab. 105</div>
-                <div class="meta"><ion-icon name="time-outline"></ion-icon> Hace 5 min</div>
-              </div>
-              <span class="badge badge-critico">Crítico</span>
-            </div>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
+  <app-explore-container name="Dashboard page"></app-explore-container>
 </ion-content>

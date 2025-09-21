@@ -35,24 +35,3 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
-
-/* Fuerza tema claro en toda la app */
-:root {
-  color-scheme: light;
-}
-
-html, body, ion-app, ion-content {
-  background: var(--ion-background-color);
-}
-
-/* Permitir scroll natural en todos los ion-content */
-ion-content {
-  --overflow: auto;
-}
-
-/* Asegurar que no haya altura fija que bloquee el scroll */
-.dashboard .container,
-.patients-section {
-  height: auto;
-  min-height: auto;
-}

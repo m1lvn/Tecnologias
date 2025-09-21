@@ -7,10 +7,6 @@ describe('Tab4Page', () => {
   let fixture: ComponentFixture<Tab4Page>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Tab4Page],
-    }).compileComponents();
-
     fixture = TestBed.createComponent(Tab4Page);
     component = fixture.componentInstance;
     fixture.detectChanges();

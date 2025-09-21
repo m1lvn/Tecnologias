@@ -1,40 +1,23 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar class="toolbar-clear"></ion-toolbar>
-</ion-header>
-
-<!-- HEADER FIJO -->
-<div class="page-head">
-  <h1>Sistema Médico</h1>
-  <p>Gestión integral de fichas médicas</p>
-
-  <nav class="top-tabs" aria-label="Navegación principal">
-    <a class="tab-btn"
-       routerLink="/tabs/tab1"
-       routerLinkActive="active"
-       [routerLinkActiveOptions]="{ exact: true }">
-      <ion-icon name="pulse-outline"></ion-icon>
-      <span>Dashboard</span>
-    </a>
-
-    <a class="tab-btn" routerLink="/tabs/tab2" routerLinkActive="active">
-      <ion-icon name="people-outline"></ion-icon>
-      <span>Pacientes</span>
-    </a>
-
-    <a class="tab-btn" routerLink="/tabs/tab3" routerLinkActive="active">
-      <ion-icon name="document-text-outline"></ion-icon>
-      <span>Fichas</span>
-    </a>
-
-    <a class="tab-btn" routerLink="/tabs/tab4" routerLinkActive="active">
-      <ion-icon name="link-outline"></ion-icon>
-      <span>Medicación</span>
-    </a>
-  </nav>
-</div>
-<!-- /HEADER FIJO -->
-
-<!-- Contenido de las tabs -->
 <ion-tabs>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="tab1" href="/tabs/tab1">
+      <ion-icon aria-hidden="true" name="analytics"></ion-icon>
+      <ion-label>Dashboard</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab2" href="/tabs/tab2">
+      <ion-icon aria-hidden="true" name="people"></ion-icon>
+      <ion-label>Pacientes</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab3" href="/tabs/tab3">
+      <ion-icon aria-hidden="true" name="document-text"></ion-icon>
+      <ion-label>Fichas</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab4" href="/tabs/tab4">
+      <ion-icon aria-hidden="true" name="medical"></ion-icon>
+      <ion-label>Medicación</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
 </ion-tabs>

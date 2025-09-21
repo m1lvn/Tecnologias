@@ -1,6 +1,17 @@
-<ion-content [fullscreen]="true" [scrollEvents]="true">
-  <div class="container">
-    <h2>Medicación e Indicaciones</h2>
-    <p>Aquí irá el contenido de medicación e indicaciones.</p>
-  </div>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Medicación
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Medicación</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <app-explore-container name="Medicación page"></app-explore-container>
 </ion-content>

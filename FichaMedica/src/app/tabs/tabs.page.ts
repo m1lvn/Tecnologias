@@ -1,31 +1,18 @@
-import { Component } from '@angular/core';
-import {
-  IonContent,
-  IonHeader,
-  IonToolbar,
-  IonTabs,
-  IonRouterOutlet,
-  IonIcon,
-} from '@ionic/angular/standalone';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { Component, EnvironmentInjector, inject } from '@angular/core';
+import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { triangle, ellipse, square } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
-  templateUrl: './tabs.page.html',
-  styleUrls: ['./tabs.page.scss'],
-  standalone: true,
-  // ⬇️ IMPORTA AQUÍ TODOS LOS WEB COMPONENTS/DIRECTIVAS QUE USAS EN EL HTML
-  imports: [
-    IonHeader,
-    IonToolbar,
-    IonContent,
-    IonTabs,
-    IonRouterOutlet,
-    IonIcon,
-    RouterLink,
-    RouterLinkActive,
-    NgIf,
-  ],
+  templateUrl: 'tabs.page.html',
+  styleUrls: ['tabs.page.scss'],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
 })
-export class TabsPage {}
+export class TabsPage {
+  public environmentInjector = inject(EnvironmentInjector);
+
+  constructor() {
+    addIcons({ triangle, ellipse, square });
+  }
+}

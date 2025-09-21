@@ -1,80 +1,17 @@
-<ion-content [fullscreen]="true" [scrollEvents]="true" class="patients-content">
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Pacientes
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Pacientes</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-  <!-- Sección Lista de Pacientes -->
-  <div class="patients-section">
-    <div class="section-header">
-      <h2 class="section-title">
-        <ion-icon name="people" class="title-icon blue"></ion-icon>
-        Lista de Pacientes
-      </h2>
-    </div>
-
-    <!-- Buscador -->
-    <div class="search-container">
-      <ion-searchbar
-        [(ngModel)]="searchTerm"
-        (ionInput)="onSearchChange($event)"
-        placeholder="Buscar por nombre, RUT o diagnóstico..."
-        showClearButton="focus"
-        debounce="300">
-      </ion-searchbar>
-    </div>
-
-    <!-- Lista de Pacientes -->
-    <div class="patients-list">
-      <ion-card class="patient-card" *ngFor="let patient of filteredPatients; trackBy: trackByPatient" (click)="onViewPatient(patient)">
-        <ion-card-content>
-          <div class="patient-header">
-            <div class="patient-info">
-              <h3 class="patient-name">{{patient.name}}</h3>
-              <div class="patient-details">
-                <span class="patient-rut">
-                  <ion-icon name="person-outline"></ion-icon>
-                  RUT: {{patient.rut}}
-                </span>
-                <span class="patient-age">{{patient.age}} años</span>
-                <span class="patient-room">
-                  <ion-icon name="location-outline"></ion-icon>
-                  {{patient.room}}
-                </span>
-              </div>
-            </div>
-            <div class="patient-status">
-              <ion-chip [color]="patient.statusColor">{{patient.status}}</ion-chip>
-            </div>
-          </div>
-
-          <div class="patient-diagnosis">
-            <span class="diagnosis-label">Diagnóstico Principal:</span>
-            <p class="diagnosis-text">{{patient.diagnosis}}</p>
-          </div>
-
-          <div class="patient-footer">
-            <div class="patient-contact">
-              <span class="contact-info">
-                <ion-icon name="call-outline"></ion-icon>
-                {{patient.phone}}
-              </span>
-              <span class="last-visit">
-                <ion-icon name="calendar-outline"></ion-icon>
-                Última visita: {{formatDate(patient.lastVisit)}}
-              </span>
-            </div>
-            <ion-button fill="clear" color="primary" (click)="onViewPatient(patient); $event.stopPropagation()">
-              <ion-icon name="eye-outline" slot="start"></ion-icon>
-              Ver Ficha
-            </ion-button>
-          </div>
-        </ion-card-content>
-      </ion-card>
-    </div>
-
-    <!-- Estado vacío cuando no hay resultados -->
-    <div class="empty-state" *ngIf="filteredPatients.length === 0">
-      <ion-icon name="search-outline" class="empty-icon"></ion-icon>
-      <h3>No se encontraron pacientes</h3>
-      <p>Intenta con otros términos de búsqueda</p>
-    </div>
-  </div>
+  <app-explore-container name="Pacientes page"></app-explore-container>
 </ion-content>

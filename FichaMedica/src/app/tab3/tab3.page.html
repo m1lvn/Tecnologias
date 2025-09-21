@@ -1,6 +1,17 @@
-<ion-content [fullscreen]="true" [scrollEvents]="true">
-  <div class="container">
-    <h2>Ficha Médica Individual</h2>
-    <p>Aquí irá el contenido de la ficha médica individual.</p>
-  </div>
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Fichas
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Fichas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <app-explore-container name="Fichas page"></app-explore-container>
 </ion-content>
