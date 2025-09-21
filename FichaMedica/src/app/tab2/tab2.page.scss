@@ -1,5 +1,7 @@
 .content-container {
   padding: 16px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
 }
 
 .page-header {
@@ -10,7 +12,7 @@
 
   .header-icon {
     font-size: 24px;
-    color: var(--ion-color-primary);
+    color: #3880FF;
     margin-right: 12px;
   }
 
@@ -18,23 +20,26 @@
     margin: 0;
     font-size: 24px;
     font-weight: 600;
-    color: var(--ion-color-primary);
+    color: #3880FF;
   }
 }
 
 .custom-searchbar {
   margin-bottom: 16px;
-  --background: #f8f9fa;
+  --background: #ffffff;
   --border-radius: 12px;
-  --box-shadow: none;
-  --color: var(--ion-color-dark);
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --color: #495057;
+  border: 1px solid #e9ecef;
 }
 
 .patients-list {
   .patient-card {
     margin-bottom: 16px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    border: 1px solid #e9ecef;
     
     ion-card-content {
       padding: 20px;
@@ -51,7 +56,7 @@
       margin: 0;
       font-size: 18px;
       font-weight: 600;
-      color: var(--ion-color-dark);
+      color: #212529;
       flex: 1;
       margin-right: 12px;
     }
@@ -60,8 +65,23 @@
       font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      
+      &[color="success"] {
+        background: #28a745;
+        color: white;
+      }
+      
+      &[color="warning"] {
+        background: #ffc107;
+        color: #212529;
+      }
+      
+      &[color="danger"] {
+        background: #dc3545;
+        color: white;
+      }
     }
   }
 
@@ -73,12 +93,12 @@
       align-items: center;
       margin-bottom: 6px;
       font-size: 14px;
-      color: var(--ion-color-medium);
+      color: #6c757d;
 
       .detail-icon {
         font-size: 16px;
         margin-right: 8px;
-        color: var(--ion-color-medium);
+        color: #6c757d;
       }
     }
   }
@@ -86,21 +106,22 @@
   .diagnosis {
     margin-bottom: 16px;
     padding: 12px;
-    background: #f8f9fa;
+    background: #e3f2fd;
     border-radius: 8px;
-    border-left: 4px solid var(--ion-color-primary);
+    border-left: 4px solid #3880FF;
 
     strong {
       font-size: 12px;
-      color: var(--ion-color-primary);
+      color: #3880FF;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      font-weight: 600;
     }
 
     p {
       margin: 4px 0 0 0;
       font-size: 14px;
-      color: var(--ion-color-dark);
+      color: #495057;
       font-weight: 500;
     }
   }
@@ -111,12 +132,12 @@
       align-items: center;
       margin-bottom: 4px;
       font-size: 12px;
-      color: var(--ion-color-medium);
+      color: #6c757d;
 
       .contact-icon {
         font-size: 14px;
         margin-right: 6px;
-        color: var(--ion-color-medium);
+        color: #6c757d;
       }
     }
   }
@@ -128,6 +149,10 @@
 
     .view-file-btn {
       --border-radius: 8px;
+      --background: #007bff;
+      --background-activated: #0056b3;
+      --background-hover: #0069d9;
+      --color: white;
       height: 40px;
       font-size: 14px;
       font-weight: 600;
@@ -142,12 +167,13 @@
 .no-results {
   text-align: center;
   padding: 40px 20px;
-  color: var(--ion-color-medium);
+  color: #6c757d;
 
   .no-results-icon {
     font-size: 48px;
     margin-bottom: 16px;
     opacity: 0.5;
+    color: #adb5bd;
   }
 
   p {
@@ -174,24 +200,28 @@
           }
         }
       }
+      
+      .action-col .view-file-btn {
+        width: 100%;
+      }
     }
   }
 }
 
-// Estados específicos con colores
+// Override de colores globales para badges
 ion-badge {
   &[color="success"] {
-    --background: #28a745;
-    --color: white;
+    --background: #28a745 !important;
+    --color: white !important;
   }
   
   &[color="warning"] {
-    --background: #ffc107;
-    --color: #212529;
+    --background: #ffc107 !important;
+    --color: #212529 !important;
   }
   
   &[color="danger"] {
-    --background: #dc3545;
-    --color: white;
+    --background: #dc3545 !important;
+    --color: white !important;
   }
 }
