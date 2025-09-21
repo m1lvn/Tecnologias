@@ -1,17 +1,105 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Dashboard
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Dashboard</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="page-container">
 
-  <app-explore-container name="Dashboard page"></app-explore-container>
+    <!-- Título y subtítulo -->
+    <div class="page-head">
+      <h1 class="title">Sistema Médico</h1>
+      <p class="subtitle">Gestión integral de fichas médicas</p>
+    </div>
+
+    <!-- Tarjetas de métricas -->
+    <ion-grid class="stats-grid">
+      <ion-row class="stats-row">
+        <ion-col size="12" sizeMd="6" sizeLg="3" *ngFor="let s of stats">
+          <ion-card class="stat-card">
+            <ion-card-header>
+              <div class="card-head">
+                <ion-card-subtitle>{{ s.title }}</ion-card-subtitle>
+                <ion-icon [name]="s.icon"></ion-icon>
+              </div>
+              <ion-card-title class="value">
+                {{ s.value }}
+              </ion-card-title>
+              <div class="sub">{{ s.sub }}</div>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-grid>
+      <ion-row class="panels-row">
+        <!-- Alertas clínicas -->
+        <ion-col size="12" sizeLg="6">
+          <ion-card class="panel">
+            <ion-card-header class="panel-head danger">
+              <div class="panel-title">
+                <ion-icon name="warning-outline"></ion-icon>
+                <span>Alertas Clínicas</span>
+              </div>
+            </ion-card-header>
+
+            <ion-card-content>
+              <ion-list class="alert-list">
+                <ion-item class="alert-item" lines="none" *ngFor="let a of alerts">
+                  <div class="alert-content">
+                    <div class="left">
+                      <div class="name">{{ a.name }}</div>
+                      <div class="detail">{{ a.detail }}</div>
+                      <div class="time">
+                        <ion-icon name="time-outline"></ion-icon>
+                        <span>{{ a.time }}</span>
+                      </div>
+                    </div>
+                    <ion-badge [class.badge-danger]="a.level==='Crítico'"
+                               [class.badge-warn]="a.level==='Moderado'">
+                      {{ a.level }}
+                    </ion-badge>
+                  </div>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <!-- Pacientes recientes -->
+        <ion-col size="12" sizeLg="6">
+          <ion-card class="panel">
+            <ion-card-header class="panel-head">
+              <div class="panel-title">
+                <ion-icon name="analytics-outline"></ion-icon>
+                <span>Pacientes Recientes</span>
+              </div>
+            </ion-card-header>
+
+            <ion-card-content>
+              <ion-list class="recent-list">
+                <ion-item class="recent-item" lines="none" *ngFor="let r of recent">
+                  <div class="recent-content">
+                    <div class="left">
+                      <div class="name">{{ r.name }}</div>
+                      <div class="detail">{{ r.location }}</div>
+                    </div>
+                    <div class="right">
+                      <ion-badge
+                        [class.badge-info]="r.status==='Estable'"
+                        [class.badge-warn]="r.status==='En observación'"
+                        [class.badge-danger]="r.status==='Crítico'">
+                        {{ r.status }}
+                      </ion-badge>
+                      <div class="ago">
+                        <ion-icon name="time-outline"></ion-icon>
+                        <span>{{ r.ago }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
 </ion-content>
