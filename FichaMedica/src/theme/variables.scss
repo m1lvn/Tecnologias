@@ -1,2 +1,22 @@
-// For information on how to create your own theme, please see:
-// http://ionicframework.com/docs/theming/
+:root {
+  --ion-background-color: #f6f9fc;   /* fondo gris muy claro */
+  --ion-text-color: #1f2937;         /* gris muy oscuro */
+
+  /* Azules/teal para UI */
+  --color-primary: #2979ff;
+  --color-primary-600: #1f5ed1;
+  --color-accent: #00bcd4;
+
+  /* Badges estado */
+  --badge-critico-bg: #fde4e4;
+  --badge-critico-tx: #c0392b;
+  --badge-moderado-bg: #e9f9f0;
+  --badge-moderado-tx: #2e7d32;
+  --badge-estable-bg: #e8f1ff;
+  --badge-estable-tx: #1d4ed8;
+
+  /* Tarjetas */
+  --card-bg: #ffffff;
+  --card-border: #e7edf3;
+  --card-shadow: 0 8px 24px rgba(31, 41, 55, 0.06);
+}

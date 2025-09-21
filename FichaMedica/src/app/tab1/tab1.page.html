@@ -1,122 +1,157 @@
-<ion-content [fullscreen]="true" class="dashboard-content">
-  <!-- Header del Sistema -->
-  <div class="dashboard-header">
-    <h1 class="main-title">Sistema Médico</h1>
-    <p class="subtitle">Gestión integral de fichas médicas</p>
-    
-    <!-- Navegación de tabs del dashboard -->
-    <div class="dashboard-tabs">
-      <div class="tab-item active" (click)="onTabClick('Dashboard')">
-        <ion-icon name="pulse"></ion-icon>
-        <span>Dashboard</span>
-      </div>
-      <div class="tab-item" (click)="onTabClick('Pacientes')">
-        <ion-icon name="people"></ion-icon>
-        <span>Pacientes</span>
-      </div>
-      <div class="tab-item" (click)="onTabClick('Fichas')">
-        <ion-icon name="document-text"></ion-icon>
-        <span>Fichas</span>
-      </div>
-      <div class="tab-item" (click)="onTabClick('Medicacion')">
-        <ion-icon name="medical"></ion-icon>
-        <span>Medicación</span>
-      </div>
-    </div>
-  </div>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="toolbar-clear"></ion-toolbar>
+</ion-header>
 
-  <!-- KPIs Principales -->
-  <div class="kpi-section">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6" size-md="3" *ngFor="let stat of stats">
-          <ion-card class="kpi-card">
-            <ion-card-content>
-              <div class="kpi-header">
-                <span class="kpi-title">{{stat.title}}</span>
-                <ion-icon [name]="stat.icon" [class]="'kpi-icon ' + stat.colorClass"></ion-icon>
-              </div>
-              <div class="kpi-value">{{stat.value}}</div>
-              <div class="kpi-subtitle">{{stat.subtitle}}</div>
-            </ion-card-content>
-          </ion-card>
+<ion-content fullscreen class="dashboard">
+  <div class="container">
+    <div class="page-head">
+      <h1>Sistema Médico</h1>
+      <p>Gestión integral de fichas médicas</p>
+    </div>
+
+    <!-- Navegación superior tipo “tabs” -->
+    <div class="top-tabs">
+      <button class="tab-btn active">
+        <ion-icon name="pulse-outline"></ion-icon>
+        Dashboard
+      </button>
+      <button class="tab-btn" routerLink="/tabs/tab2">
+        <ion-icon name="people-outline"></ion-icon>
+        Pacientes
+      </button>
+      <button class="tab-btn" routerLink="/tabs/tab3">
+        <ion-icon name="document-text-outline"></ion-icon>
+        Fichas
+      </button>
+      <button class="tab-btn" routerLink="/tabs/tab4">
+        <ion-icon name="medkit-outline"></ion-icon>
+        Medicación
+      </button>
+    </div>
+
+    <!-- KPIs -->
+    <ion-grid class="kpis">
+      <ion-row class="ion-justify-content-between">
+        <ion-col size="12" sizeMd="6" sizeLg="3">
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span>Pacientes Activos</span>
+              <ion-icon name="people-circle-outline"></ion-icon>
+            </div>
+            <div class="kpi-value">42</div>
+            <div class="kpi-sub">28 hospitalizados, 14 ambulatorios</div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6" sizeLg="3">
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span>Consultas del Día</span>
+              <ion-icon name="calendar-outline"></ion-icon>
+            </div>
+            <div class="kpi-value">18</div>
+            <div class="kpi-sub">Cardiología: 6, Medicina: 8, Pediatría: 4</div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6" sizeLg="3">
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span>Boxes Disponibles</span>
+              <ion-icon name="bed-outline"></ion-icon>
+            </div>
+            <div class="kpi-value">3/8</div>
+            <div class="kpi-sub">5 boxes ocupados</div>
+          </div>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6" sizeLg="3">
+          <div class="kpi-card">
+            <div class="kpi-head">
+              <span>Alertas Activas</span>
+              <ion-icon name="alert-circle-outline"></ion-icon>
+            </div>
+            <div class="kpi-value">7</div>
+            <div class="kpi-sub">2 críticas, 5 moderadas</div>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
-  </div>
 
-  <!-- Contenido Principal -->
-  <ion-grid>
-    <ion-row>
-      <!-- Alertas Clínicas -->
-      <ion-col size="12" size-md="6">
-        <ion-card class="alerts-card">
-          <ion-card-header>
-            <ion-card-title class="section-title">
-              <ion-icon name="warning" class="title-icon red"></ion-icon>
-              Alertas Clínicas
-            </ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <div class="alert-item" *ngFor="let alert of criticalAlerts" (click)="onAlertClick(alert)">
-              <div class="alert-info">
-                <h4>{{alert.patient}}</h4>
-                <p>{{alert.alert}}</p>
-                <span class="time">
-                  <ion-icon name="time-outline"></ion-icon>
-                  {{alert.time}}
-                </span>
-              </div>
-              <ion-chip [color]="alert.chipColor">{{getAlertTypeDisplay(alert.type)}}</ion-chip>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <!-- Pacientes Recientes -->
-      <ion-col size="12" size-md="6">
-        <ion-card class="patients-card">
-          <ion-card-header>
-            <ion-card-title class="section-title">
-              <ion-icon name="pulse" class="title-icon blue"></ion-icon>
-              Pacientes Recientes
-            </ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <div class="patient-item" *ngFor="let patient of recentPatients" (click)="onPatientClick(patient)">
-              <div class="patient-info">
-                <h4>{{patient.name}}</h4>
-                <p>{{patient.room}}</p>
-                <span class="time">
-                  <ion-icon name="time-outline"></ion-icon>
-                  {{patient.lastUpdate}}
-                </span>
-              </div>
-              <ion-chip [color]="patient.chipColor">{{patient.condition}}</ion-chip>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-  <!-- Accesos Rápidos -->
-  <div class="quick-actions">
-    <h3 class="section-title">Accesos Rápidos</h3>
-    <ion-grid>
+    <ion-grid class="panels">
       <ion-row>
-        <ion-col size="6" size-md="3" *ngFor="let action of quickActions">
-          <ion-button 
-            [fill]="action.isPrimary ? 'solid' : 'outline'"
-            [color]="action.isPrimary ? 'primary' : 'medium'"
-            class="action-button" 
-            (click)="action.action === 'onAgregarPaciente' ? onAgregarPaciente() : 
-                     action.action === 'onAbrirUltimaFicha' ? onAbrirUltimaFicha() :
-                     action.action === 'onSignosVitales' ? onSignosVitales() :
-                     onExamenes()">
-            <ion-icon [name]="action.icon"></ion-icon>
-            <span>{{action.label}}</span>
-          </ion-button>
+        <!-- Alertas clínicas -->
+        <ion-col size="12" sizeLg="6">
+          <div class="panel">
+            <div class="panel-title">
+              <ion-icon name="warning-outline"></ion-icon>
+              <span>Alertas Clínicas</span>
+            </div>
+
+            <div class="alert-item">
+              <div class="info">
+                <div class="name">María González</div>
+                <div class="desc">Alergia severa a penicilina</div>
+                <div class="meta"><ion-icon name="time-outline"></ion-icon> 10:30 AM</div>
+              </div>
+              <span class="badge badge-critico">Crítico</span>
+            </div>
+
+            <div class="alert-item">
+              <div class="info">
+                <div class="name">Juan Pérez</div>
+                <div class="desc">Resultados de laboratorio críticos</div>
+                <div class="meta"><ion-icon name="time-outline"></ion-icon> 09:15 AM</div>
+              </div>
+              <span class="badge badge-critico">Crítico</span>
+            </div>
+
+            <div class="alert-item">
+              <div class="info">
+                <div class="name">Ana López</div>
+                <div class="desc">Signos vitales alterados</div>
+                <div class="meta"><ion-icon name="time-outline"></ion-icon> 11:45 AM</div>
+              </div>
+              <span class="badge badge-moderado">Moderado</span>
+            </div>
+          </div>
+        </ion-col>
+
+        <!-- Pacientes recientes -->
+        <ion-col size="12" sizeLg="6">
+          <div class="panel">
+            <div class="panel-title">
+              <ion-icon name="trending-up-outline"></ion-icon>
+              <span>Pacientes Recientes</span>
+            </div>
+
+            <div class="patient-item">
+              <div class="info">
+                <div class="name">Carlos Ruiz</div>
+                <div class="desc">Hab. 203</div>
+                <div class="meta"><ion-icon name="time-outline"></ion-icon> Hace 15 min</div>
+              </div>
+              <span class="badge badge-estable">Estable</span>
+            </div>
+
+            <div class="patient-item">
+              <div class="info">
+                <div class="name">Elena Morales</div>
+                <div class="desc">Box 4</div>
+                <div class="meta"><ion-icon name="time-outline"></ion-icon> Hace 30 min</div>
+              </div>
+              <span class="badge badge-moderado">En observación</span>
+            </div>
+
+            <div class="patient-item">
+              <div class="info">
+                <div class="name">Roberto Silva</div>
+                <div class="desc">Hab. 105</div>
+                <div class="meta"><ion-icon name="time-outline"></ion-icon> Hace 5 min</div>
+              </div>
+              <span class="badge badge-critico">Crítico</span>
+            </div>
+          </div>
         </ion-col>
       </ion-row>
     </ion-grid>
