@@ -1,15 +1,20 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  IonContent, IonSearchbar, IonList, IonItem, IonIcon, IonBadge,
-  IonModal, IonInput, IonSelect, IonSelectOption, IonTextarea
+  // Base / listas
+  IonContent, IonList, IonItem,
+  // Inputs
+  IonSearchbar, IonInput, IonTextarea, IonSelect, IonSelectOption,
+  // UI
+  IonIcon, IonBadge, IonButton, IonAvatar, IonLabel,
+  IonModal, IonHeader, IonToolbar, IonTitle, IonButtons
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgClass } from '@angular/common';
 
 type Estado = 'Estable' | 'Activo' | 'Crítico';
 
-type Paciente = {
+export type Paciente = {
   nombre: string;
   rut: string;
   edad: number;
@@ -24,8 +29,12 @@ type Paciente = {
   selector: 'app-tab2',
   standalone: true,
   imports: [
-    IonContent, IonSearchbar, IonList, IonItem, IonIcon, IonBadge,
-    IonModal, IonInput, IonSelect, IonSelectOption, IonTextarea,
+    // Ionic usados en el HTML
+    IonContent, IonList, IonItem,
+    IonSearchbar, IonInput, IonTextarea, IonSelect, IonSelectOption,
+    IonIcon, IonBadge, IonButton, IonAvatar, IonLabel,
+    IonModal, IonHeader, IonToolbar, IonTitle, IonButtons,
+    // Angular
     FormsModule, NgFor, NgClass
   ],
   templateUrl: './tab2.page.html',
@@ -37,7 +46,7 @@ export class Tab2Page {
 
   // ---------- Navegación ----------
   goBack() { this.router.navigateByUrl('/tabs/tab1'); }
-  verFicha(p: Paciente) { this.router.navigateByUrl('/tabs/tab3'); }
+  verFicha(_p: Paciente) { this.router.navigateByUrl('/tabs/tab3'); }
 
   // ---------- Búsqueda ----------
   query = '';
@@ -88,7 +97,7 @@ export class Tab2Page {
 
   get total(): number { return this.filtered.length; }
 
-  // ---------- Avatar con iniciales ----------
+  // ---------- Utilidades UI ----------
   initials(nombre: string): string {
     const parts = nombre.trim().split(/\s+/);
     const first = parts[0]?.[0] ?? '';
@@ -106,7 +115,6 @@ export class Tab2Page {
 
   // ============== CREAR PACIENTE (Modal) ==============
   isCreateOpen = false;
-
   newPaciente: Paciente = this.blankPaciente();
 
   openCreate() {
@@ -118,9 +126,16 @@ export class Tab2Page {
   saveCreate() {
     const p = this.newPaciente;
     if (!p.nombre?.trim() || !p.rut?.trim() || !p.diagnostico?.trim()) return;
+
     if (!p.ultimaVisita) p.ultimaVisita = this.today();
+    if (!p.estado) p.estado = 'Estable';
+
+    // Inserta al INICIO del listado
     this.pacientes = [{ ...p }, ...this.pacientes];
+
+    // Cierra modal y limpia búsqueda para ver el nuevo arriba
     this.closeCreate();
+    this.query = '';
   }
 
   private today(): string {
