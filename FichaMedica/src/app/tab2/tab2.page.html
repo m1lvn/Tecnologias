@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
   <div class="page-container">
 
-    <!-- Barra superior: volver + acciones -->
+    <!-- Topbar: volver + acciones -->
     <div class="topbar">
       <button class="back-btn" (click)="goBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
@@ -13,14 +13,14 @@
           <ion-icon name="download-outline"></ion-icon>
           <span>Exportar</span>
         </button>
-        <button class="primary" (click)="addPaciente()">
+        <button class="primary" (click)="openCreate()">
           <ion-icon name="add-outline"></ion-icon>
           <span>Nuevo Paciente</span>
         </button>
       </div>
     </div>
 
-    <!-- Encabezado de sección -->
+    <!-- Encabezado -->
     <div class="section-title">
       <div class="left">
         <div class="soft-icon">
@@ -54,19 +54,16 @@
       <ion-item class="patient-card" lines="none" *ngFor="let p of filtered">
         <div class="card-inner">
 
-          <!-- Cabecera: avatar + nombre + estado -->
           <div class="head">
             <div class="head-left">
               <div class="avatar">{{ initials(p.nombre) }}</div>
               <h3 class="name">{{ p.nombre }}</h3>
             </div>
-
             <ion-badge [ngClass]="estadoClass(p.estado)" class="state-badge">
               <span class="dot"></span> {{ p.estado }}
             </ion-badge>
           </div>
 
-          <!-- Metadatos -->
           <div class="meta">
             <div class="meta-line">
               <ion-icon name="id-card-outline"></ion-icon>
@@ -81,7 +78,6 @@
             </div>
           </div>
 
-          <!-- Diagnóstico -->
           <div class="dx">
             <div class="dx-title">
               <ion-icon name="bandage-outline"></ion-icon>
@@ -90,7 +86,6 @@
             <div class="dx-body">{{ p.diagnostico }}</div>
           </div>
 
-          <!-- Pie: contacto + última visita + CTA -->
           <div class="foot">
             <div class="foot-left">
               <div class="foot-line">
@@ -112,6 +107,79 @@
         </div>
       </ion-item>
     </ion-list>
+
+    <!-- ===== MODAL: NUEVO PACIENTE ===== -->
+    <ion-modal [isOpen]="isCreateOpen" (didDismiss)="closeCreate()" class="create-modal">
+      <div class="modal-sheet">
+        <div class="modal-head">
+          <h3>
+            <ion-icon name="add-outline"></ion-icon>
+            Nuevo Paciente
+          </h3>
+          <button class="close" (click)="closeCreate()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+
+        <form class="form" (ngSubmit)="saveCreate()">
+          <ion-item lines="none" class="fi">
+            <ion-icon name="person-outline"></ion-icon>
+            <ion-input required [(ngModel)]="newPaciente.nombre" name="nombre" placeholder="Nombre completo"></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="fi">
+            <ion-icon name="id-card-outline"></ion-icon>
+            <ion-input required [(ngModel)]="newPaciente.rut" name="rut" placeholder="RUT"></ion-input>
+          </ion-item>
+
+          <div class="row-2">
+            <ion-item lines="none" class="fi">
+              <ion-icon name="calendar-number-outline"></ion-icon>
+              <ion-input type="number" min="0" [(ngModel)]="newPaciente.edad" name="edad" placeholder="Edad"></ion-input>
+            </ion-item>
+
+            <ion-item lines="none" class="fi">
+              <ion-icon name="location-outline"></ion-icon>
+              <ion-input [(ngModel)]="newPaciente.ubicacion" name="ubicacion" placeholder="Ubicación (Hab/Box)"></ion-input>
+            </ion-item>
+          </div>
+
+          <ion-item lines="none" class="fi">
+            <ion-icon name="pulse-outline"></ion-icon>
+            <ion-select [(ngModel)]="newPaciente.estado" name="estado" interface="popover">
+              <ion-select-option value="Estable">Estable</ion-select-option>
+              <ion-select-option value="Activo">Activo</ion-select-option>
+              <ion-select-option value="Crítico">Crítico</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" class="fi">
+            <ion-icon name="bandage-outline"></ion-icon>
+            <ion-textarea auto-grow required [(ngModel)]="newPaciente.diagnostico" name="diagnostico" placeholder="Diagnóstico principal"></ion-textarea>
+          </ion-item>
+
+          <div class="row-2">
+            <ion-item lines="none" class="fi">
+              <ion-icon name="call-outline"></ion-icon>
+              <ion-input [(ngModel)]="newPaciente.telefono" name="telefono" placeholder="Teléfono"></ion-input>
+            </ion-item>
+
+            <ion-item lines="none" class="fi">
+              <ion-icon name="time-outline"></ion-icon>
+              <ion-input type="date" [(ngModel)]="newPaciente.ultimaVisita" name="ultimaVisita"></ion-input>
+            </ion-item>
+          </div>
+
+          <div class="actions-row">
+            <button type="button" class="ghost" (click)="closeCreate()">Cancelar</button>
+            <button type="submit" class="primary">
+              <ion-icon name="save-outline"></ion-icon>
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </ion-modal>
 
   </div>
 </ion-content>
