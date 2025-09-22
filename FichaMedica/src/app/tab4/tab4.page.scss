@@ -1,0 +1,694 @@
+:host {
+  --c-bg: #f7fbff;
+  --c-surface: #fff;
+  --c-surface-soft: #f1f6ff;
+  --c-border: #dbe8f7;
+  --c-text: #0f1c2e;
+  --c-muted: #6b7a90;
+
+  --c-primary-50:  #eaf3ff;
+  --c-primary-300: #52a6ff;
+  --c-primary-600: #176fdb;
+
+  --elev-1: 0 4px 12px rgba(23, 66, 150, .08);
+  --elev-2: 0 10px 24px rgba(23, 66, 150, .12);
+
+  ion-content { --background: var(--c-bg); }
+}
+
+.page-container { 
+  max-width: 1100px; 
+  margin: 0 auto; 
+  padding: 22px; 
+}
+
+// ========== HEADER ==========
+.section-title { 
+  display: flex; 
+  align-items: center; 
+  margin: 6px 0 20px; 
+  padding: 12px 14px; 
+  background: var(--c-surface-soft); 
+  border: 1px solid #dbe9ff; 
+  border-radius: 12px; 
+}
+
+.section-title .left { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+}
+
+// ========== SOFT ICONS ==========
+.soft-icon { 
+  width: 36px; 
+  height: 36px; 
+  border-radius: 10px; 
+  background: #eaf4ff; 
+  border: 1px solid #dbe9ff; 
+  display: grid; 
+  place-items: center; 
+  
+  &.warning {
+    background: #fff3cd;
+    border-color: #ffeaa7;
+    
+    ion-icon {
+      color: #856404;
+    }
+  }
+  
+  &.medical {
+    background: #d4edda;
+    border-color: #c3e6cb;
+    
+    ion-icon {
+      color: #155724;
+    }
+  }
+  
+  &.history {
+    background: #e2e3e5;
+    border-color: #d6d8db;
+    
+    ion-icon {
+      color: #6c757d;
+    }
+  }
+}
+
+.soft-icon ion-icon { 
+  font-size: 20px; 
+  color: #1f88ff; 
+}
+
+.titles h2 { 
+  margin: 0; 
+  font-size: 20px; 
+  color: var(--c-text); 
+  font-weight: 900; 
+}
+
+// ========== MEDICAMENTOS ==========
+.medicamentos-list {
+  margin-bottom: 24px;
+  
+  .medicamento-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 14px;
+    box-shadow: var(--elev-1);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      box-shadow: var(--elev-2);
+      transform: translateY(-1px);
+    }
+    
+    .medicamento-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid #f0f0f0;
+      
+      .medicamento-nombre {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--c-text);
+        margin: 0;
+        flex: 1;
+      }
+      
+      .estado-badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-right: 12px;
+        
+        &[color="success"] {
+          background: #d4edda;
+          color: #155724;
+          border: 1px solid #c3e6cb;
+        }
+      }
+      
+      .action-buttons-header {
+        display: flex;
+        gap: 8px;
+        
+        ion-button {
+          height: 32px;
+          font-size: 12px;
+          font-weight: 600;
+          --border-radius: 6px;
+          --padding-start: 12px;
+          --padding-end: 12px;
+          
+          &[fill="outline"][color="primary"] {
+            --border-color: var(--c-primary-300);
+            --color: var(--c-primary-600);
+            --background-hover: var(--c-primary-50);
+          }
+          
+          &[fill="solid"][color="danger"] {
+            --background: #dc3545;
+            --color: white;
+            --background-hover: #c82333;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ========== INFORMACIÓN DEL MEDICAMENTO ==========
+.medicamento-info {
+  padding: 16px;
+  
+  .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    
+    .info-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #6c757d;
+      margin-right: 8px;
+      min-width: 70px;
+    }
+    
+    .info-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--c-text);
+    }
+  }
+}
+
+// ========== SECCIÓN DE INDICACIÓN ==========
+.indicacion-box {
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-top: 1px solid #e9ecef;
+  
+  .indicacion-header {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    color: var(--c-text);
+    
+    strong {
+      color: #495057;
+    }
+  }
+  
+  .prescriptor {
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+  }
+}
+
+// ========== FAB BUTTON ==========
+ion-fab-button {
+  --background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-600));
+  --color: white;
+  --border-radius: 16px;
+  --box-shadow: 0 8px 20px rgba(23, 111, 219, 0.3);
+  width: 56px;
+  height: 56px;
+  
+  &:hover {
+    --box-shadow: 0 12px 28px rgba(23, 111, 219, 0.4);
+  }
+  
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+// ========== MODAL ==========
+ion-modal {
+  --background: var(--c-bg);
+  
+  ion-header {
+    ion-toolbar {
+      --background: var(--c-surface);
+      --border-color: var(--c-border);
+      
+      ion-title {
+        font-weight: 700;
+        color: var(--c-text);
+      }
+      
+      ion-button {
+        --color: var(--c-primary-600);
+        font-weight: 600;
+      }
+    }
+  }
+  
+  ion-content {
+    --background: var(--c-bg);
+    
+    ion-item {
+      --background: var(--c-surface);
+      --border-color: var(--c-border);
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--c-border);
+      
+      ion-label {
+        font-weight: 600;
+        color: var(--c-text);
+        font-size: 13px;
+      }
+      
+      ion-input, ion-textarea, ion-select {
+        --color: var(--c-text);
+        font-size: 14px;
+        font-weight: 500;
+      }
+      
+      ion-select {
+        --placeholder-color: var(--c-muted);
+      }
+    }
+    
+    ion-button[expand="block"] {
+      margin-top: 24px;
+      height: 48px;
+      font-weight: 700;
+      --border-radius: 12px;
+      --background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-600));
+      box-shadow: 0 6px 16px rgba(23, 111, 219, 0.25);
+      
+      &:hover {
+        box-shadow: 0 8px 20px rgba(23, 111, 219, 0.35);
+      }
+    }
+  }
+}
+
+// ========== HISTORIAL DE MEDICACIÓN ==========
+.historial-list {
+  margin-bottom: 24px;
+  
+  .historial-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: var(--elev-1);
+    transition: all 0.2s ease;
+    opacity: 0.85;
+    
+    &:hover {
+      opacity: 1;
+      box-shadow: var(--elev-2);
+      transform: translateY(-1px);
+    }
+    
+    .historial-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 16px 16px 8px;
+      
+      .medicamento-nombre {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--c-muted);
+        margin: 0;
+        flex: 1;
+      }
+      
+      .estado-badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 16px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// ========== DETALLES DEL HISTORIAL ==========
+.historial-details {
+  padding: 0 16px;
+  margin-bottom: 12px;
+  
+  .detail-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    
+    .detail-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--c-muted);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .detail-value {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--c-muted);
+      line-height: 1.4;
+    }
+  }
+}
+
+.periodo-section {
+  margin: 0 16px 12px;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  
+  .detail-item {
+    margin-bottom: 0;
+    
+    .detail-value {
+      color: var(--c-text);
+      font-weight: 600;
+    }
+  }
+}
+
+.prescriptor-section {
+  margin: 0 16px 12px;
+  padding: 8px 0;
+  border-top: 1px solid #e9ecef;
+  
+  .detail-item {
+    margin-bottom: 0;
+    
+    .detail-value {
+      color: var(--c-muted);
+      font-weight: 600;
+    }
+  }
+}
+
+.motivo-section {
+  margin: 0 16px 16px;
+  padding: 12px;
+  background: #f1f3f4;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  
+  .detail-item {
+    margin-bottom: 0;
+    
+    .detail-label {
+      color: var(--c-text);
+      font-weight: 700;
+    }
+    
+    .motivo-text {
+      color: var(--c-text);
+      font-weight: 500;
+      line-height: 1.5;
+      margin-top: 4px;
+      font-style: italic;
+    }
+  }
+}
+
+// ========== BADGES PERSONALIZADOS ==========
+ion-badge {
+  &[color="success"] {
+    --background: #d4edda;
+    --color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  &[color="primary"] {
+    --background: var(--c-primary-50);
+    --color: var(--c-primary-600);
+    border: 1px solid var(--c-primary-300);
+  }
+  
+  &[color="warning"] {
+    --background: #fff3cd;
+    --color: #856404;
+    border: 1px solid #ffeaa7;
+  }
+  
+  &[color="danger"] {
+    --background: #f8d7da;
+    --color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  &[color="secondary"] {
+    --background: #e2f0ff;
+    --color: #0856a3;
+    border: 1px solid #b3d9ff;
+  }
+  
+  &[color="tertiary"] {
+    --background: #f3e8ff;
+    --color: #6b21a8;
+    border: 1px solid #d8b4fe;
+  }
+  
+  &[color="medium"] {
+    --background: #e2e3e5;
+    --color: #383d41;
+    border: 1px solid #d6d8db;
+  }
+}
+
+// ========== BOTÓN AGREGAR MEDICAMENTO ==========
+.add-medicamento-btn {
+  margin: 24px 0;
+  height: 48px;
+  font-weight: 700;
+  --border-radius: 12px;
+  --background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-600));
+  box-shadow: 0 4px 12px rgba(23, 111, 219, 0.25);
+  
+  &:hover {
+    box-shadow: 0 6px 16px rgba(23, 111, 219, 0.35);
+  }
+  
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+// ========== ALERTAS DE INTERACCIONES ==========
+.alertas-list {
+  margin-bottom: 24px;
+  
+  .alerta-card {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--elev-1);
+    
+    .alerta-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      
+      .warning-icon {
+        font-size: 24px;
+        color: #856404;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+      
+      .alerta-content {
+        flex: 1;
+        
+        .medicamentos-interaccion {
+          margin: 0 0 8px 0;
+          font-size: 16px;
+          font-weight: 700;
+          color: #856404;
+        }
+        
+        .alerta-descripcion {
+          margin: 0;
+          font-size: 14px;
+          color: #856404;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+}
+
+// ========== INDICACIONES MÉDICAS ==========
+.indicaciones-list {
+  margin-bottom: 24px;
+  
+  .indicacion-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: var(--elev-1);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      box-shadow: var(--elev-2);
+      transform: translateY(-1px);
+    }
+    
+    .indicacion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 16px 8px;
+      
+      .indicacion-badges {
+        display: flex;
+        gap: 8px;
+        
+        .tipo-badge, .estado-badge {
+          font-size: 11px;
+          font-weight: 600;
+          padding: 4px 10px;
+          border-radius: 16px;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+        }
+      }
+      
+      ion-button {
+        height: 32px;
+        font-size: 12px;
+        font-weight: 600;
+        --border-radius: 8px;
+        --padding-start: 12px;
+        --padding-end: 12px;
+        
+        ion-icon {
+          font-size: 14px;
+        }
+      }
+    }
+    
+    .indicacion-content {
+      padding: 0 16px 16px;
+      
+      .indicacion-titulo {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--c-text);
+      }
+      
+      .indicacion-descripcion {
+        margin: 0 0 12px 0;
+        font-size: 14px;
+        color: var(--c-text);
+        line-height: 1.5;
+      }
+      
+      .indicacion-fecha {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--c-muted);
+        
+        ion-icon {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+// ========== BOTÓN AGREGAR INDICACIÓN ==========
+.add-indicacion-btn {
+  margin: 24px 0;
+  height: 48px;
+  font-weight: 700;
+  --border-radius: 12px;
+  --background: #28a745;
+  --background-hover: #218838;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.25);
+  
+  &:hover {
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.35);
+  }
+  
+  ion-icon {
+    font-size: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .page-container {
+    padding: 16px;
+  }
+  
+  .medicamento-details {
+    ion-col {
+      padding: 4px;
+    }
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 6px;
+    
+    ion-button {
+      width: 100%;
+      height: 36px;
+    }
+  }
+  
+  .medicamento-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    
+    .estado-badge {
+      align-self: flex-end;
+    }
+  }
+}
+
+// ========== ANIMACIONES ==========
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.medicamento-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+// ========== DATETIME ==========
+ion-datetime {
+  --background: var(--c-surface);
+  --color: var(--c-text);
+}

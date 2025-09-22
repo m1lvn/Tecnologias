@@ -7,11 +7,416 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Medicación</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="page-container">
+    <!-- Encabezado de Sección -->
+    <div class="section-title">
+      <div class="left">
+        <div class="soft-icon">
+          <ion-icon name="medical"></ion-icon>
+        </div>
+        <div class="titles">
+          <h2>Medicación Actual</h2>
+        </div>
+      </div>
+    </div>
 
-  <app-explore-container name="Medicación page"></app-explore-container>
+    <!-- Lista de Medicamentos -->
+    <div class="medicamentos-list">
+      @for (medicamento of medicamentosActuales; track medicamento.id) {
+        <div class="medicamento-card">
+          <div class="medicamento-header">
+            <h3 class="medicamento-nombre">{{ medicamento.nombre }}</h3>
+            <ion-badge [color]="getEstadoColor(medicamento.estado)" class="estado-badge">
+              {{ medicamento.estado }}
+            </ion-badge>
+            <div class="action-buttons-header">
+              <ion-button 
+                fill="outline" 
+                size="small" 
+                color="primary"
+                (click)="modificarMedicamento(medicamento)">
+                Modificar
+              </ion-button>
+              
+              <ion-button 
+                fill="solid" 
+                size="small" 
+                color="danger"
+                (click)="suspenderMedicamento(medicamento)"
+                [disabled]="medicamento.estado === 'Suspendido'">
+                Suspender
+              </ion-button>
+            </div>
+          </div>
+          
+          <div class="medicamento-info">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  <div class="info-item">
+                    <span class="info-label">Dosis:</span>
+                    <span class="info-value">{{ medicamento.dosis }}</span>
+                  </div>
+                </ion-col>
+                <ion-col size="6">
+                  <div class="info-item">
+                    <span class="info-label">Frecuencia:</span>
+                    <span class="info-value">{{ medicamento.frecuencia }}</span>
+                  </div>
+                </ion-col>
+              </ion-row>
+              
+              <ion-row>
+                <ion-col size="6">
+                  <div class="info-item">
+                    <span class="info-label">Vía:</span>
+                    <span class="info-value">{{ medicamento.via }}</span>
+                  </div>
+                </ion-col>
+                <ion-col size="6">
+                  <div class="info-item">
+                    <span class="info-label">Desde:</span>
+                    <span class="info-value">{{ medicamento.fechaInicio }}</span>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+
+          <div class="indicacion-box">
+            <div class="indicacion-header">
+              <strong>Indicación:</strong> {{ medicamento.indicacion }}
+            </div>
+            <div class="prescriptor">
+              Prescrito por: {{ medicamento.medicoPrescriptor }}
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Botón para agregar nuevo medicamento -->
+    <ion-button 
+      expand="block" 
+      fill="solid" 
+      color="primary" 
+      class="add-medicamento-btn"
+      (click)="abrirModalNuevoMedicamento()">
+      <ion-icon name="add" slot="start"></ion-icon>
+      Agregar Nuevo Medicamento
+    </ion-button>
+
+    <!-- Sección Alertas de Interacciones -->
+    <div class="section-title">
+      <div class="left">
+        <div class="soft-icon warning">
+          <ion-icon name="warning"></ion-icon>
+        </div>
+        <div class="titles">
+          <h2>Alertas de Interacciones</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="alertas-list">
+      @for (alerta of alertasInteracciones; track alerta.id) {
+        <div class="alerta-card">
+          <div class="alerta-header">
+            <ion-icon name="warning" class="warning-icon"></ion-icon>
+            <div class="alerta-content">
+              <h4 class="medicamentos-interaccion">
+                {{ alerta.medicamentos.join(' + ') }}
+              </h4>
+              <p class="alerta-descripcion">{{ alerta.descripcion }}</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Sección Indicaciones Médicas -->
+    <div class="section-title">
+      <div class="left">
+        <div class="soft-icon medical">
+          <ion-icon name="medical"></ion-icon>
+        </div>
+        <div class="titles">
+          <h2>Indicaciones Médicas</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="indicaciones-list">
+      @for (indicacion of indicacionesMedicas; track indicacion.id) {
+        <div class="indicacion-card">
+          <div class="indicacion-header">
+            <div class="indicacion-badges">
+              <ion-badge [color]="getTipoIndicacionColor(indicacion.tipo)" class="tipo-badge">
+                {{ indicacion.tipo }}
+              </ion-badge>
+              <ion-badge [color]="getEstadoColor(indicacion.estado)" class="estado-badge">
+                {{ indicacion.estado }}
+              </ion-badge>
+            </div>
+            <ion-button 
+              fill="outline" 
+              size="small" 
+              color="primary"
+              (click)="completarIndicacion(indicacion)"
+              [disabled]="indicacion.estado === 'Completado'">
+              <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+              Completar
+            </ion-button>
+          </div>
+          
+          <div class="indicacion-content">
+            <h4 class="indicacion-titulo">{{ indicacion.titulo }}</h4>
+            <p class="indicacion-descripcion">{{ indicacion.descripcion }}</p>
+            <div class="indicacion-fecha">
+              <ion-icon name="calendar"></ion-icon>
+              <span>Fecha: {{ indicacion.fecha }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Botón para agregar nueva indicación -->
+    <ion-button 
+      expand="block" 
+      fill="solid" 
+      color="success" 
+      class="add-indicacion-btn"
+      (click)="abrirModalNuevaIndicacion()">
+      <ion-icon name="add" slot="start"></ion-icon>
+      Agregar Indicación
+    </ion-button>
+
+    <!-- Sección Historial de Medicación -->
+    <div class="section-title">
+      <div class="left">
+        <div class="soft-icon history">
+          <ion-icon name="time"></ion-icon>
+        </div>
+        <div class="titles">
+          <h2>Historial de Medicación</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="historial-list">
+      @for (medicamento of historialMedicacion; track medicamento.id) {
+        <div class="historial-card">
+          <div class="historial-header">
+            <h4 class="medicamento-nombre">{{ medicamento.nombre }}</h4>
+            <ion-badge [color]="getEstadoColor(medicamento.estado)" class="estado-badge">
+              {{ medicamento.estado }}
+            </ion-badge>
+          </div>
+          
+          <div class="historial-details">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  <div class="detail-item">
+                    <span class="detail-label">Dosis</span>
+                    <span class="detail-value">{{ medicamento.dosis }}</span>
+                  </div>
+                </ion-col>
+                <ion-col size="6">
+                  <div class="detail-item">
+                    <span class="detail-label">Frecuencia</span>
+                    <span class="detail-value">{{ medicamento.frecuencia }}</span>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+
+          <div class="periodo-section">
+            <div class="detail-item">
+              <span class="detail-label">Período</span>
+              <span class="detail-value">{{ medicamento.periodo }}</span>
+            </div>
+          </div>
+
+          <div class="prescriptor-section">
+            <div class="detail-item">
+              <span class="detail-label">Prescrito por</span>
+              <span class="detail-value">{{ medicamento.medicoPrescriptor }}</span>
+            </div>
+          </div>
+
+          <div class="motivo-section">
+            <div class="detail-item">
+              <span class="detail-label">Motivo</span>
+              <span class="detail-value motivo-text">{{ medicamento.motivo }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Modal para Nuevo Medicamento -->
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Agregar Nuevo Medicamento</ion-title>
+          <ion-button slot="end" fill="clear" (click)="cerrarModal()">
+            Cerrar
+          </ion-button>
+        </ion-toolbar>
+      </ion-header>
+      
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-label position="stacked">Nombre del Medicamento *</ion-label>
+          <ion-input 
+            [(ngModel)]="nuevoMedicamento.nombre" 
+            placeholder="Ej: Metformina"
+            type="text">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Dosis *</ion-label>
+          <ion-input 
+            [(ngModel)]="nuevoMedicamento.dosis" 
+            placeholder="Ej: 850 mg"
+            type="text">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Frecuencia *</ion-label>
+          <ion-input 
+            [(ngModel)]="nuevoMedicamento.frecuencia" 
+            placeholder="Ej: 2 veces al día"
+            type="text">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Vía de Administración</ion-label>
+          <ion-select [(ngModel)]="nuevoMedicamento.via" placeholder="Seleccionar">
+            <ion-select-option value="Oral">Oral</ion-select-option>
+            <ion-select-option value="Intramuscular">Intramuscular</ion-select-option>
+            <ion-select-option value="Intravenosa">Intravenosa</ion-select-option>
+            <ion-select-option value="Subcutánea">Subcutánea</ion-select-option>
+            <ion-select-option value="Tópica">Tópica</ion-select-option>
+            <ion-select-option value="Inhalada">Inhalada</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Indicación *</ion-label>
+          <ion-textarea 
+            [(ngModel)]="nuevoMedicamento.indicacion" 
+            placeholder="Ej: Control de diabetes mellitus tipo 2"
+            rows="3">
+          </ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Médico Prescriptor</ion-label>
+          <ion-input 
+            [(ngModel)]="nuevoMedicamento.medicoPrescriptor" 
+            placeholder="Ej: Dr. José Fernández"
+            type="text">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha de Inicio</ion-label>
+          <ion-datetime 
+            [(ngModel)]="nuevoMedicamento.fechaInicio"
+            display-format="DD/MM/YYYY"
+            picker-format="DD MM YYYY">
+          </ion-datetime>
+        </ion-item>
+
+        <ion-button 
+          expand="block" 
+          class="ion-margin-top"
+          (click)="agregarMedicamento()"
+          [disabled]="!nuevoMedicamento.nombre || !nuevoMedicamento.dosis || !nuevoMedicamento.frecuencia || !nuevoMedicamento.indicacion">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Agregar Medicamento
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal para Nueva Indicación -->
+  <ion-modal [isOpen]="isModalIndicacionOpen" (didDismiss)="cerrarModalIndicacion()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Agregar Nueva Indicación</ion-title>
+          <ion-button slot="end" fill="clear" (click)="cerrarModalIndicacion()">
+            Cerrar
+          </ion-button>
+        </ion-toolbar>
+      </ion-header>
+      
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-label position="stacked">Título de la Indicación *</ion-label>
+          <ion-input 
+            [(ngModel)]="nuevaIndicacion.titulo" 
+            placeholder="Ej: Dieta hipocalórica"
+            type="text">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Tipo de Indicación</ion-label>
+          <ion-select [(ngModel)]="nuevaIndicacion.tipo" placeholder="Seleccionar">
+            <ion-select-option value="Dieta">Dieta</ion-select-option>
+            <ion-select-option value="Seguimiento">Seguimiento</ion-select-option>
+            <ion-select-option value="Reposo">Reposo</ion-select-option>
+            <ion-select-option value="Ejercicio">Ejercicio</ion-select-option>
+            <ion-select-option value="Control">Control</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Descripción Detallada *</ion-label>
+          <ion-textarea 
+            [(ngModel)]="nuevaIndicacion.descripcion" 
+            placeholder="Describa la indicación médica detalladamente..."
+            rows="4">
+          </ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Estado</ion-label>
+          <ion-select [(ngModel)]="nuevaIndicacion.estado" placeholder="Seleccionar">
+            <ion-select-option value="Vigente">Vigente</ion-select-option>
+            <ion-select-option value="Pendiente">Pendiente</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Fecha</ion-label>
+          <ion-datetime 
+            [(ngModel)]="nuevaIndicacion.fecha"
+            display-format="DD/MM/YYYY"
+            picker-format="DD MM YYYY">
+          </ion-datetime>
+        </ion-item>
+
+        <ion-button 
+          expand="block" 
+          class="ion-margin-top"
+          (click)="agregarIndicacion()"
+          [disabled]="!nuevaIndicacion.titulo || !nuevaIndicacion.descripcion">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Agregar Indicación
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

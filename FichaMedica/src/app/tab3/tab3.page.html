@@ -1,17 +1,240 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Fichas
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Fichas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="ficha-container">
+    
+    <!-- Header con botón de volver -->
+    <div class="ficha-header">
+      <button class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        <span>Volver a Pacientes</span>
+      </button>
+      
+      <div class="header-title">
+        <ion-icon name="document-text" class="header-icon"></ion-icon>
+        <h1>Ficha Médica - {{ ficha.datosPersonales.nombre }}</h1>
+      </div>
+    </div>
 
-  <app-explore-container name="Fichas page"></app-explore-container>
+    <!-- SECCIÓN: Datos Personales -->
+    <ion-card class="section-card">
+      <ion-card-header>
+        <div class="section-header">
+          <ion-icon name="person" class="section-icon"></ion-icon>
+          <ion-card-title>Datos Personales</ion-card-title>
+        </div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" sizeMd="6">
+              <div class="info-group">
+                <div class="info-item">
+                  <span class="info-label">RUT:</span>
+                  <span class="info-value">{{ ficha.datosPersonales.rut }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Edad:</span>
+                  <span class="info-value">{{ ficha.datosPersonales.edad }} años</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Tipo sanguíneo:</span>
+                  <span class="info-value blood-type">{{ ficha.datosPersonales.tipoSanguineo }}</span>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col size="12" sizeMd="6">
+              <div class="info-group">
+                <div class="info-item">
+                  <span class="info-label">Dirección:</span>
+                  <span class="info-value">{{ ficha.datosPersonales.direccion }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Contacto:</span>
+                  <span class="info-value">{{ ficha.datosPersonales.contacto }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Emergencia:</span>
+                  <span class="info-value">{{ ficha.datosPersonales.emergencia }}</span>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- SECCIÓN: Alertas Médicas -->
+    <ion-card class="section-card">
+      <ion-card-header>
+        <div class="section-header">
+          <ion-icon name="alert-circle" class="section-icon alert-icon"></ion-icon>
+          <ion-card-title>Alertas Médicas</ion-card-title>
+        </div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="alerts-container">
+          <div class="alerts-group">
+            <h4 class="alerts-subtitle">Alergias:</h4>
+            <div class="badges-container">
+              <ion-badge 
+                *ngFor="let alerta of ficha.alertasMedicas | slice:0:2" 
+                [color]="getBadgeColor(alerta.criticidad)"
+                class="alert-badge">
+                {{ alerta.descripcion }}
+              </ion-badge>
+            </div>
+          </div>
+          
+          <div class="alerts-group">
+            <h4 class="alerts-subtitle">Condiciones Crónicas:</h4>
+            <div class="badges-container">
+              <ion-badge 
+                *ngFor="let alerta of ficha.alertasMedicas | slice:2:4" 
+                [color]="getBadgeColor(alerta.criticidad)"
+                class="alert-badge condition-badge">
+                {{ alerta.descripcion }}
+              </ion-badge>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- SECCIÓN: Evolución Médica -->
+    <ion-card class="section-card">
+      <ion-card-header>
+        <div class="section-header">
+          <ion-icon name="pulse" class="section-icon evolution-icon"></ion-icon>
+          <ion-card-title>Evolución Médica</ion-card-title>
+        </div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="evolution-timeline">
+          <div 
+            *ngFor="let consulta of ficha.evoluciones; let i = index" 
+            class="evolution-item"
+            [class.latest]="i === 0">
+            
+            <div class="evolution-marker">
+              <div class="evolution-dot"></div>
+              <div class="evolution-line" *ngIf="i < ficha.evoluciones.length - 1"></div>
+            </div>
+            
+            <div class="evolution-content">
+              <div class="evolution-header">
+                <div class="evolution-date-time">
+                  <span class="evolution-date">{{ formatDate(consulta.fecha) }}</span>
+                  <span class="evolution-time">{{ consulta.hora }}</span>
+                </div>
+                <span class="evolution-specialty">{{ consulta.especialidad }}</span>
+              </div>
+              
+              <div class="evolution-doctor">
+                <ion-icon name="person-circle-outline"></ion-icon>
+                <span>{{ consulta.medico }}</span>
+              </div>
+              
+              <div class="evolution-notes">
+                <p>{{ consulta.observaciones }}</p>
+              </div>
+              
+              <div class="vital-signs">
+                <h5 class="vital-signs-title">
+                  <ion-icon name="heart-outline"></ion-icon>
+                  Signos Vitales
+                </h5>
+                <div class="vital-signs-grid">
+                  <div class="vital-item">
+                    <span class="vital-label">PA:</span>
+                    <span class="vital-value">{{ consulta.signosVitales.presionArterial }}</span>
+                  </div>
+                  <div class="vital-item">
+                    <span class="vital-label">FC:</span>
+                    <span class="vital-value">{{ consulta.signosVitales.frecuenciaCardiaca }} bpm</span>
+                  </div>
+                  <div class="vital-item">
+                    <span class="vital-label">T°:</span>
+                    <span class="vital-value">{{ consulta.signosVitales.temperatura }}°C</span>
+                  </div>
+                  <div class="vital-item">
+                    <span class="vital-label">Peso:</span>
+                    <span class="vital-value">{{ consulta.signosVitales.peso }} kg</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- SECCIÓN: Exámenes y Resultados -->
+    <ion-card class="section-card">
+      <ion-card-header>
+        <div class="section-header">
+          <ion-icon name="flask" class="section-icon examenes-icon"></ion-icon>
+          <ion-card-title>Exámenes y Resultados</ion-card-title>
+        </div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="examenes-list">
+          <div 
+            *ngFor="let examen of ficha.examenes" 
+            class="examen-item">
+            
+            <div class="examen-header">
+              <div class="examen-info">
+                <h4 class="examen-name">{{ examen.nombre }}</h4>
+                <span class="examen-date">{{ formatDateShort(examen.fecha) }}</span>
+              </div>
+              <ion-badge 
+                [color]="getExamenBadgeColor(examen.estado)"
+                class="examen-badge">
+                {{ getExamenBadgeText(examen.estado) }}
+              </ion-badge>
+            </div>
+            
+            <div class="examen-result">
+              <span>{{ examen.resultado }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- SECCIÓN: Notas Rápidas -->
+    <ion-card class="section-card">
+      <ion-card-header>
+        <div class="section-header">
+          <ion-icon name="document-outline" class="section-icon notas-icon"></ion-icon>
+          <ion-card-title>Notas Rápidas</ion-card-title>
+        </div>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="notas-container">
+          <ion-textarea
+            [(ngModel)]="nuevaNota"
+            placeholder="Agregar nota rápida sobre el paciente..."
+            rows="4"
+            fill="outline"
+            class="nota-textarea">
+          </ion-textarea>
+          
+          <ion-button 
+            (click)="agregarNota()"
+            [disabled]="!nuevaNota.trim()"
+            color="primary"
+            class="agregar-nota-btn">
+            <ion-icon name="add" slot="start"></ion-icon>
+            Agregar Nota
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
 </ion-content>

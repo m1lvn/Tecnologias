@@ -1,0 +1,487 @@
+.ficha-container {
+  padding: 16px;
+  background-color: var(--ion-color-light);
+  min-height: 100vh;
+}
+
+// ========== HEADER ==========
+.ficha-header {
+  margin-bottom: 20px;
+  
+  .back-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--ion-color-primary);
+    font-size: 14px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    padding: 8px 0;
+    
+    ion-icon {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+    
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+  
+  .header-title {
+    display: flex;
+    align-items: center;
+    
+    .header-icon {
+      font-size: 28px;
+      color: var(--ion-color-primary);
+      margin-right: 12px;
+    }
+    
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+// ========== TARJETAS DE SECCIÓN ==========
+.section-card {
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: var(--medical-card-background);
+  border: 1px solid var(--medical-border);
+  
+  ion-card-header {
+    padding: 20px 20px 0 20px;
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      
+      .section-icon {
+        font-size: 24px;
+        margin-right: 12px;
+        color: var(--ion-color-primary);
+        
+        &.alert-icon {
+          color: var(--ion-color-danger);
+        }
+        
+        &.evolution-icon {
+          color: var(--ion-color-success);
+        }
+      }
+      
+      ion-card-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--medical-text-primary);
+        margin: 0;
+      }
+    }
+  }
+  
+  ion-card-content {
+    padding: 16px 20px 20px 20px;
+  }
+}
+
+// ========== DATOS PERSONALES ==========
+.info-group {
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      font-size: 14px;
+      color: var(--medical-text-secondary);
+      font-weight: 500;
+      min-width: 100px;
+    }
+    
+    .info-value {
+      font-size: 14px;
+      color: var(--medical-text-primary);
+      font-weight: 600;
+      text-align: right;
+      flex: 1;
+      
+      &.blood-type {
+        background: var(--ion-color-primary);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 12px;
+        text-align: center;
+        min-width: 40px;
+      }
+    }
+  }
+}
+
+// ========== ALERTAS MÉDICAS ==========
+.alerts-container {
+  .alerts-group {
+    margin-bottom: 20px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .alerts-subtitle {
+      font-size: 14px;
+      color: var(--medical-text-secondary);
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .badges-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      
+      .alert-badge {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 20px;
+        
+        &.condition-badge {
+          background: var(--ion-color-warning) !important;
+          color: var(--ion-color-warning-contrast) !important;
+        }
+      }
+    }
+  }
+}
+
+// ========== EVOLUCIÓN MÉDICA ==========
+.evolution-timeline {
+  position: relative;
+  
+  .evolution-item {
+    display: flex;
+    margin-bottom: 30px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &.latest .evolution-content {
+      background: var(--medical-blue-light);
+      border-left: 4px solid var(--ion-color-primary);
+    }
+    
+    .evolution-marker {
+      position: relative;
+      margin-right: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      
+      .evolution-dot {
+        width: 12px;
+        height: 12px;
+        background: var(--ion-color-primary);
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 0 0 2px var(--ion-color-primary);
+        z-index: 2;
+      }
+      
+      .evolution-line {
+        width: 2px;
+        flex: 1;
+        background: #e0e0e0;
+        margin-top: 8px;
+        min-height: 40px;
+      }
+    }
+    
+    .evolution-content {
+      flex: 1;
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      
+      .evolution-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        
+        .evolution-date-time {
+          display: flex;
+          flex-direction: column;
+          
+          .evolution-date {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--medical-text-primary);
+          }
+          
+          .evolution-time {
+            font-size: 12px;
+            color: var(--medical-text-secondary);
+            margin-top: 2px;
+          }
+        }
+        
+        .evolution-specialty {
+          background: var(--ion-color-primary);
+          color: white;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 4px 8px;
+          border-radius: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+        }
+      }
+      
+      .evolution-doctor {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: var(--medical-text-secondary);
+        
+        ion-icon {
+          margin-right: 6px;
+          font-size: 16px;
+        }
+      }
+      
+      .evolution-notes {
+        margin-bottom: 16px;
+        
+        p {
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.5;
+          color: var(--medical-text-primary);
+        }
+      }
+      
+      .vital-signs {
+        background: white;
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid var(--medical-border);
+        
+        .vital-signs-title {
+          display: flex;
+          align-items: center;
+          margin: 0 0 12px 0;
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--ion-color-primary);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          
+          ion-icon {
+            margin-right: 6px;
+            font-size: 16px;
+          }
+        }
+        
+        .vital-signs-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 8px;
+          
+          .vital-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            
+            .vital-label {
+              font-size: 12px;
+              color: var(--medical-text-secondary);
+              font-weight: 600;
+            }
+            
+            .vital-value {
+              font-size: 12px;
+              color: var(--medical-text-primary);
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ========== RESPONSIVE ==========
+@media (max-width: 768px) {
+  .ficha-container {
+    padding: 12px;
+  }
+  
+  .ficha-header {
+    .header-title h1 {
+      font-size: 20px;
+    }
+  }
+  
+  .section-card {
+    ion-card-header {
+      padding: 16px 16px 0 16px;
+    }
+    
+    ion-card-content {
+      padding: 12px 16px 16px 16px;
+    }
+  }
+  
+  .evolution-item {
+    .evolution-marker {
+      margin-right: 12px;
+    }
+    
+    .evolution-content {
+      padding: 12px;
+    }
+  }
+  
+  .vital-signs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// ========== EXÁMENES Y RESULTADOS ==========
+.examenes-list {
+  .examen-item {
+    padding: 16px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--medical-border);
+    margin-bottom: 12px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .examen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      
+      .examen-info {
+        flex: 1;
+        
+        .examen-name {
+          margin: 0 0 4px 0;
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--medical-text-primary);
+        }
+        
+        .examen-date {
+          font-size: 12px;
+          color: var(--medical-text-secondary);
+        }
+      }
+      
+      .examen-badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+    }
+    
+    .examen-result {
+      span {
+        font-size: 14px;
+        color: var(--medical-text-primary);
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+// ========== NOTAS RÁPIDAS ==========
+.notas-container {
+  .nota-textarea {
+    margin-bottom: 16px;
+    --background: white;
+    --border-color: var(--medical-border);
+    --border-radius: 8px;
+    --color: var(--medical-text-primary);
+    --placeholder-color: var(--medical-text-secondary);
+    
+    &.ng-valid {
+      --border-color: var(--ion-color-primary);
+    }
+  }
+  
+  .agregar-nota-btn {
+    --border-radius: 8px;
+    font-weight: 600;
+    
+    ion-icon {
+      margin-right: 8px;
+    }
+    
+    &[disabled] {
+      opacity: 0.5;
+    }
+  }
+}
+
+// ========== ICONOS DE SECCIÓN ==========
+.section-header {
+  .section-icon {
+    &.examenes-icon {
+      color: var(--ion-color-tertiary);
+    }
+    
+    &.notas-icon {
+      color: var(--ion-color-secondary);
+    }
+  }
+}
+
+// ========== BADGES OVERRIDE ==========
+ion-badge {
+  &[color="danger"] {
+    --background: var(--ion-color-danger) !important;
+    --color: white !important;
+  }
+  
+  &[color="warning"] {
+    --background: var(--ion-color-warning) !important;
+    --color: var(--ion-color-warning-contrast) !important;
+  }
+  
+  &[color="success"] {
+    --background: var(--ion-color-success) !important;
+    --color: white !important;
+  }
+  
+  &[color="medium"] {
+    --background: var(--ion-color-medium) !important;
+    --color: white !important;
+  }
+}
