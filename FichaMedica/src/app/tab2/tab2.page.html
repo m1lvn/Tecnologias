@@ -111,15 +111,20 @@
       </ion-item>
     </ion-list>
 
-    <!-- ===== MODAL: NUEVO PACIENTE (contenido dentro de ng-template) ===== -->
+    <!-- ===== MODAL: NUEVO PACIENTE ===== -->
     <ion-modal [isOpen]="isCreateOpen" (didDismiss)="closeCreate()" class="create-modal">
       <ng-template>
-        <div class="modal-sheet">
+        <div class="modal-sheet light-theme">
           <div class="modal-head">
-            <h3>
-              <ion-icon name="add-outline"></ion-icon>
-              Nuevo Paciente
-            </h3>
+            <div class="modal-title">
+              <div class="title-icon">
+                <ion-icon name="add-outline"></ion-icon>
+              </div>
+              <div>
+                <h3>Nuevo Paciente</h3>
+                <p>Completa los datos principales del paciente</p>
+              </div>
+            </div>
             <button class="close" (click)="closeCreate()">
               <ion-icon name="close-outline"></ion-icon>
             </button>
@@ -150,7 +155,7 @@
 
             <ion-item lines="none" class="fi">
               <ion-icon name="pulse-outline"></ion-icon>
-              <ion-select [(ngModel)]="newPaciente.estado" name="estado" interface="popover">
+              <ion-select [(ngModel)]="newPaciente.estado" name="estado" interface="popover" placeholder="Estado">
                 <ion-select-option value="Estable">Estable</ion-select-option>
                 <ion-select-option value="Activo">Activo</ion-select-option>
                 <ion-select-option value="Crítico">Crítico</ion-select-option>
@@ -170,7 +175,7 @@
 
               <ion-item lines="none" class="fi">
                 <ion-icon name="time-outline"></ion-icon>
-                <ion-input type="date" [(ngModel)]="newPaciente.ultimaVisita" name="ultimaVisita"></ion-input>
+                <ion-input type="date" [(ngModel)]="newPaciente.ultimaVisita" name="ultimaVisita" placeholder="Última visita"></ion-input>
               </ion-item>
             </div>
 

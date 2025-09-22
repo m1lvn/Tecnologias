@@ -18,7 +18,7 @@
 
 .page-container { max-width: 1100px; margin: 0 auto; padding: 22px; }
 
-/* Topbar */
+/* ---------- Topbar ---------- */
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
 .back-btn,
 .actions .ghost,
@@ -31,7 +31,7 @@
 .back-btn ion-icon { font-size: 18px; color: #176fdb; }
 .back-btn:hover { background: #ddecff; box-shadow: var(--elev-1); }
 .actions { display: inline-flex; gap: 10px; }
-.actions .ghost { background: #fff; border-color: #cfe3ff; color: #176fdb; }
+.actions .ghost { background: #fff; border: 1px solid #cfe3ff; color: #176fdb; }
 .actions .ghost ion-icon { font-size: 18px; color: #176fdb; }
 .actions .ghost:hover { background: #f6faff; box-shadow: var(--elev-1); }
 .actions .primary {
@@ -41,7 +41,7 @@
 .actions .primary ion-icon { font-size: 18px; color: #fff; }
 .actions .primary:hover { filter: saturate(1.04); box-shadow: var(--elev-2); }
 
-/* Encabezado sección */
+/* ---------- Encabezado ---------- */
 .section-title { display: flex; align-items: center; margin: 6px 0 12px; padding: 12px 14px; background: var(--c-surface-soft); border: 1px solid #dbe9ff; border-radius: 12px; }
 .section-title .left { display: flex; align-items: center; gap: 12px; }
 .soft-icon { width: 36px; height: 36px; border-radius: 10px; background: #eaf4ff; border: 1px solid #dbe9ff; display: grid; place-items: center; }
@@ -49,7 +49,7 @@
 .titles h2 { margin: 0; font-size: 20px; color: var(--c-text); font-weight: 900; }
 .titles .subtitle { margin: 2px 0 0 0; color: var(--c-muted); font-size: 13px; }
 
-/* Buscador */
+/* ---------- Buscador ---------- */
 .search-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .searchbar-container { position: relative; flex: 1; }
 .search-icon { position: absolute; top: 50%; left: 14px; transform: translateY(-50%); font-size: 18px; color: #176fdb; z-index: 2; }
@@ -60,75 +60,157 @@
 .filter-chip ion-icon { font-size: 18px; color: #2a5ea8; }
 .filter-chip:hover { background: #f6fbff; box-shadow: var(--elev-1); }
 
-/* Lista */
+/* ---------- Cards ---------- */
 .patients-list { padding: 0; background: transparent; }
 .patient-card { --background: transparent; padding: 0; margin-bottom: 14px; }
 .card-inner { width: 100%; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 14px; box-shadow: var(--elev-1); padding: 16px; transition: transform .12s ease, box-shadow .12s ease; }
 .card-inner:hover { transform: translateY(-1px); box-shadow: var(--elev-2); }
 
-/* Head */
 .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
 .head-left { display: inline-flex; align-items: center; gap: 12px; }
 .avatar { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: #eaf3ff; color: #176fdb; font-weight: 900; border: 1px solid #dbe9ff; }
 .name { margin: 0; font-size: 18px; font-weight: 900; color: var(--c-text); }
 
-/* Badge estado */
 .state-badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 6px 10px; font-weight: 800; }
 .state-badge .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: currentColor; }
 .badge-estable { background: #e6f7ea; color: #2dbf7c; }
 .badge-activo  { background: #e7f0ff; color: #176fdb; }
 .badge-critico { background: #ffe3e3; color: #e53935; }
 
-/* Meta */
 .meta { display: grid; grid-template-columns: 1fr; row-gap: 6px; margin-bottom: 12px; }
 .meta-line { display: flex; align-items: center; gap: 8px; color: var(--c-muted); font-size: 13px; }
 .meta-line ion-icon { font-size: 16px; color: #7aa2d6; }
 .meta-line .separator { margin: 0 2px; }
 
-/* Diagnóstico */
 .dx { border: 1px solid #e5efff; background: #eef6ff; border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; }
 .dx-title { display: inline-flex; align-items: center; gap: 8px; color: #2a5ea8; font-weight: 900; margin-bottom: 6px; }
 .dx-title ion-icon { font-size: 18px; color: #2a5ea8; }
 .dx-body { color: #1e4069; }
 
-/* Pie */
 .foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .foot-left { display: grid; row-gap: 6px; }
 .foot-line { display: flex; align-items: center; gap: 8px; color: var(--c-muted); font-size: 13px; }
 .foot-line ion-icon { font-size: 16px; color: #7aa2d6; }
 
-/* CTA */
 .cta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-600)); color: #fff; font-weight: 800; cursor: pointer; box-shadow: 0 8px 18px rgba(31,136,255,.18); transition: transform .12s ease, box-shadow .12s ease, filter .12s ease; }
 .cta ion-icon { font-size: 18px; color: #fff; }
 .cta:hover { transform: translateY(-1px); box-shadow: var(--elev-2); filter: saturate(1.04); }
 
-/* ===== Modal crear ===== */
-.create-modal::part(content) { --height: auto; --width: 720px; --border-radius: 16px; }
-.modal-sheet { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 16px; box-shadow: var(--elev-2); }
-.modal-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--c-border); }
-.modal-head h3 { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: 18px; font-weight: 900; color: var(--c-text); }
-.modal-head h3 ion-icon { color: #176fdb; }
-.modal-head .close { background: transparent; border: 1px solid #e1ecff; color: #5b7fb2; border-radius: 10px; height: 32px; width: 32px; display: grid; place-items: center; cursor: pointer; }
+/* ---------- MODAL – LIGHT THEME (fondo sólido, título legible) ---------- */
+
+/* oscurece el fondo detrás del modal (overlay) */
+.create-modal::part(backdrop) {
+  background: rgba(15, 28, 46, 0.32);
+  backdrop-filter: blur(2px);
+}
+
+/* CONTENEDOR del modal */
+.create-modal::part(content) {
+  --height: auto;
+  --width: 720px;
+  --border-radius: 16px;
+  /* Fondo sólido (no transparente) */
+  --background: #ffffff;
+  background: #ffffff;
+  border: 1px solid var(--c-border);
+  box-shadow: 0 18px 40px rgba(15, 28, 46, 0.18);
+}
+
+/* Fuerza tema claro dentro del modal */
+.light-theme {
+  color-scheme: light;
+  --ion-background-color: #ffffff;
+  --ion-text-color: #0f1c2e;
+  --ion-item-background: #ffffff;
+  --ion-toolbar-background: #f6faff;
+
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+/* Cabecera del modal: azul claro y tipografía fuerte */
+.modal-sheet { border-radius: 16px; overflow: hidden; }
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  background: #eaf3ff;                 /* MÁS CLARO y opaco */
+  border-bottom: 1px solid #d5e6ff;
+}
+
+.modal-title { display: flex; align-items: center; gap: 12px; }
+
+.title-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: #dff0ff; border: 1px solid #cfe3ff;
+  display: grid; place-items: center;
+}
+.title-icon ion-icon { color: #176fdb; font-size: 20px; }
+
+/* Título y subtítulo con buen contraste */
+.modal-head h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f1c2e;                      /* MÁS OSCURO */
+}
+.modal-head p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #4b648a;                      /* mejor legibilidad */
+}
+
+.modal-head .close {
+  background: #ffffff;
+  border: 1px solid #dbe9ff;
+  color: #5b7fb2;
+  border-radius: 10px;
+  height: 34px; width: 34px;
+  display: grid; place-items: center;
+  cursor: pointer;
+}
 .modal-head .close:hover { background: #f1f6ff; }
 
-.form { padding: 14px 16px 18px; display: grid; row-gap: 12px; }
-.fi { --background: #fff; border: 1px solid #e1ecff; border-radius: 10px; padding: 4px 8px; }
-.fi ion-icon { margin-right: 8px; color: #7aa2d6; }
-.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.actions-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }
-.actions-row .ghost, .actions-row .primary {
-  height: 36px; padding: 0 14px; border-radius: 10px; font-weight: 800; cursor: pointer; border: 1px solid transparent;
+/* Contenido del formulario: inputs blancos y bordes suaves */
+.form { padding: 16px 18px 20px; display: grid; row-gap: 12px; }
+
+.fi {
+  --background: #ffffff !important;
+  background: #ffffff;
+  border: 1px solid #e1ecff;
+  border-radius: 12px;
+  padding: 6px 8px;
 }
-.actions-row .ghost { background: #fff; border-color: #cfe3ff; color: #176fdb; }
-.actions-row .ghost:hover { background: #f6faff; box-shadow: var(--elev-1); }
-.actions-row .primary { background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-600)); color: #fff; border: none; box-shadow: 0 6px 14px rgba(31,136,255,.18); }
-.actions-row .primary ion-icon { color: #fff; }
+.fi ion-icon { margin-right: 8px; color: #7aa2d6; }
+.fi::part(native) { --padding-start: 0; --background: #ffffff; color: #0f1c2e; }
+.fi ion-input, .fi ion-textarea, .fi ion-select {
+  --background: #ffffff;
+  --color: #0f1c2e;
+  --placeholder-color: #9bb6da;
+}
+
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.actions-row {
+  display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px;
+}
+.actions-row .ghost, .actions-row .primary {
+  height: 38px; padding: 0 16px; border-radius: 10px;
+  font-weight: 800; cursor: pointer; border: 1px solid transparent;
+}
+.actions-row .ghost { background: #ffffff; border: 1px solid #cfe3ff; color: #176fdb; }
+.actions-row .ghost:hover { background: #f6faff; box-shadow: var(--elev-1); color: #176fdb; }
+.actions-row .primary {
+  background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-600));
+  color: #23579b; border: 1px solid #cfe3ff; box-shadow: 0 6px 14px rgba(31,136,255,.18);
+}
+.actions-row .primary ion-icon { color: #ffffff; }
 .actions-row .primary:hover { filter: saturate(1.04); box-shadow: var(--elev-2); }
 
+/* Responsive */
 @media (max-width: 768px) {
-  .page-container { padding: 18px; }
-  .foot { flex-direction: column; align-items: flex-start; }
-  .cta { align-self: stretch; justify-content: center; width: 100%; }
   .create-modal::part(content) { --width: 94vw; }
   .row-2 { grid-template-columns: 1fr; }
 }
