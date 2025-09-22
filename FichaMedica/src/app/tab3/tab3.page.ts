@@ -4,7 +4,7 @@ import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton,
   IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle,
   IonBadge, IonGrid, IonRow, IonCol, IonList, IonItem, IonLabel,
-  IonTextarea
+  IonTextarea, IonTabs, IonTabButton
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -66,7 +66,7 @@ interface FichaMedica {
     IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton,
     IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle,
     IonBadge, IonGrid, IonRow, IonCol, IonList, IonItem, IonLabel,
-    IonTextarea, CommonModule, FormsModule
+    IonTextarea, IonTabs, IonTabButton, CommonModule, FormsModule
   ],
 })
 export class Tab3Page implements OnInit {
@@ -220,5 +220,9 @@ export class Tab3Page implements OnInit {
       // Mostrar confirmación (opcional)
       // En una implementación real podrías usar un toast o alert
     }
+  }
+
+  verMedicacion() {
+    this.router.navigate(['/tabs/tab4']);
   }
 }

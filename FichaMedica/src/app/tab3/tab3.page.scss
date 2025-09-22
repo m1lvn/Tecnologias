@@ -46,6 +46,24 @@
       color: var(--ion-color-primary);
     }
   }
+
+  .header-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    
+    .medicacion-btn {
+      --border-color: var(--ion-color-primary);
+      --color: var(--ion-color-primary);
+      font-size: 14px;
+      height: 40px;
+      
+      &:hover {
+        --background: var(--ion-color-primary-tint);
+      }
+    }
+  }
 }
 
 // ========== TARJETAS DE SECCIÓN ==========
