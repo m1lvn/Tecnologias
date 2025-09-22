@@ -6,8 +6,8 @@
   --c-text: #0f1c2e;
   --c-muted: #6b7a90;
 
-  --c-primary-50: #eaf3ff;
-  --c-primary-400: #52a6ff;
+  --c-primary-50:  #eaf3ff;
+  --c-primary-300: #52a6ff;
   --c-primary-600: #176fdb;
 
   --elev-1: 0 4px 12px rgba(23, 66, 150, .08);
@@ -22,52 +22,91 @@
   padding: 22px;
 }
 
-/* Top: volver */
-.topbar { margin-bottom: 10px; }
-.back-btn {
+/* Topbar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.back-btn,
+.actions .ghost,
+.actions .primary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  background: #eaf3ff;
-  border: 1px solid #cfe3ff;
+  height: 36px;
+  padding: 0 12px;
   border-radius: 10px;
-  color: #176fdb;
   font-weight: 800;
   cursor: pointer;
   transition: background .12s ease, box-shadow .12s ease;
+  border: 1px solid transparent;
+}
+
+.back-btn {
+  background: #eaf3ff;
+  border-color: #cfe3ff;
+  color: #176fdb;
 }
 .back-btn ion-icon { font-size: 18px; color: #176fdb; }
 .back-btn:hover { background: #ddecff; box-shadow: var(--elev-1); }
 
-/* Título sección */
+.actions { display: inline-flex; gap: 10px; }
+.actions .ghost {
+  background: #fff;
+  border-color: #cfe3ff;
+  color: #176fdb;
+}
+.actions .ghost ion-icon { font-size: 18px; color: #176fdb; }
+.actions .ghost:hover { background: #f6faff; box-shadow: var(--elev-1); }
+
+.actions .primary {
+  background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-600));
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 16px rgba(31,136,255,.18);
+}
+.actions .primary ion-icon { font-size: 18px; color: #fff; }
+.actions .primary:hover { filter: saturate(1.04); box-shadow: var(--elev-2); }
+
+/* Encabezado sección */
 .section-title {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   margin: 6px 0 12px;
   padding: 12px 14px;
   background: var(--c-surface-soft);
   border: 1px solid #dbe9ff;
   border-radius: 12px;
 }
-.section-title .left { display: flex; align-items: center; gap: 10px; }
-.section-title h2 {
-  margin: 0;
-  font-size: 20px;
-  color: #0f1c2e;
-}
+
+.section-title .left { display: flex; align-items: center; gap: 12px; }
 .soft-icon {
-  width: 32px; height: 32px; border-radius: 8px;
+  width: 36px; height: 36px; border-radius: 10px;
   background: #eaf4ff; border: 1px solid #dbe9ff;
   display: grid; place-items: center;
 }
-.soft-icon ion-icon { font-size: 18px; color: #1f88ff; }
+.soft-icon ion-icon { font-size: 20px; color: #1f88ff; }
+
+.titles h2 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--c-text);
+  font-weight: 900;
+}
+.titles .subtitle {
+  margin: 2px 0 0 0;
+  color: var(--c-muted);
+  font-size: 13px;
+}
 
 /* Buscador */
 .search-wrap {
   display: grid;
-  grid-template-columns: 24px 1fr;
+  grid-template-columns: 24px 1fr auto;
   align-items: center;
   gap: 10px;
   background: #eaf4ff;
@@ -88,15 +127,25 @@
   border-radius: 8px;
   height: 40px;
 }
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #cfe3ff;
+  background: #fff;
+  color: #2a5ea8;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.filter-chip ion-icon { font-size: 18px; color: #2a5ea8; }
+.filter-chip:hover { background: #f6fbff; box-shadow: var(--elev-1); }
 
 /* Lista */
 .patients-list { padding: 0; background: transparent; }
 
-.patient-card {
-  --background: transparent;
-  padding: 0;
-  margin-bottom: 14px;
-}
+.patient-card { --background: transparent; padding: 0; margin-bottom: 14px; }
 
 .card-inner {
   width: 100%;
@@ -105,7 +154,9 @@
   border-radius: 14px;
   box-shadow: var(--elev-1);
   padding: 16px;
+  transition: transform .12s ease, box-shadow .12s ease;
 }
+.card-inner:hover { transform: translateY(-1px); box-shadow: var(--elev-2); }
 
 /* Head */
 .head {
@@ -115,13 +166,23 @@
   gap: 12px;
   margin-bottom: 10px;
 }
+.head-left { display: inline-flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: #eaf3ff; color: #176fdb; font-weight: 900;
+  border: 1px solid #dbe9ff;
+}
 .name { margin: 0; font-size: 18px; font-weight: 900; color: var(--c-text); }
 
-/* Badge estado */
-ion-badge {
-  border-radius: 999px;
-  font-weight: 800;
-  padding: 6px 10px;
+/* Badge de estado con punto */
+.state-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 999px; padding: 6px 10px; font-weight: 800;
+}
+.state-badge .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  display: inline-block; background: currentColor;
 }
 .badge-estable { background: #e6f7ea; color: #2dbf7c; }
 .badge-activo  { background: #e7f0ff; color: #176fdb; }
@@ -131,7 +192,7 @@ ion-badge {
 .meta { display: grid; grid-template-columns: 1fr; row-gap: 6px; margin-bottom: 12px; }
 .meta-line { display: flex; align-items: center; gap: 8px; color: var(--c-muted); font-size: 13px; }
 .meta-line ion-icon { font-size: 16px; color: #7aa2d6; }
-.meta-line .dot { margin: 0 4px; }
+.meta-line .separator { margin: 0 2px; }
 
 /* Diagnóstico */
 .dx {
@@ -141,15 +202,13 @@ ion-badge {
   padding: 10px 12px;
   margin-bottom: 12px;
 }
-.dx-title { color: #2a5ea8; font-weight: 900; margin-bottom: 6px; }
+.dx-title { display: inline-flex; align-items: center; gap: 8px; color: #2a5ea8; font-weight: 900; margin-bottom: 6px; }
+.dx-title ion-icon { font-size: 18px; color: #2a5ea8; }
 .dx-body { color: #1e4069; }
 
-/* Foot */
+/* Pie */
 .foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
 .foot-left { display: grid; row-gap: 6px; }
 .foot-line { display: flex; align-items: center; gap: 8px; color: var(--c-muted); font-size: 13px; }
@@ -157,17 +216,11 @@ ion-badge {
 
 /* CTA */
 .cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--c-primary-400), var(--c-primary-600));
-  color: #fff;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(31, 136, 255, .18);
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, var(--c-primary-300), var(--c-primary-600));
+  color: #fff; font-weight: 800; cursor: pointer;
+  box-shadow: 0 8px 18px rgba(31,136,255,.18);
   transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
 }
 .cta ion-icon { font-size: 18px; color: #fff; }

@@ -1,21 +1,35 @@
 <ion-content [fullscreen]="true">
   <div class="page-container">
 
-    <!-- Volver al inicio -->
+    <!-- Barra superior: volver + acciones -->
     <div class="topbar">
       <button class="back-btn" (click)="goBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
         <span>Volver al Inicio</span>
       </button>
+
+      <div class="actions">
+        <button class="ghost" (click)="exportar()">
+          <ion-icon name="download-outline"></ion-icon>
+          <span>Exportar</span>
+        </button>
+        <button class="primary" (click)="addPaciente()">
+          <ion-icon name="add-outline"></ion-icon>
+          <span>Nuevo Paciente</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Título sección -->
+    <!-- Encabezado de sección -->
     <div class="section-title">
       <div class="left">
         <div class="soft-icon">
           <ion-icon name="people-outline"></ion-icon>
         </div>
-        <h2>Lista de Pacientes</h2>
+        <div class="titles">
+          <h2>Lista de Pacientes</h2>
+          <p class="subtitle">{{ total }} resultado{{ total === 1 ? '' : 's' }}</p>
+        </div>
       </div>
     </div>
 
@@ -24,27 +38,41 @@
       <ion-icon name="search-outline" class="search-icon"></ion-icon>
       <ion-searchbar
         class="searchbar"
-        placeholder="Buscar por nombre, RUT o diagnóstico..."
+        placeholder="Buscar por nombre, RUT, diagnóstico o ubicación..."
         (ionInput)="onSearch($event)"
         [debounce]="150"
         showCancelButton="never">
       </ion-searchbar>
+      <button class="filter-chip" title="Filtros (demo)">
+        <ion-icon name="options-outline"></ion-icon>
+        <span>Filtros</span>
+      </button>
     </div>
 
     <!-- Listado -->
     <ion-list class="patients-list">
       <ion-item class="patient-card" lines="none" *ngFor="let p of filtered">
         <div class="card-inner">
+
+          <!-- Cabecera: avatar + nombre + estado -->
           <div class="head">
-            <h3 class="name">{{ p.nombre }}</h3>
-            <ion-badge [ngClass]="estadoClass(p.estado)">{{ p.estado }}</ion-badge>
+            <div class="head-left">
+              <div class="avatar">{{ initials(p.nombre) }}</div>
+              <h3 class="name">{{ p.nombre }}</h3>
+            </div>
+
+            <ion-badge [ngClass]="estadoClass(p.estado)" class="state-badge">
+              <span class="dot"></span> {{ p.estado }}
+            </ion-badge>
           </div>
 
+          <!-- Metadatos -->
           <div class="meta">
             <div class="meta-line">
-              <ion-icon name="person-outline"></ion-icon>
-              <span>RUT: {{ p.rut }}</span>
-              <span class="dot">•</span>
+              <ion-icon name="id-card-outline"></ion-icon>
+              <span>{{ p.rut }}</span>
+              <span class="separator">•</span>
+              <ion-icon name="calendar-number-outline"></ion-icon>
               <span>{{ p.edad }} años</span>
             </div>
             <div class="meta-line">
@@ -53,11 +81,16 @@
             </div>
           </div>
 
+          <!-- Diagnóstico -->
           <div class="dx">
-            <div class="dx-title">Diagnóstico Principal:</div>
+            <div class="dx-title">
+              <ion-icon name="bandage-outline"></ion-icon>
+              <span>Diagnóstico Principal</span>
+            </div>
             <div class="dx-body">{{ p.diagnostico }}</div>
           </div>
 
+          <!-- Pie: contacto + última visita + CTA -->
           <div class="foot">
             <div class="foot-left">
               <div class="foot-line">
@@ -69,11 +102,13 @@
                 <span>Última visita: {{ p.ultimaVisita }}</span>
               </div>
             </div>
+
             <button class="cta" (click)="verFicha(p)">
               <ion-icon name="eye-outline"></ion-icon>
               <span>Ver Ficha</span>
             </button>
           </div>
+
         </div>
       </ion-item>
     </ion-list>

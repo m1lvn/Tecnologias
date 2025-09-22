@@ -30,15 +30,19 @@ export class Tab2Page {
 
   constructor(private router: Router) {}
 
-  // -------- Navegación
-  goBack() { this.router.navigateByUrl('/tabs/tab1'); }
-  verFicha(p: Paciente) { this.router.navigateByUrl('/tabs/tab3'); /* ajusta ruta si quieres */ }
+  // Navegación
+  goBack()    { this.router.navigateByUrl('/tabs/tab1'); }
+  verFicha(p: Paciente) { this.router.navigateByUrl('/tabs/tab3'); } // ajusta ruta
 
-  // -------- Búsqueda
+  // Acciones del header (demo)
+  addPaciente() { /* abre modal/route de alta */ }
+  exportar()    { /* export CSV/PDF */ }
+
+  // Búsqueda
   query = '';
   onSearch(ev: any) { this.query = (ev?.detail?.value || '').toLowerCase().trim(); }
 
-  // -------- Datos demo (ajusta a tu backend)
+  // Datos demo
   pacientes: Paciente[] = [
     {
       nombre: 'María González Pérez',
@@ -79,10 +83,20 @@ export class Tab2Page {
     );
   }
 
+  get total(): number { return this.filtered.length; }
+
+  // Avatar con iniciales
+  initials(nombre: string): string {
+    const parts = nombre.trim().split(/\s+/);
+    const first = parts[0]?.[0] ?? '';
+    const last  = parts[parts.length - 1]?.[0] ?? '';
+    return (first + last).toUpperCase();
+  }
+
   estadoClass(estado: Paciente['estado']) {
     return {
       'badge-estable': estado === 'Estable',
-      'badge-activo': estado === 'Activo',
+      'badge-activo' : estado === 'Activo',
       'badge-critico': estado === 'Crítico',
     };
   }
