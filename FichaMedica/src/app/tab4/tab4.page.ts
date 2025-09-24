@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
@@ -61,6 +62,7 @@ export interface HistorialMedicamento {
   ],
 })
 export class Tab4Page {
+
   medicamentosActuales: Medicamento[] = [
     {
       id: 1,
@@ -184,7 +186,7 @@ export class Tab4Page {
     fecha: new Date().toISOString().split('T')[0]
   };
 
-  constructor() {
+  constructor(private router: Router) {
     addIcons({ add, create, ban, calendar, time, medical, person, warning, checkmarkCircle });
   }
 
@@ -304,5 +306,9 @@ export class Tab4Page {
 
   completarIndicacion(indicacion: IndicacionMedica) {
     indicacion.estado = 'Completado';
+  }
+
+  volverAFicha() {
+    this.router.navigate(['/tabs/tab3']);
   }
 }

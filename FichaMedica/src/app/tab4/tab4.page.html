@@ -8,6 +8,14 @@
 
 <ion-content [fullscreen]="true">
   <div class="page-container">
+    <!-- Botón de volver a la ficha -->
+    <div class="volver-container">
+      <button class="volver-btn" (click)="volverAFicha()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        <span>Volver a Ficha Médica</span>
+      </button>
+    </div>
+    
     <!-- Encabezado de Sección -->
     <div class="section-title">
       <div class="left">

@@ -76,7 +76,7 @@ export class Tab3Page implements OnInit {
   
   ficha: FichaMedica = {
     datosPersonales: {
-      nombre: 'María González Pérez',
+      nombre: 'Ignacia Castilo',
       rut: '12.345.678-9',
       edad: 45,
       tipoSanguineo: 'O+',

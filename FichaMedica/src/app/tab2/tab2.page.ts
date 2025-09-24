@@ -55,7 +55,7 @@ export class Tab2Page {
   // ---------- Datos demo ----------
   pacientes: Paciente[] = [
     {
-      nombre: 'María González Pérez',
+      nombre: 'Ignacia Castillo',
       rut: '12.345.678-9',
       edad: 45,
       ubicacion: 'Hab. 203',
@@ -65,7 +65,7 @@ export class Tab2Page {
       ultimaVisita: '2024-01-15'
     },
     {
-      nombre: 'Juan Carlos Ruiz',
+      nombre: 'Milan Kurte',
       rut: '11.222.333-4',
       edad: 62,
       ubicacion: 'Box 4',
@@ -75,7 +75,7 @@ export class Tab2Page {
       ultimaVisita: '2024-01-20'
     },
     {
-      nombre: 'Ana López Silva',
+      nombre: 'Mattias Morales',
       rut: '15.678.901-2',
       edad: 34,
       ubicacion: 'Hab. 105',
