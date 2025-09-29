@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import {
   IonContent, IonGrid, IonRow, IonCol,
   IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-  IonIcon, IonAvatar
+  IonIcon, IonAvatar, IonButton
 } from '@ionic/angular/standalone';
 import { NgFor, NgClass } from '@angular/common';
 
@@ -13,7 +13,7 @@ import { NgFor, NgClass } from '@angular/common';
   imports: [
     IonContent, IonGrid, IonRow, IonCol,
     IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-    IonIcon, IonAvatar,
+    IonIcon, IonAvatar, IonButton,
     NgFor,
     NgClass
   ],
@@ -23,6 +23,11 @@ import { NgFor, NgClass } from '@angular/common';
 export class Tab1Page {
 
   constructor(private router: Router) {}
+
+  verExamenesPaciente(pacienteId: string) {
+    // Navegar a la página de exámenes del paciente
+    this.router.navigate(['/tabs/tab2', { id: pacienteId }]);
+  }
 
   stats = [
     { title: 'Pacientes Activos', value: 42, sub: '28 hospitalizados, 14 ambulatorios', icon: 'people-outline' },
