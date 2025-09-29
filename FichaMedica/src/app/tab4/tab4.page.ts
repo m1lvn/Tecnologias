@@ -1,291 +1,173 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, IonBadge, IonButton, 
   IonIcon, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonModal, 
-  IonInput, IonTextarea, IonSelect, IonSelectOption, IonDatetime
+  IonInput, IonTextarea, IonSelect, IonSelectOption, IonDatetime,
+  IonSpinner, IonToast
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { add, create, ban, calendar, time, medical, person, warning, checkmarkCircle } from 'ionicons/icons';
+import { Subscription } from 'rxjs';
 
-export interface Medicamento {
-  id: number;
-  nombre: string;
-  dosis: string;
-  frecuencia: string;
-  via: string;
-  indicacion: string;
-  medicoPrescriptor: string;
-  fechaInicio: string;
-  estado: 'Activo' | 'Suspendido' | 'Finalizado';
-}
-
-export interface InteraccionMedicamentosa {
-  id: number;
-  medicamentos: string[];
-  tipo: 'menor' | 'moderada' | 'mayor';
-  descripcion: string;
-  recomendacion: string;
-}
-
-export interface IndicacionMedica {
-  id: number;
-  titulo: string;
-  descripcion: string;
-  tipo: 'Dieta' | 'Seguimiento' | 'Reposo' | 'Ejercicio' | 'Control';
-  estado: 'Vigente' | 'Completado' | 'Pendiente';
-  fecha: string;
-  fechaVencimiento?: string;
-}
-
-export interface HistorialMedicamento {
-  id: number;
-  nombre: string;
-  dosis: string;
-  frecuencia: string;
-  periodo: string;
-  medicoPrescriptor: string;
-  estado: 'Suspendido' | 'Completado';
-  motivo: string;
-}
+// Servicios
+import { MedicationService, Medication, CreateMedicationRequest } from '../services/medication.service';
+import { PatientService } from '../services/patient.service';
 
 @Component({
   selector: 'app-tab4',
   templateUrl: 'tab4.page.html',
   styleUrls: ['tab4.page.scss'],
+  standalone: true,
   imports: [
-    CommonModule, FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, 
-    IonBadge, IonButton, IonIcon, IonGrid, IonRow, IonCol, IonItem, IonLabel, 
-    IonModal, IonInput, IonTextarea, IonSelect, IonSelectOption, IonDatetime
-  ],
+    IonHeader, IonToolbar, IonTitle, IonContent, IonBadge, IonButton, 
+    IonIcon, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonModal, 
+    IonInput, IonTextarea, IonSelect, IonSelectOption, IonDatetime,
+    IonSpinner, IonToast,
+    CommonModule, FormsModule
+  ]
 })
-export class Tab4Page {
-
-  medicamentosActuales: Medicamento[] = [
-    {
-      id: 1,
-      nombre: 'Metformina',
-      dosis: '850 mg',
-      frecuencia: '2 veces al día',
-      via: 'Oral',
-      indicacion: 'Control de diabetes mellitus tipo 2',
-      medicoPrescriptor: 'Dr. José Fernández',
-      fechaInicio: '2024-01-10',
-      estado: 'Activo'
-    },
-    {
-      id: 2,
-      nombre: 'Enalapril',
-      dosis: '10 mg',
-      frecuencia: '1 vez al día',
-      via: 'Oral',
-      indicacion: 'Control de hipertensión arterial',
-      medicoPrescriptor: 'Dr. Luis Martínez',
-      fechaInicio: '2023-12-15',
-      estado: 'Activo'
-    },
-    {
-      id: 3,
-      nombre: 'Atorvastatina',
-      dosis: '20 mg',
-      frecuencia: '1 vez al día (noche)',
-      via: 'Oral',
-      indicacion: 'Control de colesterol elevado',
-      medicoPrescriptor: 'Dra. Carmen Silva',
-      fechaInicio: '2024-01-12',
-      estado: 'Activo'
-    }
-  ];
-
-  // Alertas de Interacciones
-  alertasInteracciones: InteraccionMedicamentosa[] = [
-    {
-      id: 1,
-      medicamentos: ['Metformina', 'Enalapril'],
-      tipo: 'menor',
-      descripcion: 'Interacción menor. Monitorear función renal.',
-      recomendacion: 'Controlar creatinina sérica regularmente'
-    }
-  ];
-
-  // Indicaciones Médicas
-  indicacionesMedicas: IndicacionMedica[] = [
-    {
-      id: 1,
-      titulo: 'Dieta hipocalórica',
-      descripcion: '1500 kcal/día. Restricción de carbohidratos simples.',
-      tipo: 'Dieta',
-      estado: 'Vigente',
-      fecha: '2024-01-15'
-    },
-    {
-      id: 2,
-      titulo: 'Control cardiológico',
-      descripcion: 'Control cardiológico en 3 meses. Traer electrocardiograma de control.',
-      tipo: 'Seguimiento',
-      estado: 'Vigente',
-      fecha: '2024-01-20'
-    },
-    {
-      id: 3,
-      titulo: 'Reposo relativo',
-      descripcion: 'Reposo relativo. Evitar esfuerzos físicos intensos por 2 semanas.',
-      tipo: 'Reposo',
-      estado: 'Vigente',
-      fecha: '2024-01-18'
-    }
-  ];
-
-  // Historial de Medicación
-  historialMedicacion: HistorialMedicamento[] = [
-    {
-      id: 1,
-      nombre: 'Losartán',
-      dosis: '50 mg',
-      frecuencia: '1 vez al día',
-      periodo: '2023-10-01 - 2023-12-14',
-      medicoPrescriptor: 'Dr. Luis Martínez',
-      estado: 'Suspendido',
-      motivo: 'Reemplazado por Enalapril por mejor tolerancia'
-    },
-    {
-      id: 2,
-      nombre: 'Paracetamol',
-      dosis: '500 mg',
-      frecuencia: 'Cada 8 horas',
-      periodo: '2024-01-05 - 2024-01-10',
-      medicoPrescriptor: 'Dra. Carmen Silva',
-      estado: 'Completado',
-      motivo: 'Manejo de dolor post-procedimiento'
-    }
-  ];
-
-  // Variables para el modal de nuevo medicamento
-  isModalOpen = false;
+export class Tab4Page implements OnInit, OnDestroy {
+  
+  // Estados del componente
+  medicamentosActuales: Medication[] = [];
+  isLoading = false;
+  error: string | null = null;
+  patientId: string | null = null;
+  
+  // Modal para crear medicamento
+  isCreateModalOpen = false;
+  newMedication: Partial<CreateMedicationRequest> = this.blankMedication();
+  
+  // Propiedades para compatibilidad con HTML
+  nuevoMedicamento: Partial<CreateMedicationRequest> = this.blankMedication();
+  
+  // Modal para indicaciones
   isModalIndicacionOpen = false;
-  nuevoMedicamento: Medicamento = {
-    id: 0,
-    nombre: '',
-    dosis: '',
-    frecuencia: '',
-    via: 'Oral',
-    indicacion: '',
-    medicoPrescriptor: '',
-    fechaInicio: new Date().toISOString().split('T')[0],
-    estado: 'Activo'
-  };
-
-  nuevaIndicacion: IndicacionMedica = {
-    id: 0,
+  nuevaIndicacion = {
     titulo: '',
+    tipo: '',
     descripcion: '',
-    tipo: 'Dieta',
-    estado: 'Vigente',
-    fecha: new Date().toISOString().split('T')[0]
+    estado: '',
+    fecha: new Date()
   };
 
-  constructor(private router: Router) {
+  // Propiedades adicionales para el HTML
+  alertasInteracciones: any[] = [];
+  indicacionesMedicas: any[] = [];
+  historialMedicacion: Medication[] = [];
+  isModalOpen = false;
+  
+  // Paginación
+  currentPage = 1;
+  totalPages = 1;
+  
+  private subscriptions: Subscription[] = [];
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private medicationService: MedicationService,
+    private patientService: PatientService
+  ) {
     addIcons({ add, create, ban, calendar, time, medical, person, warning, checkmarkCircle });
   }
 
-  abrirModalNuevoMedicamento() {
-    this.nuevoMedicamento = {
-      id: 0,
-      nombre: '',
-      dosis: '',
-      frecuencia: '',
-      via: 'Oral',
-      indicacion: '',
-      medicoPrescriptor: '',
-      fechaInicio: new Date().toISOString().split('T')[0],
-      estado: 'Activo'
-    };
-    this.isModalOpen = true;
+  ngOnInit() {
+    // Obtener el ID del paciente desde los query params
+    this.subscriptions.push(
+      this.route.queryParams.subscribe(params => {
+        this.patientId = params['patientId'];
+        if (this.patientId) {
+          this.loadMedications(this.patientId);
+        } else {
+          this.error = 'No se especificó el ID del paciente';
+        }
+      })
+    );
+
+    this.setupSubscriptions();
   }
 
-  cerrarModal() {
-    this.isModalOpen = false;
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  private setupSubscriptions() {
+    this.subscriptions.push(
+      this.medicationService.loading$.subscribe(loading => {
+        this.isLoading = loading;
+      }),
+      this.medicationService.error$.subscribe(error => {
+        this.error = error;
+      })
+    );
+  }
+
+  /**
+   * Cargar medicamentos del paciente
+   */
+  loadMedications(patientId: string, page: number = 1) {
+    this.currentPage = page;
+    
+    this.subscriptions.push(
+      this.medicationService.getPatientMedications(patientId, page, 20).subscribe({
+        next: (response) => {
+          this.medicamentosActuales = response.medicamentos;
+          this.historialMedicacion = response.medicamentos; // Sincronizar
+          this.totalPages = response.pagination.totalPages;
+          this.error = null;
+        },
+        error: (error) => {
+          console.error('Error loading medications:', error);
+          this.error = 'Error al cargar los medicamentos';
+        }
+      })
+    );
+  }
+
+  // ============== NAVEGACIÓN ==============
+  goBack() {
+    this.router.navigateByUrl('/tabs/tab3');
+  }
+
+  verFicha() {
+    if (this.patientId) {
+      this.router.navigate(['/tabs/tab3'], { 
+        queryParams: { patientId: this.patientId } 
+      });
+    }
+  }
+
+  // ============== CREAR MEDICAMENTO ==============
+  openCreateModal() {
+    this.newMedication = this.blankMedication();
+    this.nuevoMedicamento = this.blankMedication();
+    this.isCreateModalOpen = true;
+  }
+
+  closeCreateModal() {
+    this.isCreateModalOpen = false;
+  }
+
+  // Métodos para compatibilidad con HTML
+  abrirModalNuevoMedicamento() {
+    this.openCreateModal();
   }
 
   agregarMedicamento() {
-    if (this.nuevoMedicamento.nombre && this.nuevoMedicamento.dosis && 
-        this.nuevoMedicamento.frecuencia && this.nuevoMedicamento.indicacion) {
-      
-      const nuevoId = Math.max(...this.medicamentosActuales.map(m => m.id)) + 1;
-      this.nuevoMedicamento.id = nuevoId;
-      
-      this.medicamentosActuales.push({ ...this.nuevoMedicamento });
-      this.cerrarModal();
-    }
+    this.saveMedication();
   }
 
-  modificarMedicamento(medicamento: Medicamento) {
-    // Aquí se implementaría la lógica para modificar
-    console.log('Modificar medicamento:', medicamento);
-  }
-
-  suspenderMedicamento(medicamento: Medicamento) {
-    medicamento.estado = 'Suspendido';
-  }
-
-  getEstadoColor(estado: string): string {
-    switch (estado) {
-      case 'Activo':
-      case 'Vigente':
-        return 'success';
-      case 'Suspendido':
-        return 'danger';
-      case 'Finalizado':
-      case 'Completado':
-        return 'medium';
-      case 'Pendiente':
-        return 'warning';
-      default:
-        return 'medium';
-    }
-  }
-
-  getTipoInteraccionColor(tipo: string): string {
-    switch (tipo) {
-      case 'menor':
-        return 'warning';
-      case 'moderada':
-        return 'warning';
-      case 'mayor':
-        return 'danger';
-      default:
-        return 'medium';
-    }
-  }
-
-  getTipoIndicacionColor(tipo: string): string {
-    switch (tipo) {
-      case 'Dieta':
-        return 'success';
-      case 'Seguimiento':
-        return 'primary';
-      case 'Reposo':
-        return 'warning';
-      case 'Ejercicio':
-        return 'secondary';
-      case 'Control':
-        return 'tertiary';
-      default:
-        return 'medium';
-    }
-  }
-
-  // Modal de nueva indicación
   abrirModalNuevaIndicacion() {
     this.nuevaIndicacion = {
-      id: 0,
       titulo: '',
+      tipo: '',
       descripcion: '',
-      tipo: 'Dieta',
-      estado: 'Vigente',
-      fecha: new Date().toISOString().split('T')[0]
+      estado: '',
+      fecha: new Date()
     };
     this.isModalIndicacionOpen = true;
   }
@@ -295,20 +177,220 @@ export class Tab4Page {
   }
 
   agregarIndicacion() {
-    if (this.nuevaIndicacion.titulo && this.nuevaIndicacion.descripcion) {
-      const nuevoId = Math.max(...this.indicacionesMedicas.map(i => i.id)) + 1;
-      this.nuevaIndicacion.id = nuevoId;
-      
-      this.indicacionesMedicas.push({ ...this.nuevaIndicacion });
-      this.cerrarModalIndicacion();
+    // Lógica para agregar indicación
+    console.log('Agregando indicación:', this.nuevaIndicacion);
+    this.cerrarModalIndicacion();
+  }
+
+  // Métodos adicionales para compatibilidad con HTML
+  getTipoIndicacionColor(tipo: string): string {
+    switch(tipo) {
+      case 'critica': return 'danger';
+      case 'importante': return 'warning';
+      case 'informativa': return 'primary';
+      default: return 'medium';
     }
   }
 
-  completarIndicacion(indicacion: IndicacionMedica) {
-    indicacion.estado = 'Completado';
+  completarIndicacion(indicacion: any) {
+    console.log('Completar indicación:', indicacion);
+  }
+
+  cerrarModal() {
+    this.isModalOpen = false;
+    this.isCreateModalOpen = false;
   }
 
   volverAFicha() {
-    this.router.navigate(['/tabs/tab3']);
+    this.goBack();
+  }
+
+  getEstadoColor(estado: string): string {
+    return this.estadoColor(estado);
+  }
+
+  modificarMedicamento(medicamento: Medication) {
+    console.log('Modificar medicamento:', medicamento);
+    // Implementar lógica de modificación
+  }
+
+  saveMedication() {
+    if (!this.patientId || !this.nuevoMedicamento.nombre?.trim()) {
+      this.error = 'Nombre del medicamento es obligatorio';
+      return;
+    }
+
+    const medicationData: CreateMedicationRequest = {
+      nombre: this.nuevoMedicamento.nombre,
+      principioActivo: this.nuevoMedicamento.principioActivo || '',
+      dosis: this.nuevoMedicamento.dosis || '',
+      frecuencia: this.nuevoMedicamento.frecuencia || '',
+      via: this.nuevoMedicamento.via || 'oral',
+      duracion: this.nuevoMedicamento.duracion || '',
+      indicaciones: this.nuevoMedicamento.indicaciones || '',
+      contraindicaciones: this.nuevoMedicamento.contraindicaciones || [],
+      efectosSecundarios: this.nuevoMedicamento.efectosSecundarios || [],
+      medicoPrescriptor: this.nuevoMedicamento.medicoPrescriptor || 'Dr. No especificado',
+      fechaInicio: this.nuevoMedicamento.fechaInicio || new Date(),
+      fechaFin: this.nuevoMedicamento.fechaFin,
+      observaciones: this.nuevoMedicamento.observaciones
+    };
+
+    this.subscriptions.push(
+      this.medicationService.createMedication(this.patientId, medicationData).subscribe({
+        next: (newMedication) => {
+          if (newMedication) {
+            this.medicamentosActuales = [newMedication, ...this.medicamentosActuales];
+            this.closeCreateModal();
+            this.error = null;
+          }
+        },
+        error: (error) => {
+          console.error('Error creating medication:', error);
+          this.error = 'Error al crear el medicamento';
+        }
+      })
+    );
+  }
+
+  // ============== GESTIÓN DE MEDICAMENTOS ==============
+  suspenderMedicamento(medication: Medication) {
+    this.subscriptions.push(
+      this.medicationService.changeMedicationStatus(medication.id, 'suspendido').subscribe({
+        next: (updatedMedication) => {
+          if (updatedMedication) {
+            const index = this.medicamentosActuales.findIndex(m => m.id === medication.id);
+            if (index >= 0) {
+              this.medicamentosActuales[index] = updatedMedication;
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Error suspending medication:', error);
+          this.error = 'Error al suspender el medicamento';
+        }
+      })
+    );
+  }
+
+  reactivarMedicamento(medication: Medication) {
+    this.subscriptions.push(
+      this.medicationService.changeMedicationStatus(medication.id, 'activo').subscribe({
+        next: (updatedMedication) => {
+          if (updatedMedication) {
+            const index = this.medicamentosActuales.findIndex(m => m.id === medication.id);
+            if (index >= 0) {
+              this.medicamentosActuales[index] = updatedMedication;
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Error reactivating medication:', error);
+          this.error = 'Error al reactivar el medicamento';
+        }
+      })
+    );
+  }
+
+  completarMedicamento(medication: Medication) {
+    this.subscriptions.push(
+      this.medicationService.changeMedicationStatus(medication.id, 'completado').subscribe({
+        next: (updatedMedication) => {
+          if (updatedMedication) {
+            const index = this.medicamentosActuales.findIndex(m => m.id === medication.id);
+            if (index >= 0) {
+              this.medicamentosActuales[index] = updatedMedication;
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Error completing medication:', error);
+          this.error = 'Error al completar el medicamento';
+        }
+      })
+    );
+  }
+
+  eliminarMedicamento(medication: Medication) {
+    if (confirm('¿Está seguro de que desea eliminar este medicamento?')) {
+      this.subscriptions.push(
+        this.medicationService.deleteMedication(medication.id).subscribe({
+          next: (success) => {
+            if (success) {
+              this.medicamentosActuales = this.medicamentosActuales.filter(m => m.id !== medication.id);
+            }
+          },
+          error: (error) => {
+            console.error('Error deleting medication:', error);
+            this.error = 'Error al eliminar el medicamento';
+          }
+        })
+      );
+    }
+  }
+
+  // ============== PAGINACIÓN ==============
+  previousPage() {
+    if (this.currentPage > 1 && this.patientId) {
+      this.loadMedications(this.patientId, this.currentPage - 1);
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages && this.patientId) {
+      this.loadMedications(this.patientId, this.currentPage + 1);
+    }
+  }
+
+  // ============== UTILIDADES UI ==============
+  estadoClass(estado: string) {
+    return {
+      'badge-activo': estado === 'activo',
+      'badge-suspendido': estado === 'suspendido',
+      'badge-completado': estado === 'completado'
+    };
+  }
+
+  estadoColor(estado: string): string {
+    switch (estado) {
+      case 'activo': return 'success';
+      case 'suspendido': return 'warning';
+      case 'completado': return 'secondary';
+      default: return 'medium';
+    }
+  }
+
+  formatDate(date: Date | string): string {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toLocaleDateString('es-CL');
+  }
+
+  // ============== REFRESCAR DATOS ==============
+  refreshMedications() {
+    if (this.patientId) {
+      this.loadMedications(this.patientId, this.currentPage);
+    }
+  }
+
+  clearError() {
+    this.error = null;
+  }
+
+  private blankMedication(): Partial<CreateMedicationRequest> {
+    return {
+      nombre: '',
+      principioActivo: '',
+      dosis: '',
+      frecuencia: '',
+      via: 'oral',
+      duracion: '',
+      indicaciones: '',
+      contraindicaciones: [],
+      efectosSecundarios: [],
+      medicoPrescriptor: '',
+      fechaInicio: new Date(),
+      observaciones: ''
+    };
   }
 }

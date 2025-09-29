@@ -59,8 +59,8 @@
 
           <div class="head">
             <div class="head-left">
-              <div class="avatar">{{ initials(p.nombre) }}</div>
-              <h3 class="name">{{ p.nombre }}</h3>
+              <div class="avatar">{{ initials(p.nombres) }}</div>
+              <h3 class="name">{{ p.nombres }}</h3>
             </div>
             <ion-badge [ngClass]="estadoClass(p.estado)" class="state-badge">
               <span class="dot"></span> {{ p.estado }}
@@ -133,7 +133,7 @@
           <form class="form" (ngSubmit)="saveCreate()">
             <ion-item lines="none" class="fi">
               <ion-icon name="person-outline"></ion-icon>
-              <ion-input required [(ngModel)]="newPaciente.nombre" name="nombre" placeholder="Nombre completo"></ion-input>
+                          [(ngModel)]="newPaciente.nombres" name="nombres" placeholder="Nombres completos"
             </ion-item>
 
             <ion-item lines="none" class="fi">

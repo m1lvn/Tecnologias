@@ -1,180 +1,247 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton,
   IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle,
   IonBadge, IonGrid, IonRow, IonCol, IonList, IonItem, IonLabel,
-  IonTextarea, IonTabs, IonTabButton
+  IonTextarea, IonTabs, IonTabButton, IonSpinner, IonToast
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription, forkJoin } from 'rxjs';
 
-// Modelos de datos para la ficha médica
-interface DatosPersonales {
-  nombre: string;
-  rut: string;
-  edad: number;
-  tipoSanguineo: string;
-  direccion: string;
-  contacto: string;
-  emergencia: string;
-}
+// Servicios
+import { PatientService } from '../services/patient.service';
+import { MedicalConsultationService } from '../services/medical-consultation.service';
+import { ExamService } from '../services/exam.service';
 
-interface AlertaMedica {
-  tipo: 'alergia' | 'condicion';
-  descripcion: string;
-  criticidad: 'alta' | 'media' | 'baja';
-}
+// Modelos
+import { Patient } from '../models/patient.model';
 
-interface SignosVitales {
-  presionArterial: string;
-  frecuenciaCardiaca: number;
-  temperatura: number;
-  peso: number;
-}
-
-interface ConsultaMedica {
-  fecha: string;
-  hora: string;
-  medico: string;
-  especialidad: string;
-  motivo: string;
-  observaciones: string;
-  signosVitales: SignosVitales;
-}
-
-interface ExamenMedico {
-  nombre: string;
-  fecha: string;
-  resultado: string;
-  estado: 'normal' | 'atencion' | 'critico';
-  valorReferencia?: string;
-}
-
-interface FichaMedica {
-  datosPersonales: DatosPersonales;
-  alertasMedicas: AlertaMedica[];
-  evoluciones: ConsultaMedica[];
-  examenes: ExamenMedico[];
+interface FichaMedicaUI {
+  datosPersonales: {
+    nombres: string;
+    apellidos: string;
+    documento: string;
+    edad: number;
+    grupoSanguineo: string;
+    direccion: string;
+    telefono: string;
+    contactoEmergencia: string;
+  };
+  alertasMedicas: Array<{
+    tipo: 'alergia' | 'medicamento' | 'antecedente';
+    descripcion: string;
+    criticidad: 'alta' | 'media' | 'baja';
+  }>;
+  consultas: any[];
+  examenes: any[];
 }
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
+  standalone: true,
   imports: [
-    IonContent, IonIcon, IonButton,
+    IonContent, IonIcon, IonButton, IonSpinner, IonToast,
     IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-    IonBadge, IonGrid, IonRow, IonCol,
+    IonBadge, IonGrid, IonRow, IonCol, IonList, IonItem, IonLabel,
     IonTextarea, CommonModule, FormsModule
   ],
 })
-export class Tab3Page implements OnInit {
+export class Tab3Page implements OnInit, OnDestroy {
+  
+  // Estados del componente
+  ficha: FichaMedicaUI | null = null;
+  isLoading = false;
+  error: string | null = null;
+  patientId: string | null = null;
   
   // Variable para las notas rápidas
   nuevaNota: string = '';
   
-  ficha: FichaMedica = {
-    datosPersonales: {
-      nombre: 'Ignacia Castilo',
-      rut: '12.345.678-9',
-      edad: 45,
-      tipoSanguineo: 'O+',
-      direccion: 'Av. Providencia 1234, Santiago',
-      contacto: '+56 9 8765 4321',
-      emergencia: 'Pedro González - +56 9 1111 2222'
-    },
-    alertasMedicas: [
-      { tipo: 'alergia', descripcion: 'Penicilina', criticidad: 'alta' },
-      { tipo: 'alergia', descripcion: 'Mariscos', criticidad: 'media' },
-      { tipo: 'condicion', descripcion: 'Hipertensión arterial', criticidad: 'alta' },
-      { tipo: 'condicion', descripcion: 'Diabetes tipo 2', criticidad: 'alta' }
-    ],
-    examenes: [
-      {
-        nombre: 'Hemograma completo',
-        fecha: '2024-01-20',
-        resultado: 'Valores normales',
-        estado: 'normal'
-      },
-      {
-        nombre: 'Hemoglobina glicosilada',
-        fecha: '2024-01-15',
-        resultado: '6.8% (Normal <7%)',
-        estado: 'normal'
-      },
-      {
-        nombre: 'Perfil lipídico',
-        fecha: '2024-01-10',
-        resultado: 'Colesterol elevado: 245 mg/dL',
-        estado: 'atencion'
-      }
-    ],
-    evoluciones: [
-      {
-        fecha: '2024-01-21',
-        hora: '14:30',
-        medico: 'Dr. Luis Martínez',
-        especialidad: 'Cardiología',
-        motivo: 'Control rutinario',
-        observaciones: 'Paciente acude por control rutinario. Presión arterial controlada con medicación actual. Se mantiene tratamiento.',
-        signosVitales: {
-          presionArterial: '125/80 mmHg',
-          frecuenciaCardiaca: 72,
-          temperatura: 36.5,
-          peso: 68
-        }
-      },
-      {
-        fecha: '2024-01-15',
-        hora: '10:15',
-        medico: 'Dra. Carmen Silva',
-        especialidad: 'Medicina Interna',
-        motivo: 'Evaluación diabetes',
-        observaciones: 'Evaluación de diabetes. Hemoglobina glicosilada en rangos normales. Paciente adherente al tratamiento.',
-        signosVitales: {
-          presionArterial: '130/85 mmHg',
-          frecuenciaCardiaca: 75,
-          temperatura: 36.7,
-          peso: 69
-        }
-      },
-      {
-        fecha: '2024-01-08',
-        hora: '16:45',
-        medico: 'Dr. José Fernández',
-        especialidad: 'Endocrinología',
-        motivo: 'Control diabetológico',
-        observaciones: 'Control diabetológico trimestral. Ajuste de dosis de metformina. Cita de control en 3 meses.',
-        signosVitales: {
-          presionArterial: '128/82 mmHg',
-          frecuenciaCardiaca: 74,
-          temperatura: 36.6,
-          peso: 69
-        }
-      }
-    ]
-  };
+  private subscriptions: Subscription[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private patientService: PatientService,
+    private consultationService: MedicalConsultationService,
+    private examService: ExamService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Obtener el ID del paciente desde los query params
+    this.subscriptions.push(
+      this.route.queryParams.subscribe(params => {
+        this.patientId = params['patientId'];
+        if (this.patientId) {
+          this.loadPatientData(this.patientId);
+        } else {
+          this.error = 'No se especificó el ID del paciente';
+        }
+      })
+    );
+  }
 
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  /**
+   * Cargar todos los datos del paciente
+   */
+  loadPatientData(patientId: string) {
+    this.isLoading = true;
+    this.error = null;
+
+    // Cargar datos en paralelo
+    const patientData$ = this.patientService.getPatientById(patientId);
+    const consultations$ = this.consultationService.getPatientConsultations(patientId, 1, 10);
+    const exams$ = this.examService.getPatientExams(patientId);
+
+    this.subscriptions.push(
+      forkJoin({
+        patient: patientData$,
+        consultations: consultations$,
+        exams: exams$
+      }).subscribe({
+        next: (data) => {
+          if (data.patient) {
+            this.ficha = this.buildFichaMedica(data);
+          } else {
+            this.error = 'No se encontró el paciente';
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading patient data:', error);
+          this.error = 'Error al cargar los datos del paciente';
+          this.isLoading = false;
+        }
+      })
+    );
+  }
+
+  /**
+   * Construir la ficha médica a partir de los datos del backend
+   */
+  private buildFichaMedica(data: any): FichaMedicaUI {
+    const patient: Patient = data.patient;
+    
+    return {
+      datosPersonales: {
+        nombres: patient.nombres,
+        apellidos: patient.apellidos,
+        documento: patient.documento,
+        edad: this.calculateAge(patient.fechaNacimiento),
+        grupoSanguineo: patient.grupoSanguineo,
+        direccion: patient.direccion,
+        telefono: patient.telefono,
+        contactoEmergencia: `${patient.contactoEmergencia.nombre} - ${patient.contactoEmergencia.telefono}`
+      },
+      alertasMedicas: [
+        // Alergias
+        ...patient.alergias.map(alergia => ({
+          tipo: 'alergia' as const,
+          descripcion: alergia,
+          criticidad: 'alta' as const
+        })),
+        // Medicamentos
+        ...patient.medicamentos.map(medicamento => ({
+          tipo: 'medicamento' as const,
+          descripcion: medicamento,
+          criticidad: 'media' as const
+        })),
+        // Antecedentes
+        ...patient.antecedentes.map(antecedente => ({
+          tipo: 'antecedente' as const,
+          descripcion: antecedente,
+          criticidad: 'media' as const
+        }))
+      ],
+      consultas: data.consultations.consultas || [],
+      examenes: data.exams.examenes || []
+    };
+  }
+
+  /**
+   * Calcular edad a partir de fecha de nacimiento
+   */
+  private calculateAge(fechaNacimiento: Date): number {
+    if (!fechaNacimiento) return 0;
+    const birth = new Date(fechaNacimiento);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
+  }
+
+  // ============== NAVEGACIÓN ==============
   goBack() {
     this.router.navigateByUrl('/tabs/tab2');
   }
 
-  getBadgeColor(criticidad: string): string {
-    switch(criticidad) {
-      case 'alta': return 'danger';
-      case 'media': return 'warning';
-      case 'baja': return 'medium';
-      default: return 'medium';
+  verMedicamentos() {
+    if (this.patientId) {
+      this.router.navigate(['/tabs/tab4'], { 
+        queryParams: { patientId: this.patientId } 
+      });
     }
   }
 
-  getExamenBadgeColor(estado: string): string {
-    switch(estado) {
+  verExamenes() {
+    if (this.patientId) {
+      this.router.navigate(['/tabs/tab5'], { 
+        queryParams: { patientId: this.patientId } 
+      });
+    }
+  }
+
+  nuevaConsulta() {
+    if (this.patientId) {
+      // TODO: Implementar modal o navegación para nueva consulta
+      console.log('Nueva consulta para paciente:', this.patientId);
+    }
+  }
+
+  // ============== UTILIDADES UI ==============
+  badgeClass(criticidad: 'alta' | 'media' | 'baja') {
+    return {
+      'badge-alta': criticidad === 'alta',
+      'badge-media': criticidad === 'media',
+      'badge-baja': criticidad === 'baja'
+    };
+  }
+
+  badgeColor(criticidad: 'alta' | 'media' | 'baja'): string {
+    switch (criticidad) {
+      case 'alta': return 'danger';
+      case 'media': return 'warning';
+      case 'baja': return 'secondary';
+      default: return 'secondary';
+    }
+  }
+
+  // Alias para compatibilidad con HTML
+  getBadgeColor(criticidad: string): string {
+    return this.badgeColor(criticidad as 'alta' | 'media' | 'baja');
+  }
+
+  verMedicacion() {
+    if (this.patientId) {
+      this.router.navigate(['/tabs/tab4'], { 
+        queryParams: { patientId: this.patientId } 
+      });
+    }
+  }
+
+  estadoExamenColor(estado: string): string {
+    switch (estado) {
       case 'normal': return 'success';
       case 'atencion': return 'warning';
       case 'critico': return 'danger';
@@ -182,51 +249,61 @@ export class Tab3Page implements OnInit {
     }
   }
 
+  formatDate(date: Date | string): string {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toLocaleDateString('es-CL');
+  }
+
+  formatDateShort(date: Date | string): string {
+    if (!date) return '';
+    const d = new Date(date);
+    return d.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit' });
+  }
+
+  getExamenBadgeColor(estado: string): string {
+    return this.estadoExamenColor(estado);
+  }
+
   getExamenBadgeText(estado: string): string {
-    switch(estado) {
+    switch (estado) {
       case 'normal': return 'Normal';
       case 'atencion': return 'Atención';
       case 'critico': return 'Crítico';
-      default: return 'Pendiente';
+      case 'solicitado': return 'Solicitado';
+      case 'en_proceso': return 'En Proceso';
+      case 'completado': return 'Completado';
+      default: return estado;
     }
   }
 
-  getAlertIcon(tipo: string): string {
-    return tipo === 'alergia' ? 'warning' : 'medical';
+  formatTime(time: string | Date): string {
+    if (!time) return '';
+    if (typeof time === 'string') return time;
+    return time.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
   }
 
-  formatDate(fecha: string): string {
-    const date = new Date(fecha);
-    return date.toLocaleDateString('es-ES', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+  // ============== REFRESCAR DATOS ==============
+  refreshData() {
+    if (this.patientId) {
+      this.loadPatientData(this.patientId);
+    }
   }
 
-  formatDateShort(fecha: string): string {
-    const date = new Date(fecha);
-    return date.toLocaleDateString('es-ES');
+  clearError() {
+    this.error = null;
+  }
+
+  // ============== NOTAS RÁPIDAS ==============
+  guardarNota() {
+    if (!this.nuevaNota.trim()) return;
+    
+    // TODO: Implementar guardado de nota en el backend
+    console.log('Guardar nota:', this.nuevaNota);
+    this.nuevaNota = '';
   }
 
   agregarNota() {
-    if (this.nuevaNota.trim()) {
-      // En una aplicación real, aquí guardarías la nota en el backend
-      console.log('Nueva nota agregada:', this.nuevaNota);
-      
-      // Limpiar el campo de texto
-      this.nuevaNota = '';
-      
-      // Mostrar confirmación (opcional)
-      // En una implementación real podrías usar un toast o alert
-    }
-  }
-
-  verMedicacion() {
-    this.router.navigate(['/tabs/tab4']);
-  }
-
-  verExamenes() {
-    this.router.navigate(['/tabs/tab5']);
+    this.guardarNota();
   }
 }

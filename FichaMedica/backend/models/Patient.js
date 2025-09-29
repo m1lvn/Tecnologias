@@ -187,6 +187,73 @@ const patientSchema = new mongoose.Schema({
     maxlength: [100, 'El nombre de la EPS no puede exceder 100 caracteres'],
     default: ''
   },
+  // ============= CAMPOS NUEVOS PARA COMPATIBILIDAD CON FRONTEND =============
+  rut: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: function(v) {
+        // Validar formato RUT chileno (XX.XXX.XXX-X)
+        if (!v) return true; // Campo opcional
+        return /^[0-9]+[-][0-9kK]$/.test(v.replace(/\./g, ''));
+      },
+      message: 'Formato de RUT inválido (debe ser XX.XXX.XXX-X)'
+    }
+  },
+  ubicacion: {
+    type: String,
+    trim: true,
+    maxlength: [50, 'La ubicación no puede exceder 50 caracteres'],
+    default: ''
+  },
+  diagnostico: {
+    type: String,
+    trim: true,
+    maxlength: [200, 'El diagnóstico no puede exceder 200 caracteres'],
+    default: ''
+  },
+  ultimaVisita: {
+    type: Date,
+    default: null
+  },
+  // Datos físicos y signos vitales
+  peso: {
+    type: Number,
+    min: [0.1, 'El peso debe ser mayor a 0'],
+    max: [1000, 'El peso no puede exceder 1000 kg']
+  },
+  altura: {
+    type: Number,
+    min: [10, 'La altura debe ser mayor a 10 cm'],
+    max: [300, 'La altura no puede exceder 300 cm']
+  },
+  imc: {
+    type: Number,
+    min: [1, 'El IMC debe ser mayor a 1'],
+    max: [100, 'El IMC no puede exceder 100']
+  },
+  presionArterial: {
+    type: String,
+    trim: true,
+    validate: {
+      validator: function(v) {
+        if (!v) return true; // Campo opcional
+        return /^\d{2,3}\/\d{2,3}\s?(mmHg)?$/i.test(v);
+      },
+      message: 'Formato de presión arterial inválido (ej: 120/80 mmHg)'
+    }
+  },
+  frecuenciaCardiaca: {
+    type: Number,
+    min: [30, 'La frecuencia cardíaca debe ser mayor a 30'],
+    max: [300, 'La frecuencia cardíaca no puede exceder 300']
+  },
+  temperatura: {
+    type: Number,
+    min: [30, 'La temperatura debe ser mayor a 30°C'],
+    max: [50, 'La temperatura no puede exceder 50°C']
+  },
+  // ============= FIN CAMPOS NUEVOS =============
   estado: {
     type: String,
     enum: {
@@ -227,29 +294,44 @@ const patientSchema = new mongoose.Schema({
 // Índices para optimizar búsquedas
 patientSchema.index({ documento: 1 }, { unique: true });
 patientSchema.index({ email: 1 }, { unique: true });
+patientSchema.index({ rut: 1 }, { sparse: true }); // Índice sparse para RUT opcional
 patientSchema.index({ nombres: 1, apellidos: 1 });
 patientSchema.index({ estado: 1 });
+patientSchema.index({ ubicacion: 1 });
+patientSchema.index({ ultimaVisita: -1 });
 patientSchema.index({ fechaCreacion: -1 });
 patientSchema.index({ 
   nombres: 'text', 
   apellidos: 'text', 
   documento: 'text',
-  email: 'text'
+  rut: 'text',
+  email: 'text',
+  diagnostico: 'text'
 }, {
   weights: {
     nombres: 10,
     apellidos: 10,
-    documento: 5,
-    email: 3
+    documento: 8,
+    rut: 8,
+    email: 5,
+    diagnostico: 3
   },
   name: 'search_index'
 });
 
 // Middleware pre-save para actualizar fechaActualizacion
 patientSchema.pre('save', function(next) {
+  // Actualizar fecha de actualización
   if (!this.isNew) {
     this.fechaActualizacion = new Date();
   }
+  
+  // Calcular IMC automáticamente si tenemos peso y altura
+  if (this.peso && this.altura) {
+    const alturaMetros = this.altura / 100;
+    this.imc = Math.round((this.peso / (alturaMetros * alturaMetros)) * 10) / 10;
+  }
+  
   next();
 });
 
@@ -278,6 +360,26 @@ patientSchema.virtual('edad').get(function() {
 // Método virtual para obtener el nombre completo
 patientSchema.virtual('nombreCompleto').get(function() {
   return `${this.nombres} ${this.apellidos}`;
+});
+
+// Método virtual para calcular IMC automáticamente
+patientSchema.virtual('imcCalculado').get(function() {
+  if (!this.peso || !this.altura) return null;
+  
+  const alturaMetros = this.altura / 100;
+  const imc = this.peso / (alturaMetros * alturaMetros);
+  return Math.round(imc * 10) / 10; // Redondear a 1 decimal
+});
+
+// Método virtual para obtener el estado del IMC
+patientSchema.virtual('estadoIMC').get(function() {
+  const imc = this.imcCalculado;
+  if (!imc) return null;
+  
+  if (imc < 18.5) return 'Bajo peso';
+  if (imc < 25) return 'Normal';
+  if (imc < 30) return 'Sobrepeso';
+  return 'Obesidad';
 });
 
 // Método estático para búsqueda de texto

@@ -51,7 +51,7 @@
                 size="small" 
                 color="danger"
                 (click)="suspenderMedicamento(medicamento)"
-                [disabled]="medicamento.estado === 'Suspendido'">
+                [disabled]="medicamento.estado === 'suspendido'">
                 Suspender
               </ion-button>
             </div>
@@ -93,7 +93,7 @@
 
           <div class="indicacion-box">
             <div class="indicacion-header">
-              <strong>Indicación:</strong> {{ medicamento.indicacion }}
+              <strong>Indicación:</strong> {{ medicamento.indicaciones }}
             </div>
             <div class="prescriptor">
               Prescrito por: {{ medicamento.medicoPrescriptor }}
@@ -244,7 +244,7 @@
           <div class="periodo-section">
             <div class="detail-item">
               <span class="detail-label">Período</span>
-              <span class="detail-value">{{ medicamento.periodo }}</span>
+              <span class="detail-value">{{ medicamento.duracion }}</span>
             </div>
           </div>
 
@@ -258,7 +258,7 @@
           <div class="motivo-section">
             <div class="detail-item">
               <span class="detail-label">Motivo</span>
-              <span class="detail-value motivo-text">{{ medicamento.motivo }}</span>
+              <span class="detail-value motivo-text">{{ medicamento.observaciones }}</span>
             </div>
           </div>
         </div>
@@ -321,7 +321,7 @@
         <ion-item>
           <ion-label position="stacked">Indicación *</ion-label>
           <ion-textarea 
-            [(ngModel)]="nuevoMedicamento.indicacion" 
+            [(ngModel)]="nuevoMedicamento.indicaciones" 
             placeholder="Ej: Control de diabetes mellitus tipo 2"
             rows="3">
           </ion-textarea>
@@ -349,7 +349,7 @@
           expand="block" 
           class="ion-margin-top"
           (click)="agregarMedicamento()"
-          [disabled]="!nuevoMedicamento.nombre || !nuevoMedicamento.dosis || !nuevoMedicamento.frecuencia || !nuevoMedicamento.indicacion">
+          [disabled]="!nuevoMedicamento.nombre || !nuevoMedicamento.dosis || !nuevoMedicamento.frecuencia || !nuevoMedicamento.indicaciones">
           <ion-icon name="add" slot="start"></ion-icon>
           Agregar Medicamento
         </ion-button>

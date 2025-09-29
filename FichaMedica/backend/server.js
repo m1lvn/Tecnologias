@@ -112,6 +112,10 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.use('/api/patients', require('./routes/patients'));
+app.use('/api/patients', require('./routes/consultations'));
+app.use('/api/patients', require('./routes/exams'));
+app.use('/api/patients', require('./routes/medications'));
+app.use('/api/dashboard', require('./routes/dashboard'));
 
 // Handle 404 for API routes
 app.use('/api/*', (req, res) => {
@@ -123,7 +127,15 @@ app.use('/api/*', (req, res) => {
       'POST /api/patients',
       'GET /api/patients/:id',
       'PUT /api/patients/:id',
-      'DELETE /api/patients/:id'
+      'DELETE /api/patients/:id',
+      'GET /api/patients/:id/consultas',
+      'POST /api/patients/:id/consultas',
+      'GET /api/patients/:id/examenes',
+      'POST /api/patients/:id/examenes',
+      'GET /api/patients/:id/medicamentos',
+      'POST /api/patients/:id/medicamentos',
+      'GET /api/dashboard/stats',
+      'GET /api/dashboard/alerts'
     ]
   });
 });
@@ -203,20 +215,18 @@ const startServer = async () => {
 };
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
   console.log('👋 SIGTERM received, shutting down gracefully');
-  mongoose.connection.close(() => {
-    console.log('📊 MongoDB connection closed');
-    process.exit(0);
-  });
+  await mongoose.connection.close();
+  console.log('📊 MongoDB connection closed');
+  process.exit(0);
 });
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   console.log('👋 SIGINT received, shutting down gracefully');
-  mongoose.connection.close(() => {
-    console.log('📊 MongoDB connection closed');
-    process.exit(0);
-  });
+  await mongoose.connection.close();
+  console.log('📊 MongoDB connection closed');
+  process.exit(0);
 });
 
 // Start the server

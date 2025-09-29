@@ -52,10 +52,14 @@ export class PatientService {
         // Devolver respuesta vacía pero válida para que la UI pueda mostrar placeholders
         const emptyResponse: PatientListResponse = {
           patients: [],
-          total: 0,
-          page: 1,
-          totalPages: 0,
-          limit: limit
+          pagination: {
+            page: 1,
+            limit: limit,
+            total: 0,
+            totalPages: 0,
+            hasNext: false,
+            hasPrev: false
+          }
         };
         
         return of(emptyResponse);

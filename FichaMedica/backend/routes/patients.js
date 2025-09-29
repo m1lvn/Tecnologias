@@ -59,7 +59,48 @@ const validatePatient = [
   
   body('estadoCivil')
     .isIn(['soltero', 'casado', 'divorciado', 'viudo', 'union_libre'])
-    .withMessage('Estado civil inválido')
+    .withMessage('Estado civil inválido'),
+  
+  // NUEVAS VALIDACIONES PARA CAMPOS ADICIONALES
+  body('rut')
+    .optional()
+    .matches(/^[0-9]+[-][0-9kK]$/)
+    .withMessage('Formato de RUT inválido (debe ser XXXXXXXX-X)'),
+  
+  body('ubicacion')
+    .optional()
+    .isLength({ max: 50 })
+    .withMessage('La ubicación no puede exceder 50 caracteres'),
+  
+  body('diagnostico')
+    .optional()
+    .isLength({ max: 200 })
+    .withMessage('El diagnóstico no puede exceder 200 caracteres'),
+  
+  body('peso')
+    .optional()
+    .isFloat({ min: 0.1, max: 1000 })
+    .withMessage('El peso debe estar entre 0.1 y 1000 kg'),
+  
+  body('altura')
+    .optional()
+    .isFloat({ min: 10, max: 300 })
+    .withMessage('La altura debe estar entre 10 y 300 cm'),
+  
+  body('presionArterial')
+    .optional()
+    .matches(/^\d{2,3}\/\d{2,3}\s?(mmHg)?$/i)
+    .withMessage('Formato de presión arterial inválido (ej: 120/80 mmHg)'),
+  
+  body('frecuenciaCardiaca')
+    .optional()
+    .isFloat({ min: 30, max: 300 })
+    .withMessage('La frecuencia cardíaca debe estar entre 30 y 300'),
+  
+  body('temperatura')
+    .optional()
+    .isFloat({ min: 30, max: 50 })
+    .withMessage('La temperatura debe estar entre 30 y 50°C')
 ];
 
 const handleValidationErrors = (req, res, next) => {
@@ -98,7 +139,7 @@ router.get('/', async (req, res) => {
     // Construir query
     let query;
     if (search.trim()) {
-      // Búsqueda por texto en múltiples campos
+      // Búsqueda por texto en múltiples campos INCLUYENDO NUEVOS CAMPOS
       const searchRegex = new RegExp(search.trim().split(' ').join('|'), 'i');
       query = Patient.find({
         $and: [
@@ -108,7 +149,10 @@ router.get('/', async (req, res) => {
               { nombres: searchRegex },
               { apellidos: searchRegex },
               { documento: searchRegex },
-              { email: searchRegex }
+              { rut: searchRegex },
+              { email: searchRegex },
+              { diagnostico: searchRegex },
+              { ubicacion: searchRegex }
             ]
           }
         ]
@@ -132,7 +176,10 @@ router.get('/', async (req, res) => {
               { nombres: new RegExp(search.trim().split(' ').join('|'), 'i') },
               { apellidos: new RegExp(search.trim().split(' ').join('|'), 'i') },
               { documento: new RegExp(search.trim().split(' ').join('|'), 'i') },
-              { email: new RegExp(search.trim().split(' ').join('|'), 'i') }
+              { rut: new RegExp(search.trim().split(' ').join('|'), 'i') },
+              { email: new RegExp(search.trim().split(' ').join('|'), 'i') },
+              { diagnostico: new RegExp(search.trim().split(' ').join('|'), 'i') },
+              { ubicacion: new RegExp(search.trim().split(' ').join('|'), 'i') }
             ]
           }
         ]

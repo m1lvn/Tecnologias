@@ -10,7 +10,7 @@
       <div class="header-title-row">
         <div class="header-title">
           <ion-icon name="document-text" class="header-icon"></ion-icon>
-          <h1>Ficha Médica - {{ ficha.datosPersonales.nombre }}</h1>
+          <h1>Ficha Médica - {{ ficha?.datosPersonales?.nombres }} {{ ficha?.datosPersonales?.apellidos }}</h1>
         </div>
         
         <ion-button (click)="verMedicacion()" fill="outline" class="medicacion-btn">
@@ -37,15 +37,15 @@
               <div class="info-group">
                 <div class="info-item">
                   <span class="info-label">RUT:</span>
-                  <span class="info-value">{{ ficha.datosPersonales.rut }}</span>
+                  <span class="info-value">{{ ficha?.datosPersonales?.documento }}</span>
                 </div>
                 <div class="info-item">
                   <span class="info-label">Edad:</span>
-                  <span class="info-value">{{ ficha.datosPersonales.edad }} años</span>
+                  <span class="info-value">{{ ficha?.datosPersonales?.edad }} años</span>
                 </div>
                 <div class="info-item">
                   <span class="info-label">Tipo sanguíneo:</span>
-                  <span class="info-value blood-type">{{ ficha.datosPersonales.tipoSanguineo }}</span>
+                  <span class="info-value blood-type">{{ ficha?.datosPersonales?.grupoSanguineo }}</span>
                 </div>
               </div>
             </ion-col>
@@ -53,15 +53,15 @@
               <div class="info-group">
                 <div class="info-item">
                   <span class="info-label">Dirección:</span>
-                  <span class="info-value">{{ ficha.datosPersonales.direccion }}</span>
+                  <span class="info-value">{{ ficha?.datosPersonales?.direccion }}</span>
                 </div>
                 <div class="info-item">
                   <span class="info-label">Contacto:</span>
-                  <span class="info-value">{{ ficha.datosPersonales.contacto }}</span>
+                  <span class="info-value">{{ ficha?.datosPersonales?.telefono }}</span>
                 </div>
                 <div class="info-item">
                   <span class="info-label">Emergencia:</span>
-                  <span class="info-value">{{ ficha.datosPersonales.emergencia }}</span>
+                  <span class="info-value">{{ ficha?.datosPersonales?.contactoEmergencia }}</span>
                 </div>
               </div>
             </ion-col>
@@ -85,7 +85,7 @@
             <h4 class="alerts-subtitle">Alergias:</h4>
             <div class="badges-container">
               <ion-badge 
-                *ngFor="let alerta of ficha.alertasMedicas | slice:0:2" 
+                *ngFor="let alerta of ficha?.alertasMedicas | slice:0:2" 
                 [color]="getBadgeColor(alerta.criticidad)"
                 class="alert-badge">
                 {{ alerta.descripcion }}
@@ -97,7 +97,7 @@
             <h4 class="alerts-subtitle">Condiciones Crónicas:</h4>
             <div class="badges-container">
               <ion-badge 
-                *ngFor="let alerta of ficha.alertasMedicas | slice:2:4" 
+                *ngFor="let alerta of ficha?.alertasMedicas | slice:2:4" 
                 [color]="getBadgeColor(alerta.criticidad)"
                 class="alert-badge condition-badge">
                 {{ alerta.descripcion }}
@@ -120,13 +120,13 @@
       <ion-card-content>
         <div class="evolution-timeline">
           <div 
-            *ngFor="let consulta of ficha.evoluciones; let i = index" 
+            *ngFor="let consulta of ficha?.consultas; let i = index" 
             class="evolution-item"
             [class.latest]="i === 0">
             
             <div class="evolution-marker">
               <div class="evolution-dot"></div>
-              <div class="evolution-line" *ngIf="i < ficha.evoluciones.length - 1"></div>
+              <div class="evolution-line" *ngIf="i < (ficha?.consultas?.length || 0) - 1"></div>
             </div>
             
             <div class="evolution-content">
@@ -197,7 +197,7 @@
       </ion-card-header>
       <ion-card-content>
         <div class="examenes-list">
-          <div *ngFor="let examen of ficha.examenes" class="examen-item">
+          <div *ngFor="let examen of ficha?.examenes" class="examen-item">
             <div class="examen-header">
               <div class="examen-info">
                 <h4 class="examen-name">{{ examen.nombre }}</h4>

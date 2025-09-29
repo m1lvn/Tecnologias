@@ -38,10 +38,14 @@ export interface PatientSearchFilters {
 
 export interface PatientListResponse {
   patients: Patient[];
-  total: number;
-  page: number;
-  totalPages: number;
-  limit: number;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
 }
 
 export interface CreatePatientRequest {
