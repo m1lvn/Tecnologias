@@ -2,9 +2,10 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
-  production: false
-};
+// Importar configuración de MongoDB para desarrollo
+import { developmentConfig } from './environment.mongodb';
+
+export const environment = developmentConfig;
 
 /*
  * For easier debugging in development mode, you can import the following file

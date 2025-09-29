@@ -7,33 +7,8 @@
       <p class="subtitle">Gestión integral de fichas médicas</p>
     </div>
 
-    <!-- Tarjetas de métricas -->
-    <ion-grid class="stats-grid">
-      <ion-row class="stats-row">
-        <ion-col size="12" sizeMd="6" sizeLg="3" *ngFor="let s of stats">
-          <ion-card class="stat-card">
-            <ion-card-header>
-              <div class="card-head">
-                <ion-card-subtitle>{{ s.title }}</ion-card-subtitle>
-                <ion-icon [name]="s.icon"></ion-icon>
-              </div>
-              <ion-card-title class="value">{{ s.value }}</ion-card-title>
-              <div class="sub">{{ s.sub }}</div>
-            </ion-card-header>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <!-- Botón directo a pacientes -->
-    <ion-card class="panel">
-      <ion-card-content>
-        <button class="alert-btn" (click)="goToPatients()">
-          <ion-icon name="people-outline"></ion-icon>
-          <span>Ver Pacientes</span>
-        </button>
-      </ion-card-content>
-    </ion-card>
+    <!-- Componente de gestión de pacientes -->
+    <app-patient-list></app-patient-list>
 
   </div>
 </ion-content>

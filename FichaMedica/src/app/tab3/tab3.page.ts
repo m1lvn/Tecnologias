@@ -63,10 +63,10 @@ interface FichaMedica {
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
   imports: [
-    IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton,
-    IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle,
-    IonBadge, IonGrid, IonRow, IonCol, IonList, IonItem, IonLabel,
-    IonTextarea, IonTabs, IonTabButton, CommonModule, FormsModule
+    IonContent, IonIcon, IonButton,
+    IonCard, IonCardContent, IonCardHeader, IonCardTitle,
+    IonBadge, IonGrid, IonRow, IonCol,
+    IonTextarea, CommonModule, FormsModule
   ],
 })
 export class Tab3Page implements OnInit {

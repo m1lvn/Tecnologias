@@ -9,13 +9,17 @@ import {
   idCardOutline, calendarNumberOutline, locationOutline, bandageOutline,
   callOutline, timeOutline, saveOutline, pulseOutline, closeOutline,
   eyeOutline, searchOutline, documentTextOutline, heartOutline, thermometerOutline,
-  bedOutline, alertCircleOutline
+  bedOutline, alertCircleOutline,
+  // ✅ AGREGADOS: Iconos faltantes
+  homeOutline, medicalOutline, flaskOutline, personAddOutline, createOutline,
+  trashOutline, mailOutline, refreshOutline, filterOutline, calendarOutline,
+  waterOutline, warningOutline, chevronDownCircleOutline, personOutline
 } from 'ionicons/icons';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [IonicModule, RouterOutlet],
+  imports: [IonicModule],
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
@@ -44,6 +48,21 @@ export class AppComponent {
       thermometerOutline,
       bedOutline,
       alertCircleOutline,
+      // ✅ AGREGADOS: Iconos faltantes
+      homeOutline,
+      medicalOutline,
+      flaskOutline,
+      personAddOutline,
+      createOutline,
+      trashOutline,
+      mailOutline,
+      refreshOutline,
+      filterOutline,
+      calendarOutline,
+      waterOutline,
+      warningOutline,
+      chevronDownCircleOutline,
+      personOutline
     });
   }
 }

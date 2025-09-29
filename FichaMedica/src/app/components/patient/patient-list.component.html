@@ -1,0 +1,276 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <ion-icon name="medical-outline" slot="start"></ion-icon>
+      Gestión de Pacientes
+    </ion-title>
+    <ion-button fill="clear" slot="end" (click)="clearError()" *ngIf="error$ | async">
+      <ion-icon name="refresh-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- 🔄 REFRESHER -->
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- ⚠️ ERROR DISPLAY -->
+  <ion-card *ngIf="error$ | async as error" color="danger">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="warning-outline"></ion-icon>
+        Error de Conexión
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ error }}</p>
+      <ion-button fill="clear" color="light" (click)="loadPatients()">
+        <ion-icon name="refresh-outline" slot="start"></ion-icon>
+        Reintentar
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- 📊 HEADER CON ESTADÍSTICAS (solo si hay datos) -->
+  <div class="stats-header" *ngIf="(patientStats$ | async) as stats; else: noDataStats">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="3">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.total }}</div>
+            <div class="stat-label">Total</div>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.active }}</div>
+            <div class="stat-label">Activos</div>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.inactive }}</div>
+            <div class="stat-label">Inactivos</div>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.withInsurance }}</div>
+            <div class="stat-label">Con Seguro</div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- 🔍 BARRA DE BÚSQUEDA -->
+  <div class="search-container">
+    <ion-searchbar 
+      placeholder="Buscar por nombre, documento o email..."
+      debounce="300"
+      [(ngModel)]="searchTerm"
+      (ionInput)="onSearchChange($event)">
+    </ion-searchbar>
+  </div>
+
+  <!-- 🎛️ FILTROS -->
+  <div class="filters-container">
+    <ion-select 
+      placeholder="Filtrar por estado"
+      interface="popover"
+      [(ngModel)]="selectedFilter"
+      (ionSelectionChange)="onFilterChange($event)">
+      <ion-select-option value="all">Todos</ion-select-option>
+      <ion-select-option value="active">Activos</ion-select-option>
+      <ion-select-option value="inactive">Inactivos</ion-select-option>
+    </ion-select>
+  </div>
+
+  <!-- 📋 LISTA DE PACIENTES -->
+  <div class="patients-container">
+    <div *ngIf="(filteredPatients$ | async) as patients; else: loadingOrEmpty">
+      <!-- Si hay pacientes filtrados, mostrarlos -->
+      <div *ngIf="patients.length > 0; else: noFilteredResults">
+        <ion-card *ngFor="let patient of patients" class="patient-card">
+          <ion-card-header>
+            <ion-grid>
+              <ion-row class="ion-align-items-center">
+                <ion-col size="2">
+                  <ion-avatar class="patient-avatar">
+                    <div class="avatar-initials">
+                      {{ getInitials(patient.nombres, patient.apellidos) }}
+                    </div>
+                  </ion-avatar>
+                </ion-col>
+                <ion-col size="8">
+                  <ion-card-title>{{ patient.nombres }} {{ patient.apellidos }}</ion-card-title>
+                  <ion-card-subtitle>
+                    <ion-chip [color]="getStatusColor(patient.estado)" size="small">
+                      {{ patient.estado | titlecase }}
+                    </ion-chip>
+                    <ion-chip color="primary" size="small">
+                      {{ patient.tipoDocumento }}: {{ patient.documento }}
+                    </ion-chip>
+                  </ion-card-subtitle>
+                </ion-col>
+                <ion-col size="2" class="ion-text-right">
+                  <ion-button fill="clear" size="small" (click)="editPatient(patient)">
+                    <ion-icon name="create-outline"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-header>
+
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  <div class="patient-detail">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <span>{{ calculateAge(patient.fechaNacimiento) }} años</span>
+                  </div>
+                  <div class="patient-detail" *ngIf="patient.telefono">
+                    <ion-icon name="call-outline"></ion-icon>
+                    <span (click)="callPatient(patient.telefono)" class="clickable">{{ patient.telefono }}</span>
+                  </div>
+                </ion-col>
+                <ion-col size="6">
+                  <div class="patient-detail" *ngIf="patient.email">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <span (click)="emailPatient(patient.email)" class="clickable">{{ patient.email }}</span>
+                  </div>
+                  <div class="patient-detail" *ngIf="patient.grupoSanguineo">
+                    <ion-icon name="water-outline"></ion-icon>
+                    <ion-chip [color]="getBloodTypeColor(patient.grupoSanguineo)" size="small">
+                      {{ patient.grupoSanguineo }}
+                    </ion-chip>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="patient.eps">
+                <ion-col size="12">
+                  <div class="patient-detail">
+                    <ion-icon name="medical-outline"></ion-icon>
+                    <span>EPS: {{ patient.eps }}</span>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <!-- Acciones -->
+            <div class="card-actions">
+              <ion-button fill="clear" size="small" (click)="callPatient(patient.telefono)" *ngIf="patient.telefono">
+                <ion-icon name="call-outline" slot="start"></ion-icon>
+                Llamar
+              </ion-button>
+              <ion-button fill="clear" size="small" (click)="emailPatient(patient.email)" *ngIf="patient.email">
+                <ion-icon name="mail-outline" slot="start"></ion-icon>
+                Email
+              </ion-button>
+              <ion-button fill="clear" size="small" color="danger" (click)="deletePatient(patient)">
+                <ion-icon name="trash-outline" slot="start"></ion-icon>
+                Eliminar
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- No hay resultados de búsqueda/filtros -->
+      <ng-template #noFilteredResults>
+        <ion-card class="empty-state">
+          <ion-card-content class="ion-text-center">
+            <ion-icon name="search-outline" size="large" color="medium"></ion-icon>
+            <h3>No se encontraron pacientes</h3>
+            <p>No hay pacientes que coincidan con los filtros aplicados.</p>
+            <ion-button fill="clear" (click)="searchTerm = ''; selectedFilter = 'all'; clearFilters()">>
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Limpiar filtros
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-template>
+    </div>
+
+    <!-- Loading o Empty State -->
+    <ng-template #loadingOrEmpty>
+      <!-- Loading State -->
+      <div *ngIf="isLoading$ | async; else: emptyState">
+        <ion-card *ngFor="let item of [1,2,3]" class="skeleton-card">
+          <ion-card-header>
+            <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 70%;"></ion-skeleton-text>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Empty State - No hay datos de la base de datos -->
+      <ng-template #emptyState>
+        <ion-card class="empty-state">
+          <ion-card-content class="ion-text-center">
+            <ion-icon name="person-outline" size="large" color="medium"></ion-icon>
+            <h3>No hay pacientes registrados</h3>
+            <p>Aún no se han registrado pacientes en la base de datos.</p>
+            <p><small>Verifica que el servidor MongoDB esté corriendo y que la conexión sea correcta.</small></p>
+            <ion-button (click)="createPatient()" expand="block">
+              <ion-icon name="person-add-outline" slot="start"></ion-icon>
+              Registrar Primer Paciente
+            </ion-button>
+            <ion-button fill="clear" (click)="loadPatients()">
+              <ion-icon name="refresh-outline" slot="start"></ion-icon>
+              Actualizar
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ng-template>
+    </ng-template>
+  </div>
+
+  <!-- Stats Placeholder cuando no hay datos -->
+  <ng-template #noDataStats>
+    <div class="stats-header">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="3">
+            <div class="stat-item">
+              <div class="stat-number">0</div>
+              <div class="stat-label">Total</div>
+            </div>
+          </ion-col>
+          <ion-col size="3">
+            <div class="stat-item">
+              <div class="stat-number">0</div>
+              <div class="stat-label">Activos</div>
+            </div>
+          </ion-col>
+          <ion-col size="3">
+            <div class="stat-item">
+              <div class="stat-number">0</div>
+              <div class="stat-label">Inactivos</div>
+            </div>
+          </ion-col>
+          <ion-col size="3">
+            <div class="stat-item">
+              <div class="stat-number">0</div>
+              <div class="stat-label">Con Seguro</div>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </ng-template>
+
+  <!-- 🎯 FAB BUTTON -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="createPatient()">
+      <ion-icon name="person-add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

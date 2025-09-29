@@ -1,0 +1,282 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      <ion-icon name="medical-outline" slot="start"></ion-icon>
+      Gestión de Pacientes
+    </ion-title>
+    <ion-button fill="clear" slot="end" (click)="toggleFilters()">
+      <ion-icon name="filter-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Header con estadísticas -->
+  <div class="stats-header" *ngIf="patientStats$ | async as stats">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="3">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.total }}</div>
+            <div class="stat-label">Total</div>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.active }}</div>
+            <div class="stat-label">Activos</div>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.inactive }}</div>
+            <div class="stat-label">Inactivos</div>
+          </div>
+        </ion-col>
+        <ion-col size="3">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.withInsurance }}</div>
+            <div class="stat-label">Con Seguro</div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="search-container">
+    <ion-searchbar 
+      placeholder="Buscar por nombre, RUT o email..."
+      debounce="300"
+      (ionInput)="onSearchChange($event)">
+    </ion-searchbar>
+  </div>
+
+  <!-- Filtros expandibles -->
+  <div class="filters-container" [class.show]="showFilters">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-md="4">
+          <ion-item>
+            <ion-label>Estado</ion-label>
+            <ion-select 
+              interface="popover" 
+              (ionSelectionChange)="onStatusFilterChange($any($event))">
+              <ion-select-option value="all">Todos</ion-select-option>
+              <ion-select-option [value]="true">Activos</ion-select-option>
+              <ion-select-option [value]="false">Inactivos</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+        <ion-col size="12" size-md="4">
+          <ion-item>
+            <ion-label>Ordenar por</ion-label>
+            <ion-select 
+              interface="popover" 
+              (ionSelectionChange)="onSortChange($any($event))">
+              <ion-select-option value="name">Nombre</ion-select-option>
+              <ion-select-option value="fechaRegistro">Fecha Registro</ion-select-option>
+              <ion-select-option value="ultimaVisita">Última Visita</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Refresher -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="chevron-down-circle-outline"
+      pullingText="Desliza para actualizar"
+      refreshingSpinner="circles"
+      refreshingText="Actualizando...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Loading state -->
+  <div *ngIf="loading$ | async" class="loading-container">
+    <ion-list>
+      <ion-item *ngFor="let item of [1,2,3,4,5]">
+        <ion-avatar slot="start">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        <ion-label>
+          <h3>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+          </p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- Lista de pacientes -->
+  <div *ngIf="!(loading$ | async)">
+    <ion-list *ngIf="filteredPatients$ | async as patients">
+      <!-- Empty state -->
+      <div *ngIf="patients.length === 0" class="empty-state">
+        <ion-icon name="person-outline" size="large"></ion-icon>
+        <h2>No hay pacientes</h2>
+        <p>No se encontraron pacientes que coincidan con los criterios de búsqueda.</p>
+      </div>
+
+      <!-- Patient cards -->
+      <ion-card *ngFor="let patient of patients" class="patient-card">
+        <ion-card-header>
+          <ion-grid>
+            <ion-row class="ion-align-items-center">
+              <ion-col size="auto">
+                <ion-avatar>
+                  <div class="avatar-placeholder">
+                    {{ patient.personalInfo.nombre.charAt(0) }}{{ patient.personalInfo.apellido.charAt(0) }}
+                  </div>
+                </ion-avatar>
+              </ion-col>
+              <ion-col>
+                <ion-card-title>{{ getPatientFullName(patient) }}</ion-card-title>
+                <ion-card-subtitle>
+                  RUT: {{ formatRut(patient.personalInfo.rut) }} • 
+                  {{ getPatientAge(patient) }} años • 
+                  {{ patient.personalInfo.sexo === 'M' ? 'Masculino' : patient.personalInfo.sexo === 'F' ? 'Femenino' : 'Otro' }}
+                </ion-card-subtitle>
+              </ion-col>
+              <ion-col size="auto">
+                <ion-badge [color]="getStatusColor(patient.activo)">
+                  {{ getStatusText(patient.activo) }}
+                </ion-badge>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="12" size-md="6">
+                <div class="info-item" *ngIf="patient.personalInfo.telefono">
+                  <ion-icon name="call-outline"></ion-icon>
+                  <span>{{ patient.personalInfo.telefono }}</span>
+                </div>
+                <div class="info-item" *ngIf="patient.personalInfo.email">
+                  <ion-icon name="mail-outline"></ion-icon>
+                  <span>{{ patient.personalInfo.email }}</span>
+                </div>
+                <div class="info-item">
+                  <ion-icon name="location-outline"></ion-icon>
+                  <span>{{ patient.personalInfo.direccion }}</span>
+                </div>
+              </ion-col>
+              <ion-col size="12" size-md="6">
+                <div class="info-item">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <span>Registro: {{ formatDate(patient.fechaRegistro) }}</span>
+                </div>
+                <div class="info-item" *ngIf="patient.ultimaVisita">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <span>Última visita: {{ formatDate(patient.ultimaVisita) }}</span>
+                </div>
+                <div class="info-item" *ngIf="patient.personalInfo.tipoSangre">
+                  <ion-icon name="water-outline"></ion-icon>
+                  <span>Tipo sangre: {{ patient.personalInfo.tipoSangre }}</span>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <!-- Medical info chips -->
+            <ion-row *ngIf="patient.medicalInfo.alergias?.length || patient.medicalInfo.condicionesCronicas?.length">
+              <ion-col size="12">
+                <div class="chips-container">
+                  <ion-chip 
+                    *ngFor="let alergia of patient.medicalInfo.alergias?.slice(0, 3)" 
+                    color="warning" 
+                    outline>
+                    <ion-icon name="warning-outline"></ion-icon>
+                    <ion-label>{{ alergia }}</ion-label>
+                  </ion-chip>
+                  <ion-chip 
+                    *ngFor="let condicion of patient.medicalInfo.condicionesCronicas?.slice(0, 2)" 
+                    color="medium" 
+                    outline>
+                    <ion-icon name="medical-outline"></ion-icon>
+                    <ion-label>{{ condicion }}</ion-label>
+                  </ion-chip>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <!-- Action buttons -->
+            <ion-row class="action-buttons">
+              <ion-col>
+                <ion-button 
+                  expand="block" 
+                  fill="outline" 
+                  (click)="navigateToPatientDetail(patient.patientId)">
+                  <ion-icon name="eye-outline" slot="start"></ion-icon>
+                  Ver Detalle
+                </ion-button>
+              </ion-col>
+              <ion-col>
+                <ion-button 
+                  expand="block" 
+                  fill="outline" 
+                  (click)="navigateToEditPatient(patient.patientId)">
+                  <ion-icon name="create-outline" slot="start"></ion-icon>
+                  Editar
+                </ion-button>
+              </ion-col>
+              <ion-col size="auto">
+                <ion-button 
+                  fill="clear" 
+                  color="danger" 
+                  (click)="confirmDelete(patient.patientId)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+  </div>
+
+  <!-- Floating Action Button -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="navigateToNewPatient()">
+      <ion-icon name="person-add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Error state -->
+  <div *ngIf="error$ | async as error" class="error-container">
+    <ion-card color="danger">
+      <ion-card-header>
+        <ion-card-title>Error</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        {{ error }}
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Toast -->
+  <ion-toast
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
+    duration="3000"
+    (didDismiss)="isToastOpen = false">
+  </ion-toast>
+
+  <!-- Alert -->
+  <ion-alert
+    [isOpen]="isAlertOpen"
+    header="Confirmar eliminación"
+    message="¿Está seguro que desea eliminar este paciente? Esta acción no se puede deshacer."
+    [buttons]="alertButtons">
+  </ion-alert>
+</ion-content>

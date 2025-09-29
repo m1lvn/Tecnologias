@@ -1,20 +1,18 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  IonContent, IonGrid, IonRow, IonCol,
-  IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-  IonIcon
+  IonContent
 } from '@ionic/angular/standalone';
 import { NgFor } from '@angular/common';
+import { PatientListComponent } from '../components/patient/patient-list.component';
 
 @Component({
   selector: 'app-tab1',
   standalone: true,
   imports: [
-    IonContent, IonGrid, IonRow, IonCol,
-    IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent,
-    IonIcon,
-    NgFor
+    IonContent,
+    NgFor,
+    PatientListComponent
   ],
   templateUrl: './tab1.page.html',
   styleUrls: ['./tab1.page.scss']
