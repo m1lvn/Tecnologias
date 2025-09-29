@@ -1,3 +1,246 @@
+/* ====== PANEL INFORMATIVO ====== */
+.alertas-seccion {
+  padding: 0;
+  margin: 16px;
+  background-color: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--elev-1);
+  overflow: hidden;
+
+  .franja-titulo {
+    background-color: rgba(56, 128, 255, 0.15);
+    padding: 16px 24px;
+    margin: 0;
+    position: relative;
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .alertas-titulo {
+    display: flex;
+    align-items: center;
+    color: #3880ff;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-transform: none;
+
+    ion-icon {
+      margin-right: 12px;
+      font-size: 1.5em;
+      color: #3880ff;
+    }
+  }
+}
+
+.alerta-card {
+  margin: 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+  overflow: hidden;
+
+  ion-card-content {
+    padding: 16px;
+  }
+
+  .alerta-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+
+    ion-avatar {
+      width: 40px;
+      height: 40px;
+      margin-right: 12px;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+
+  .alerta-contenido {
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+
+    ion-icon {
+      margin-right: 8px;
+      font-size: 1.2em;
+    }
+  }
+
+  .alerta-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 8px;
+    border-top: 1px solid var(--c-border);
+  }
+
+  .ver-mas-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    color: var(--ion-color-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    ion-icon {
+      font-size: 1em;
+      transition: transform 0.2s ease;
+    }
+
+    &:hover {
+      color: var(--ion-color-primary-shade);
+      
+      ion-icon {
+        transform: translateX(2px);
+      }
+    }
+  }
+}
+
+/* ====== COLUMNAS DE ALERTAS ====== */
+.columna-alertas {
+  padding: 16px;
+}
+
+.columna-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+
+  ion-icon {
+    font-size: 1.4em;
+  }
+}
+
+// Estilos específicos para cada tipo de título
+ion-col:first-child .columna-titulo {
+  color: #f57c00;
+  ion-icon {
+    color: #f57c00;
+  }
+}
+
+ion-col:last-child .columna-titulo {
+  color: #d32f2f;
+  ion-icon {
+    color: #d32f2f;
+  }
+}
+
+/* ====== TIPOS DE ALERTAS ====== */
+.alerta-card.alerta-urgente {
+  background-color: rgba(211, 47, 47, 0.03);
+  border-left: 4px solid rgba(211, 47, 47, 0.7);
+
+  .alerta-contenido {
+    color: #d32f2f;
+    background-color: rgba(211, 47, 47, 0.08);
+    padding: 8px 12px;
+    border-radius: 6px;
+
+    ion-icon {
+      color: #d32f2f;
+    }
+  }
+
+  .ver-mas-btn {
+    color: #d32f2f;
+    &:hover {
+      color: #b71c1c;
+    }
+  }
+}
+
+.alerta-card.alerta-pendiente {
+  background-color: rgba(255, 193, 7, 0.03);
+  border-left: 4px solid rgba(255, 193, 7, 0.7);
+
+  .alerta-contenido {
+    color: #f57c00;
+    background-color: rgba(255, 193, 7, 0.08);
+    padding: 8px 12px;
+    border-radius: 6px;
+
+    ion-icon {
+      color: #f57c00;
+    }
+  }
+
+  .ver-mas-btn {
+    color: #f57c00;
+    &:hover {
+      color: #e65100;
+    }
+  }
+}
+
+/* ====== ALERTAS DE EXÁMENES ====== */
+.alertas-examenes-panel {
+  margin-top: 28px;
+  border: 1.5px solid #ffe0e0;
+  border-radius: var(--r-lg);
+  background: #fff8f8;
+  box-shadow: 0 4px 16px rgba(229, 57, 53, 0.07);
+}
+.alertas-examenes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.alertas-examenes-list li {
+  padding: 8px 0;
+  font-size: 1.04rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #ffe0e0;
+}
+.alertas-examenes-list li:last-child {
+  border-bottom: none;
+}
+.alerta-paciente {
+  font-weight: 700;
+  color: var(--c-primary-600);
+}
+.alerta-examen {
+  font-weight: 600;
+  color: #e53935;
+}
+.alerta-tipo {
+  font-size: 0.98em;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 2px 10px;
+  margin-left: 6px;
+}
+.alerta-alterado {
+  background: #e53935;
+  color: #fff;
+}
+.alerta-pendiente {
+  background: #ffb300;
+  color: #fff;
+}
 /* ========= PALETA AZUL + BLANCO (modo claro forzado en esta página) ========= */
 :host {
   /* Fondo y superficies */
@@ -119,42 +362,16 @@
 
 /* ============ PANEL: ALERTAS CLÍNICAS ============ */
 .panel {
-  --background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-lg);
-  box-shadow: var(--elev-1);
+  --background: transparent;
+  background: transparent;
   margin-top: var(--sp-6);
+  margin-bottom: 32px; /* Añadiendo espacio después del botón */
+  box-shadow: none;
 }
 
-.panel .panel-head {
-  padding: var(--sp-5) var(--sp-6);
-  border-bottom: 1px solid var(--c-border);
-}
-
-.panel .panel-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.panel .panel-title ion-icon {
-  font-size: 20px;
-  color: #e53935;
-  background: #ffe9e9;
-  padding: 8px;
-  border-radius: 10px;
-}
-
-.panel .panel-title span {
-  font-weight: 800;
-  font-size: 18px;
-  color: var(--c-text);
-}
-
-/* Contenido del panel (solo botón) */
 ion-card.panel ion-card-content {
-  --background: var(--c-surface);
-  background: var(--c-surface);
+  --background: transparent;
+  background: transparent;
   padding: var(--sp-6);
 }
 
