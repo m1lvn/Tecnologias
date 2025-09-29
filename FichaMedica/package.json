@@ -9,7 +9,11 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "dynamodb:setup": "npx tsc scripts/setup-dynamodb.ts --target es2020 --module commonjs --moduleResolution node --esModuleInterop true --outDir scripts/dist && node scripts/dist/setup-dynamodb.js setup",
+    "dynamodb:create": "npx tsc scripts/setup-dynamodb.ts --target es2020 --module commonjs --moduleResolution node --esModuleInterop true --outDir scripts/dist && node scripts/dist/setup-dynamodb.js create",
+    "dynamodb:describe": "npx tsc scripts/setup-dynamodb.ts --target es2020 --module commonjs --moduleResolution node --esModuleInterop true --outDir scripts/dist && node scripts/dist/setup-dynamodb.js describe",
+    "dynamodb:delete": "npx tsc scripts/setup-dynamodb.ts --target es2020 --module commonjs --moduleResolution node --esModuleInterop true --outDir scripts/dist && node scripts/dist/setup-dynamodb.js delete"
   },
   "private": true,
   "dependencies": {
@@ -21,15 +25,20 @@
     "@angular/platform-browser": "^20.0.0",
     "@angular/platform-browser-dynamic": "^20.0.0",
     "@angular/router": "^20.0.0",
+    "@aws-sdk/client-dynamodb": "^3.896.0",
+    "@aws-sdk/lib-dynamodb": "^3.896.0",
     "@capacitor/app": "7.1.0",
     "@capacitor/core": "7.4.3",
     "@capacitor/haptics": "7.0.2",
     "@capacitor/keyboard": "7.0.3",
     "@capacitor/status-bar": "7.0.3",
     "@ionic/angular": "^8.0.0",
+    "@types/uuid": "^10.0.0",
+    "aws-sdk": "^2.1692.0",
     "ionicons": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "uuid": "^13.0.0",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
