@@ -26,14 +26,67 @@
     </ion-grid>
 
     <!-- Botón directo a pacientes -->
-    <ion-card class="panel">
-      <ion-card-content>
-        <button class="alert-btn" (click)="goToPatients()">
-          <ion-icon name="people-outline"></ion-icon>
-          <span>Ver Pacientes</span>
-        </button>
-      </ion-card-content>
-    </ion-card>
+    <div class="panel">
+      <button class="alert-btn" (click)="goToPatients()">
+        <ion-icon name="people-outline"></ion-icon>
+        <span>Ver Pacientes</span>
+      </button>
+    </div>
 
+    <!-- Sección de alertas de exámenes -->
+    <div class="alertas-seccion">
+      <div class="franja-titulo">
+        <div class="alertas-titulo">
+          <ion-icon name="notifications-circle-outline"></ion-icon>
+          <span>Alertas de Exámenes</span>
+        </div>
+      </div>
+      
+      <!-- Tarjeta de alerta individual -->
+      <ion-card class="alerta-card alerta-pendiente">
+        <ion-card-content>
+          <div class="alerta-header">
+            <ion-avatar>
+              <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            </ion-avatar>
+            <h3>Juan Pérez</h3>
+          </div>
+          <div class="alerta-contenido">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>Hemograma pendiente</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="alerta-card alerta-urgente">
+        <ion-card-content>
+          <div class="alerta-header">
+            <ion-avatar>
+              <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            </ion-avatar>
+            <h3>María López</h3>
+          </div>
+          <div class="alerta-contenido">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <span>Colesterol elevado</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="alerta-card alerta-recordatorio">
+        <ion-card-content>
+          <div class="alerta-header">
+            <ion-avatar>
+              <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+            </ion-avatar>
+            <h3>Pedro González</h3>
+          </div>
+          <div class="alerta-contenido">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>TSH pendiente</span>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
   </div>
 </ion-content>
