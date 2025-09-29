@@ -178,33 +178,36 @@
       </ion-card-content>
     </ion-card>
 
-    <!-- SECCIÓN: Exámenes y Resultados -->
+    <!-- BOTÓN DESTACADO: Ver Exámenes (igual a tab1) -->
+    <ion-card class="panel">
+      <ion-card-content>
+        <button class="alert-btn"(click)="verExamenes()">
+          <ion-icon name="flask"></ion-icon>
+          <span>Ver Exámenes</span>
+        </button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- SECCIÓN: Exámenes y Resultados (resumen) -->
     <ion-card class="section-card">
       <ion-card-header>
         <div class="section-header">
           <ion-icon name="flask" class="section-icon examenes-icon"></ion-icon>
-          <ion-card-title>Exámenes y Resultados</ion-card-title>
+          <ion-card-title>Resumen Exámenes y Resultados</ion-card-title>
         </div>
       </ion-card-header>
-      
       <ion-card-content>
         <div class="examenes-list">
-          <div 
-            *ngFor="let examen of ficha.examenes" 
-            class="examen-item">
-            
+          <div *ngFor="let examen of ficha.examenes" class="examen-item">
             <div class="examen-header">
               <div class="examen-info">
                 <h4 class="examen-name">{{ examen.nombre }}</h4>
                 <span class="examen-date">{{ formatDateShort(examen.fecha) }}</span>
               </div>
-              <ion-badge 
-                [color]="getExamenBadgeColor(examen.estado)"
-                class="examen-badge">
+              <ion-badge [color]="getExamenBadgeColor(examen.estado)" class="examen-badge">
                 {{ getExamenBadgeText(examen.estado) }}
               </ion-badge>
             </div>
-            
             <div class="examen-result">
               <span>{{ examen.resultado }}</span>
             </div>

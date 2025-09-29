@@ -1,0 +1,92 @@
+
+// Botón volver a ficha médica
+.volver-ficha-btn {
+  margin-bottom: 32px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(31, 136, 255, 0.10);
+}
+
+/* ========= PALETA AZUL + BLANCO (igual que tab1) ========= */
+:host {
+  --c-bg: #f7fbff;
+  --c-surface: #ffffff;
+  --c-surface-soft: #f1f6ff;
+  --c-border: #dbe8f7;
+  --c-text: #0f1c2e;
+  --c-muted: #708299;
+  --c-primary-50:  #eaf3ff;
+  --c-primary-200: #b7d6ff;
+  --c-primary-400: #52a6ff;
+  --c-primary-500: #1f88ff;
+  --c-primary-600: #176fdb;
+  --elev-1: 0 4px 12px rgba(23, 66, 150, 0.08);
+  --elev-2: 0 8px 20px rgba(23, 66, 150, 0.12);
+  --r-lg: 18px;
+  --r-md: 12px;
+  --fs-title: 32px;
+  --fs-stat: 30px;
+  --fs-md: 14px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  ion-content { --background: var(--c-bg); }
+}
+
+.examenes-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: var(--sp-6);
+}
+
+.examenes-title {
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-title);
+  font-weight: 900;
+  color: var(--c-primary-600);
+  margin-bottom: 32px;
+  gap: 12px;
+}
+
+.examenes-title ion-icon {
+  font-size: 2.5rem;
+  color: var(--c-primary-600);
+}
+
+.examenes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.examen-card {
+  border-radius: var(--r-lg);
+  box-shadow: var(--elev-1);
+  border: 1px solid var(--c-border);
+  background: var(--c-surface);
+}
+
+.examen-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.examen-date {
+  color: var(--c-muted);
+  font-size: 1rem;
+}
+
+.examen-resultado {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--c-text);
+}
+
+.examen-detalle {
+  font-size: 1rem;
+  color: var(--c-muted);
+}

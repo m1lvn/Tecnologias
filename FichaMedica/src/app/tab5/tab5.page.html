@@ -1,0 +1,33 @@
+<ion-content [fullscreen]="true">
+  <div class="examenes-container">
+    <ion-button class="volver-ficha-btn" color="primary" (click)="volverFicha()">
+      <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+      Volver a Ficha Médica
+    </ion-button>
+    <h1 class="examenes-title">
+      <ion-icon name="flask"></ion-icon>
+      Exámenes del Paciente
+    </h1>
+    <div class="examenes-list">
+      <ion-card *ngFor="let examen of examenes" class="examen-card">
+        <ion-card-header>
+          <ion-card-title>{{ examen.nombre }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="examen-info-row">
+            <span class="examen-date">Fecha: {{ examen.fecha }}</span>
+            <ion-badge [color]="getBadgeColor(examen.estado)">
+              {{ getBadgeText(examen.estado) }}
+            </ion-badge>
+          </div>
+          <div class="examen-resultado">
+            <strong>Resultado:</strong> {{ examen.resultado }}
+          </div>
+          <div class="examen-detalle">
+            <strong>Detalle:</strong> {{ examen.detalle }}
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

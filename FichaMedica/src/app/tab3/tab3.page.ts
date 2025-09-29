@@ -225,4 +225,8 @@ export class Tab3Page implements OnInit {
   verMedicacion() {
     this.router.navigate(['/tabs/tab4']);
   }
+
+  verExamenes() {
+    this.router.navigate(['/tabs/tab5']);
+  }
 }
