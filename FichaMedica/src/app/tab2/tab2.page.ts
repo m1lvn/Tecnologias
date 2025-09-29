@@ -35,18 +35,21 @@ export type Paciente = {
   apellidos: string;
   documento: string;
   tipoDocumento: string;
-  rut?: string; // Para compatibilidad con el template
+  // Campos obligatorios para el backend
+  telefono: string;
+  email: string;
+  direccion: string;
+  fechaNacimiento: Date | string;
+  genero: string;
+  estadoCivil: string;
+  ocupacion: string;
+  // Campos opcionales para compatibilidad
+  rut?: string;
   edad?: number;
   ubicacion?: string;
   estado: Estado;
   diagnostico?: string;
-  telefono: string;
-  email: string;
   ultimaVisita?: string;
-  fechaNacimiento?: Date;
-  genero?: string;
-  direccion?: string;
-  ocupacion?: string;
 };
 
 @Component({
@@ -141,18 +144,20 @@ export class Tab2Page implements OnInit, OnDestroy {
       apellidos: patient.apellidos,
       documento: patient.documento,
       tipoDocumento: patient.tipoDocumento,
+      telefono: patient.telefono,
+      email: patient.email,
+      direccion: patient.direccion,
+      fechaNacimiento: patient.fechaNacimiento,
+      genero: patient.genero,
+      estadoCivil: patient.estadoCivil,
+      ocupacion: patient.ocupacion,
+      // Campos calculados/opcionales
       rut: patient.documento, // Para compatibilidad con template
       edad: this.calculateAge(patient.fechaNacimiento),
       ubicacion: 'Sin asignar', // Campo no disponible en backend
       estado: patient.estado,
       diagnostico: patient.antecedentes?.[0] || 'Sin diagnóstico',
-      telefono: patient.telefono,
-      email: patient.email,
-      ultimaVisita: this.formatDate(patient.fechaActualizacion),
-      fechaNacimiento: patient.fechaNacimiento,
-      genero: patient.genero,
-      direccion: patient.direccion,
-      ocupacion: patient.ocupacion
+      ultimaVisita: this.formatDate(patient.fechaActualizacion)
     };
   };
 
@@ -226,63 +231,127 @@ export class Tab2Page implements OnInit, OnDestroy {
   newPaciente: Paciente = this.blankPaciente();
 
   openCreate() {
+    console.log('openCreate() llamado');
     this.newPaciente = this.blankPaciente();
+    this.error = null; // Limpiar errores previos
     this.isCreateOpen = true;
+    console.log('Modal abierto, newPaciente inicializado:', this.newPaciente);
   }
   
   closeCreate() { 
+    console.log('closeCreate() llamado');
     this.isCreateOpen = false; 
+    this.error = null;
+  }
+
+  // Método de prueba simple
+  testButton() {
+    console.log('¡Botón funciona!');
+    alert('¡El botón responde correctamente!');
   }
 
   saveCreate() {
+    console.log('saveCreate() llamado');
+    console.log('Datos del formulario:', this.newPaciente);
+    
     const p = this.newPaciente;
-    if (!p.nombres?.trim() || !p.documento?.trim()) {
-      this.error = 'Nombre y documento son obligatorios';
+    
+    // Validaciones completas
+    if (!p.nombres?.trim()) {
+      this.error = 'El campo nombres es obligatorio';
+      return;
+    }
+    if (!p.apellidos?.trim()) {
+      this.error = 'El campo apellidos es obligatorio';
+      return;
+    }
+    if (!p.documento?.trim()) {
+      this.error = 'El campo documento es obligatorio';
+      return;
+    }
+    if (!p.telefono?.trim()) {
+      this.error = 'El campo teléfono es obligatorio';
+      return;
+    }
+    if (!p.email?.trim()) {
+      this.error = 'El campo email es obligatorio';
+      return;
+    }
+    if (!p.direccion?.trim()) {
+      this.error = 'El campo dirección es obligatorio';
+      return;
+    }
+    if (!p.ocupacion?.trim()) {
+      this.error = 'El campo ocupación es obligatorio';
+      return;
+    }
+    if (!p.fechaNacimiento) {
+      this.error = 'El campo fecha de nacimiento es obligatorio';
       return;
     }
 
+    // Limpiar error previo
+    this.error = null;
+    
+    console.log('Validaciones pasadas, preparando request...');
+
     // Preparar datos para el backend
     const createRequest: CreatePatientRequest = {
-      nombres: p.nombres,
-      apellidos: p.apellidos || '',
-      documento: p.documento,
+      nombres: p.nombres.trim(),
+      apellidos: p.apellidos.trim(),
+      documento: p.documento.trim(),
       tipoDocumento: (p.tipoDocumento as 'CC' | 'TI' | 'CE' | 'PP' | 'RC') || 'CC',
-      telefono: p.telefono || '',
-      email: p.email || '',
-      fechaNacimiento: p.fechaNacimiento || new Date(),
+      telefono: p.telefono.trim(),
+      email: p.email.trim(),
+      direccion: p.direccion.trim(),
+      ocupacion: p.ocupacion.trim(),
+      fechaNacimiento: new Date(p.fechaNacimiento),
       genero: (p.genero as 'M' | 'F' | 'Otro') || 'Otro',
-      estadoCivil: 'soltero',
-      ocupacion: p.ocupacion || '',
-      direccion: p.direccion || '',
+      estadoCivil: (p.estadoCivil as 'soltero' | 'casado' | 'divorciado' | 'viudo' | 'union_libre') || 'soltero',
       contactoEmergencia: {
-        nombre: 'No especificado',
-        telefono: '',
-        relacion: 'No especificado'
+        nombre: 'Contacto por definir',
+        telefono: p.telefono.trim(),
+        relacion: 'Por definir'
       },
       alergias: [],
       medicamentos: [],
-      antecedentes: [],
+      antecedentes: p.diagnostico ? [p.diagnostico] : [],
       grupoSanguineo: 'O+',
       eps: 'Particular'
     };
 
+    console.log('Request preparado:', createRequest);
+    console.log('Enviando al backend...');
+
     this.subscriptions.push(
       this.patientService.createPatient(createRequest).subscribe({
         next: (newPatient) => {
+          console.log('Respuesta del backend exitosa:', newPatient);
           if (newPatient) {
-            // Agregar al inicio de la lista local
-            const transformedPatient = this.transformPatient(newPatient);
-            this.pacientes = [transformedPatient, ...this.pacientes];
+            // Recargar la lista completa para asegurar que se muestre el nuevo paciente
+            this.loadPatients(1);
             
-            // Cerrar modal y limpiar búsqueda
+            // Cerrar modal y limpiar error
             this.closeCreate();
-            this.query = '';
             this.error = null;
+            
+            console.log('Paciente creado exitosamente y modal cerrado');
+          } else {
+            console.log('newPatient es null');
+            this.error = 'Error: No se pudo crear el paciente';
           }
         },
         error: (error) => {
-          console.error('Error creating patient:', error);
-          this.error = 'Error al crear el paciente';
+          console.error('Error al crear paciente:', error);
+          console.error('Error details:', error.error);
+          
+          // Mostrar detalles específicos del error
+          if (error.error?.details) {
+            const errorMessages = error.error.details.map((detail: any) => detail.msg || detail.message).join(', ');
+            this.error = `Errores de validación: ${errorMessages}`;
+          } else {
+            this.error = error?.error?.message || error?.message || 'Error al crear el paciente';
+          }
         }
       })
     );
@@ -301,17 +370,20 @@ export class Tab2Page implements OnInit, OnDestroy {
       apellidos: '',
       documento: '',
       tipoDocumento: 'CC',
+      telefono: '',
+      email: '',
+      direccion: '',
+      fechaNacimiento: new Date().toISOString().split('T')[0], // Formato YYYY-MM-DD
+      genero: 'Otro',
+      estadoCivil: 'soltero',
+      ocupacion: '',
+      // Campos opcionales
       rut: '',
       edad: 0,
       ubicacion: '',
       estado: 'activo',
       diagnostico: '',
-      telefono: '',
-      email: '',
-      ultimaVisita: '',
-      genero: 'Otro',
-      direccion: '',
-      ocupacion: ''
+      ultimaVisita: ''
     };
   }
 
